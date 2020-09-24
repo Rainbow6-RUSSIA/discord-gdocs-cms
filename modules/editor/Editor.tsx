@@ -66,21 +66,10 @@ export function Editor() {
           title={theme.appearance.mobile ? undefined : "Message editor"}
           actions={[
             {
-              name: "Support server",
-              action: () => open("/discord", "_blank", "noopener"),
-            },
-            {
               name: "Backups",
               action: () =>
                 modalManager.spawn({
                   render: () => <BackupsModal editorManager={editorManager} />,
-                }),
-            },
-            {
-              name: "Appearance",
-              action: () =>
-                modalManager.spawn({
-                  render: () => <AppearanceModal />,
                 }),
             },
             {

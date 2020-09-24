@@ -1,29 +1,30 @@
 import { useObserver } from "mobx-react-lite"
 import type { GetServerSidePropsContext } from "next"
-import Router from "next/router"
-import React, { useEffect, useRef, useState } from "react"
+// import Router from "next/router"
+import React, { useEffect, /* useRef, */ useState } from "react"
 import styled, { css, ThemeProvider } from "styled-components"
-import { base64UrlEncode } from "../common/base64/base64UrlEncode"
+// import { base64UrlEncode } from "../common/base64/base64UrlEncode"
 import { useWindowEvent } from "../common/dom/useWindowEvent"
 import { PageHead } from "../common/PageHead"
-import { useAutorun } from "../common/state/useAutorun"
+// import { useAutorun } from "../common/state/useAutorun"
 import { useLazyValue } from "../common/state/useLazyValue"
 import { useRequiredContext } from "../common/state/useRequiredContext"
 import { AppearanceManagerContext } from "../common/style/AppearanceManagerContext"
 import { Editor } from "../modules/editor/Editor"
 import { EditorManager } from "../modules/editor/EditorManager"
 import { EditorManagerProvider } from "../modules/editor/EditorManagerContext"
+import { Header } from "../modules/header/Header"
 import type { MessageData } from "../modules/message/data/MessageData"
 import { decodeMessage } from "../modules/message/helpers/decodeMessage"
 import { INITIAL_MESSAGE_DATA } from "../modules/message/initialMessageData"
 import { MessagePreview } from "../modules/message/MessagePreview"
-import { timeout } from "../modules/message/timeout"
+// import { timeout } from "../modules/message/timeout"
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
 
-  height: 100%;
+  height: 95%;
 `
 
 const TabSwitcher = styled.div`
@@ -88,36 +89,6 @@ const Preview = styled(MessagePreview)`
   flex: 0 0 auto;
 `
 
-const Header = styled.header`
-  display: flex;
-
-  background: ${({ theme }) => theme.background.secondary};
-`;
-
-// const Logo
-
-const HeaderButton = styled.button.attrs({ type: "button" })<{ active: boolean }>`
-  height: 40px;
-  padding: 0 16px;
-
-  background: none;
-  border: solid transparent;
-  border-width: 2px 0;
-  border-radius: 0;
-
-  font-weight: 500;
-  font-size: 15px;
-  color: ${({ theme }) => theme.header.primary};
-  line-height: 38px;
-
-  ${({ active }) =>
-    active &&
-    css`
-      border-bottom-color: ${({ theme }) => theme.accent.primary};
-    `}
-`
-
-
 export type MainProps = {
   message: MessageData
   mobile: boolean
@@ -128,23 +99,21 @@ export default function Main(props: MainProps) {
 
   const editorManager = useLazyValue(() => new EditorManager(message))
 
-  const cancelRef = useRef<() => void>()
-  useAutorun(() => {
-    // const message = editorManager.message.getMessageData()
-    // const json = JSON.stringify({ message: { ...message, files: undefined } })
-    // const base64 = base64UrlEncode(json)
-
-    // const { current: cancel } = cancelRef
-    // if (cancel) cancel()
-
-    // cancelRef.current = timeout(async () => {
-    //   if (Router.query.message !== base64) {
-    //     await Router.replace(`/?message=${base64}`, `/?message=${base64}`, {
-    //       shallow: true,
-    //     })
-    //   }
-    // }, 500)
-  })
+  // const cancelRef = useRef<() => void>()
+  // useAutorun(() => {
+  //   const message = editorManager.message.getMessageData()
+  //   const json = JSON.stringify({ message: { ...message, files: undefined } })
+  //   const base64 = base64UrlEncode(json)
+  //   const { current: cancel } = cancelRef
+  //   if (cancel) cancel()
+  //   cancelRef.current = timeout(async () => {
+  //     if (Router.query.message !== base64) {
+  //       await Router.replace(`/?message=${base64}`, `/?message=${base64}`, {
+  //         shallow: true,
+  //       })
+  //     }
+  //   }, 500)
+  // })
 
   const appearanceManager = useRequiredContext(AppearanceManagerContext)
   useEffect(() => {
@@ -173,19 +142,7 @@ export default function Main(props: MainProps) {
           <meta key="referrer" name="referrer" content="strict-origin" />
         </PageHead>
         <Container translate="no">
-          <Header>
-            <HeaderButton
-              active
-            >
-              Login via Discord
-            </HeaderButton>
-            <HeaderButton
-              active
-
-            >
-              Login via Google
-            </HeaderButton>
-          </Header>
+          <Header />
           {mobile && (
             <TabSwitcher>
               <Tab
