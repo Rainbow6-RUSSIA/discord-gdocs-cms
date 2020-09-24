@@ -88,6 +88,36 @@ const Preview = styled(MessagePreview)`
   flex: 0 0 auto;
 `
 
+const Header = styled.header`
+  display: flex;
+
+  background: ${({ theme }) => theme.background.secondary};
+`;
+
+// const Logo
+
+const HeaderButton = styled.button.attrs({ type: "button" })<{ active: boolean }>`
+  height: 40px;
+  padding: 0 16px;
+
+  background: none;
+  border: solid transparent;
+  border-width: 2px 0;
+  border-radius: 0;
+
+  font-weight: 500;
+  font-size: 15px;
+  color: ${({ theme }) => theme.header.primary};
+  line-height: 38px;
+
+  ${({ active }) =>
+    active &&
+    css`
+      border-bottom-color: ${({ theme }) => theme.accent.primary};
+    `}
+`
+
+
 export type MainProps = {
   message: MessageData
   mobile: boolean
@@ -100,20 +130,20 @@ export default function Main(props: MainProps) {
 
   const cancelRef = useRef<() => void>()
   useAutorun(() => {
-    const message = editorManager.message.getMessageData()
-    const json = JSON.stringify({ message: { ...message, files: undefined } })
-    const base64 = base64UrlEncode(json)
+    // const message = editorManager.message.getMessageData()
+    // const json = JSON.stringify({ message: { ...message, files: undefined } })
+    // const base64 = base64UrlEncode(json)
 
-    const { current: cancel } = cancelRef
-    if (cancel) cancel()
+    // const { current: cancel } = cancelRef
+    // if (cancel) cancel()
 
-    cancelRef.current = timeout(async () => {
-      if (Router.query.message !== base64) {
-        await Router.replace(`/?message=${base64}`, `/?message=${base64}`, {
-          shallow: true,
-        })
-      }
-    }, 500)
+    // cancelRef.current = timeout(async () => {
+    //   if (Router.query.message !== base64) {
+    //     await Router.replace(`/?message=${base64}`, `/?message=${base64}`, {
+    //       shallow: true,
+    //     })
+    //   }
+    // }, 500)
   })
 
   const appearanceManager = useRequiredContext(AppearanceManagerContext)
@@ -143,6 +173,19 @@ export default function Main(props: MainProps) {
           <meta key="referrer" name="referrer" content="strict-origin" />
         </PageHead>
         <Container translate="no">
+          <Header>
+            <HeaderButton
+              active
+            >
+              Login via Discord
+            </HeaderButton>
+            <HeaderButton
+              active
+
+            >
+              Login via Google
+            </HeaderButton>
+          </Header>
           {mobile && (
             <TabSwitcher>
               <Tab
