@@ -11,8 +11,9 @@ const Container = styled.header`
 
   background: ${({ theme }) => theme.background.secondary};
 
+  z-index: 1;
+
   & > * {
-    height: 40px;
     padding: 0 16px;
 
     background: none;

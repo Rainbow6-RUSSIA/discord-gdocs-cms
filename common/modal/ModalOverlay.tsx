@@ -6,7 +6,7 @@ import React from "react"
 import { FocusOn } from "react-focus-on"
 import { animated, useTransition } from "react-spring"
 import styled, { css, useTheme } from "styled-components"
-import { Z_INDEX_MODALS } from "../constants"
+import { Z_INDEX_MODALS, Z_INDEX_MODAL_CONTAINER } from "../constants"
 import { useRequiredContext } from "../state/useRequiredContext"
 import { ModalProvider } from "./ModalContext"
 import { ModalManagerContext } from "./ModalManagerContext"
@@ -17,6 +17,8 @@ const Container = styled.div<{ side?: "left" | "right" }>`
   right: 0;
   bottom: 0;
   left: 0;
+
+  z-index: ${Z_INDEX_MODAL_CONTAINER};
 
   width: 100%;
 

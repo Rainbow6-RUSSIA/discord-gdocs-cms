@@ -1,2 +1,3 @@
-export const Z_INDEX_MODALS = 10
-export const Z_INDEX_POPOVERS = 20
+export const Z_INDEX_MODAL_CONTAINER = 50
+export const Z_INDEX_MODALS = 100
+export const Z_INDEX_POPOVERS = 200
