@@ -50,7 +50,7 @@ export function MessageEditor() {
           </MultiEditor>
         )}
       </Observer>
-      <Observer>
+      {/* <Observer>
         {() => (
           <InputGroup>
             <InputField
@@ -77,7 +77,7 @@ export function MessageEditor() {
             />
           </InputGroup>
         )}
-      </Observer>
+      </Observer>*/}
       <FileInput
         id={`message-${editorManager.message.id}-files`}
         files={editorManager.message.files}

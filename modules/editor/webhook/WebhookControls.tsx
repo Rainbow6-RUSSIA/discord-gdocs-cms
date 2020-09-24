@@ -58,7 +58,7 @@ export function WebhookControls() {
 
     return (
       <>
-        <FlexContainer flow="row">
+        {/* <FlexContainer flow="row">
           <InputField
             id="webhook-url"
             value={editorManager.webhook.url}
@@ -71,7 +71,7 @@ export function WebhookControls() {
           <Button disabled={isDisabled} onClick={sendMessage}>
             Send
           </Button>
-        </FlexContainer>
+        </FlexContainer> */}
         {isOverDiscordCharacterLimit && (
           <DisabledReason>
             The message body is over Discord&apos;s 6000 character limit

@@ -34,7 +34,7 @@ export class Message {
   }
 
   @computed get embedLimit() {
-    let limit = 10
+    let limit = 1
     for (const embed of this.embeds) limit -= embed.weight - 1
     return limit
   }
