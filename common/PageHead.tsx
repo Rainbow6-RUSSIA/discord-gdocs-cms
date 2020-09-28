@@ -82,7 +82,11 @@ export function PageHead(props: PageHeadProps) {
         property="og:description"
         content={description}
       />
-      <meta key="og:site_name" property="og:site_name" content="Discord GDocs CMS" />
+      <meta
+        key="og:site_name"
+        property="og:site_name"
+        content="Discord GDocs CMS"
+      />
       <link
         key="canonical"
         rel="canonical"
