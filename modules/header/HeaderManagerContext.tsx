@@ -1,5 +1,3 @@
-
-
 import { createContext } from "react"
 import type { HeaderManager } from "./HeaderManager"
 

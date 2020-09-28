@@ -21,10 +21,10 @@ const BackupsModal = dynamic<BackupsModalProps>(async () =>
   ),
 )
 
-const Drive = dynamic<DriveProps>(async () => 
+const Drive = dynamic<DriveProps>(async () =>
   import(process.browser ? "react-drive" : "./PickerStub").then(
-      module => module.default,
-  )
+    module => module.default,
+  ),
 )
 
 const Container = styled.header`
@@ -98,7 +98,9 @@ export function Header(/* props: HeaderProps */) {
             render: () => <BackupsModal editorManager={editorManager} />,
           })
         }
-      >Backups</HeaderButton>
+      >
+        Backups
+      </HeaderButton>
 
       <Drive
         clientId={process.env.NEXT_PUBLIC_GOOGLE_ID as string}

@@ -103,7 +103,7 @@ export function JsonInput() {
         onChange={event => setJson(event.target.value)}
       />
       <SubmitButton
-        onClick={() =>{
+        onClick={() => {
           modalManager.spawn({
             render: () => (
               <ClearAllConfirmationModal editorManager={editorManager} />
