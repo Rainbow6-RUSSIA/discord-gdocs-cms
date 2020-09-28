@@ -1,10 +1,23 @@
 import { useObserver } from "mobx-react-lite"
-import Link from "next/link"
+import dynamic from "next/dynamic"
 import React from "react"
 import styled, { css } from "styled-components"
 import { ModalManagerContext } from "../../common/modal/ModalManagerContext"
 import { useRequiredContext } from "../../common/state/useRequiredContext"
-import { AppearanceModal } from "../../common/style/AppearanceModal"
+import type { BackupsModalProps } from "../database/backup/modal/BackupsModal"
+import { EditorManagerContext } from "../editor/EditorManagerContext"
+
+const AppearanceModal = dynamic<Record<never, unknown>>(async () =>
+  import("../../common/style/AppearanceModal").then(
+    module => module.AppearanceModal,
+  ),
+)
+
+const BackupsModal = dynamic<BackupsModalProps>(async () =>
+  import("../database/backup/modal/BackupsModal").then(
+    module => module.BackupsModal,
+  ),
+)
 
 const Container = styled.header`
   display: flex;
@@ -54,6 +67,8 @@ export type HeaderProps = {
 
 export function Header(/* props: HeaderProps */) {
   const modalManager = useRequiredContext(ModalManagerContext)
+  const editorManager = useRequiredContext(EditorManagerContext)
+
   return useObserver(() => (
     <Container>
       <HeaderLink href="https://google.com" rel="noopener">
@@ -68,6 +83,13 @@ export function Header(/* props: HeaderProps */) {
       >
         Appearance
       </HeaderButton>
+      <HeaderButton
+        onClick={() =>
+          modalManager.spawn({
+            render: () => <BackupsModal editorManager={editorManager} />,
+          })
+        }
+      >Backups</HeaderButton>
       <HeaderButton>Login via Discord</HeaderButton>
       <HeaderButton>Login via Google</HeaderButton>
     </Container>

@@ -1,30 +1,11 @@
 import { useObserver } from "mobx-react-lite"
-import dynamic from "next/dynamic"
 import React from "react"
-import styled, { useTheme } from "styled-components"
-import { ModalManagerContext } from "../../common/modal/ModalManagerContext"
-import { useRequiredContext } from "../../common/state/useRequiredContext"
+import styled from "styled-components"
 import { DARK_THEME } from "../../common/style/themes/darkTheme"
-import type { BackupsModalProps } from "../database/backup/modal/BackupsModal"
-import { Actions } from "./Actions"
-import { EditorManagerContext } from "./EditorManagerContext"
 import { JsonInput } from "./JsonInput"
-import { ClearAllConfirmationModal } from "./message/ClearAllConfirmationModal"
 import { MessageEditor } from "./message/MessageEditor"
 import { FlexContainer } from "./styles/FlexContainer"
 import { WebhookControls } from "./webhook/WebhookControls"
-
-const AppearanceModal = dynamic<Record<never, unknown>>(async () =>
-  import("../../common/style/AppearanceModal").then(
-    module => module.AppearanceModal,
-  ),
-)
-
-const BackupsModal = dynamic<BackupsModalProps>(async () =>
-  import("../database/backup/modal/BackupsModal").then(
-    module => module.BackupsModal,
-  ),
-)
 
 const EditorContainer = styled.div`
   position: relative;
@@ -50,11 +31,6 @@ const JavaScriptWarning = styled.noscript`
 `
 
 export function Editor() {
-  const editorManager = useRequiredContext(EditorManagerContext)
-  const modalManager = useRequiredContext(ModalManagerContext)
-
-  const theme = useTheme()
-
   return useObserver(() => (
     <EditorContainer>
       <EditorInnerContainer>
@@ -62,27 +38,6 @@ export function Editor() {
           Discohook requires JavaScript to be enabled, please turn it on in your
           browser settings to use this app.
         </JavaScriptWarning>
-        <Actions
-          title={theme.appearance.mobile ? undefined : "Message editor"}
-          actions={[
-            {
-              name: "Backups",
-              action: () =>
-                modalManager.spawn({
-                  render: () => <BackupsModal editorManager={editorManager} />,
-                }),
-            },
-            {
-              name: "Clear all",
-              action: () =>
-                modalManager.spawn({
-                  render: () => (
-                    <ClearAllConfirmationModal editorManager={editorManager} />
-                  ),
-                }),
-            },
-          ]}
-        />
         <WebhookControls />
         <MessageEditor />
         <JsonInput />

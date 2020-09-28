@@ -4,6 +4,7 @@ import { Button } from "../../common/input/Button"
 import { InputContainer } from "../../common/input/styles/InputContainer"
 import { InputLabel } from "../../common/input/styles/InputLabel"
 import { MultilineTextInput } from "../../common/input/styles/MultilineTextInput"
+import { ModalManagerContext } from "../../common/modal/ModalManagerContext"
 import { useAutorun } from "../../common/state/useAutorun"
 import { useRequiredContext } from "../../common/state/useRequiredContext"
 import { DARK_THEME } from "../../common/style/themes/darkTheme"
@@ -11,6 +12,17 @@ import { parseMessage } from "../message/helpers/parseMessage"
 import { stringifyMessage } from "../message/helpers/stringifyMessage"
 import { Message } from "../message/Message"
 import { EditorManagerContext } from "./EditorManagerContext"
+import { ClearAllConfirmationModal } from "./message/ClearAllConfirmationModal"
+
+const JsonInputContainer = styled(InputContainer)`
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-content: space-around;
+
+  & > :not(button) {
+    flex: 0 1 100%;
+  }
+`
 
 const ErrorContainer = styled.div`
   margin: 10px 0 4px;
@@ -44,6 +56,7 @@ const SubmitButton = styled(Button)`
 
 export function JsonInput() {
   const editorManager = useRequiredContext(EditorManagerContext)
+  const modalManager = useRequiredContext(ModalManagerContext)
 
   const [json, setJson] = useState(() =>
     stringifyMessage(editorManager.message.getMessageData()),
@@ -75,7 +88,7 @@ export function JsonInput() {
   }, [json])
 
   return (
-    <InputContainer>
+    <JsonInputContainer>
       <InputLabel htmlFor="json">JSON data</InputLabel>
       {errors.length > 0 && (
         <ErrorContainer>
@@ -90,6 +103,17 @@ export function JsonInput() {
         onChange={event => setJson(event.target.value)}
       />
       <SubmitButton
+        onClick={() =>{
+          modalManager.spawn({
+            render: () => (
+              <ClearAllConfirmationModal editorManager={editorManager} />
+            ),
+          })
+        }}
+      >
+        Clear all
+      </SubmitButton>
+      <SubmitButton
         disabled={errors.length > 0}
         onClick={() => {
           editorManager.message = Message.of({
@@ -100,6 +124,6 @@ export function JsonInput() {
       >
         Apply JSON data
       </SubmitButton>
-    </InputContainer>
+    </JsonInputContainer>
   )
 }
