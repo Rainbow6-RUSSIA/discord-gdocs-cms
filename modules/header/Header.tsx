@@ -58,11 +58,9 @@ export function Header(/* props: HeaderProps */) {
   const modalManager = useRequiredContext(ModalManagerContext)
   return useObserver(() => (
     <Container>
-      <Link passHref href="https://google.com">
-        <HeaderLink rel="noopener">
-          Support server
-        </HeaderLink>
-      </Link>
+      <HeaderLink href="https://google.com" rel="noopener">
+        Support server
+      </HeaderLink>
       <HeaderButton
         onClick={() =>
           modalManager.spawn({
@@ -72,7 +70,9 @@ export function Header(/* props: HeaderProps */) {
       >
         Appearance
       </HeaderButton>
-      <HeaderButton>Login via Discord</HeaderButton>
+      <HeaderButton
+        onClick={() => {throw new Error("sentry test")}}
+      >Login via Discord</HeaderButton>
       <HeaderButton>Login via Google</HeaderButton>
     </Container>
   ))

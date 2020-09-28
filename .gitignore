@@ -13,3 +13,6 @@ yarn-debug.log*
 yarn-error.log*
 
 docker-compose.override.yml
+
+.env*
+.next/*
