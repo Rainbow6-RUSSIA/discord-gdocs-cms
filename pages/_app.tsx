@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/node"
 import { Observer } from "mobx-react-lite"
 import "mobx-react-lite/batchingForReactDom"
 import App, { AppProps } from "next/app"
@@ -14,6 +15,13 @@ import { AppearanceManager } from "../common/style/AppearanceManager"
 import { AppearanceManagerProvider } from "../common/style/AppearanceManagerContext"
 import { GlobalStyle } from "../common/style/GlobalStyle"
 import { resetNextId } from "../common/uid"
+
+if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
+  Sentry.init({
+    enabled: process.env.NODE_ENV === "production",
+    dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
+  })
+}
 
 export default class MyApp extends App {
   private readonly appearanceManager = new AppearanceManager()

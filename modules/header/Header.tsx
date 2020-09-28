@@ -27,8 +27,8 @@ const Container = styled.header`
     line-height: 38px;
 
     &:hover {
-        border-bottom-color: ${({ theme }) => theme.accent.primary};
-        text-decoration: none;
+      border-bottom-color: ${({ theme }) => theme.accent.primary};
+      text-decoration: none;
     }
   }
 `
@@ -45,9 +45,7 @@ const HeaderButton = styled.button.attrs({ type: "button" })<{
     `}
 `
 
-const HeaderLink = styled.a`
-  
-`
+const HeaderLink = styled.a``
 
 export type HeaderProps = {
   // message: Message
@@ -70,9 +68,7 @@ export function Header(/* props: HeaderProps */) {
       >
         Appearance
       </HeaderButton>
-      <HeaderButton
-        onClick={() => {throw new Error("sentry test")}}
-      >Login via Discord</HeaderButton>
+      <HeaderButton>Login via Discord</HeaderButton>
       <HeaderButton>Login via Google</HeaderButton>
     </Container>
   ))
