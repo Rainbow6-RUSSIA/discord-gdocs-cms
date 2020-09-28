@@ -75,18 +75,18 @@ export function PageHead(props: PageHeadProps) {
       <meta
         key="og:url"
         property="og:url"
-        content={`https://discohook.org${router.pathname}`}
+        content={`https://dgdcms.rainbow6.ru${router.pathname}`}
       />
       <meta
         key="og:description"
         property="og:description"
         content={description}
       />
-      <meta key="og:site_name" property="og:site_name" content="Discohook" />
+      <meta key="og:site_name" property="og:site_name" content="Discord GDocs CMS" />
       <link
         key="canonical"
         rel="canonical"
-        href={`https://discohook.org${router.pathname}`}
+        href={`https://dgdcms.rainbow6.ru${router.pathname}`}
       />
       {links.map(link => (
         <link key={`${link.rel}:${link.href}`} {...link} />
@@ -94,7 +94,7 @@ export function PageHead(props: PageHeadProps) {
       <meta
         key="application-name"
         name="application-name"
-        content="Discohook"
+        content="Discord GDocs CMS"
       />
       <meta key="theme-color" name="theme-color" content="#58b9ff" />
       <meta key="color-scheme" name="color-scheme" content="dark light" />

@@ -1,5 +1,5 @@
 {
-  "name": "discohook",
+  "name": "dgdcms",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -20,19 +20,22 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/discohook/discohook.git"
+    "url": "git+https://github.com/Rainbow6-RUSSIA/discord-gdocs-cms.git"
   },
-  "author": "Discohook authors <hello@discohook.org>",
+  "author": "BadCoder1337",
   "license": "AGPL-3.0-or-later",
   "bugs": {
-    "url": "https://github.com/discohook/discohook/issues"
+    "url": "https://github.com/Rainbow6-RUSSIA/discord-gdocs-cms/issues"
   },
-  "homepage": "https://discohook.org/",
+  "homepage": "https://dgdcms.rainbow6.ru/",
   "dependencies": {
     "@babel/runtime": "^7.11.2",
     "@popperjs/core": "^2.4.4",
+    "@sentry/integrations": "^5.24.2",
     "@sentry/node": "^5.24.2",
     "@sentry/react": "^5.24.2",
+    "@sentry/webpack-plugin": "^1.13.0",
+    "@zeit/next-source-maps": "^0.0.3",
     "core-js": "^3.6.5",
     "d3-ease": "^1.0.6",
     "date-fns": "^2.15.0",

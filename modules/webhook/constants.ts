@@ -1,7 +1,7 @@
 export const DISCORD_AVATARS_CDN_BASE_URL = "https://cdn.discordapp.com/avatars"
 
 export const DEFAULT_AVATAR_URL = "/static/discord-avatar.png"
-export const DEFAULT_DISPLAY_NAME = "Discohook"
+export const DEFAULT_DISPLAY_NAME = "Discord GDocs CMS"
 
 export const DISCORD_HOST_RE = /(?:www\.|ptb\.|canary\.)?discord(?:app)?\.com/
 export const WEBHOOK_ID_RE = /\d+/
