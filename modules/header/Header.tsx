@@ -1,11 +1,13 @@
 import { useObserver } from "mobx-react-lite"
 import dynamic from "next/dynamic"
 import React from "react"
+import type { DriveProps } from "react-drive"
 import styled, { css } from "styled-components"
 import { ModalManagerContext } from "../../common/modal/ModalManagerContext"
 import { useRequiredContext } from "../../common/state/useRequiredContext"
 import type { BackupsModalProps } from "../database/backup/modal/BackupsModal"
 import { EditorManagerContext } from "../editor/EditorManagerContext"
+import { HeaderManagerContext } from "./HeaderManagerContext"
 
 const AppearanceModal = dynamic<Record<never, unknown>>(async () =>
   import("../../common/style/AppearanceModal").then(
@@ -17,6 +19,12 @@ const BackupsModal = dynamic<BackupsModalProps>(async () =>
   import("../database/backup/modal/BackupsModal").then(
     module => module.BackupsModal,
   ),
+)
+
+const Drive = dynamic<DriveProps>(async () => 
+  import(process.browser ? "react-drive" : "./PickerStub").then(
+      module => module.default,
+  )
 )
 
 const Container = styled.header`
@@ -68,6 +76,7 @@ export type HeaderProps = {
 export function Header(/* props: HeaderProps */) {
   const modalManager = useRequiredContext(ModalManagerContext)
   const editorManager = useRequiredContext(EditorManagerContext)
+  const headerManager = useRequiredContext(HeaderManagerContext)
 
   return useObserver(() => (
     <Container>
@@ -90,6 +99,17 @@ export function Header(/* props: HeaderProps */) {
           })
         }
       >Backups</HeaderButton>
+
+      <Drive
+        clientId={process.env.NEXT_PUBLIC_GOOGLE_ID as string}
+        apiKey={process.env.NEXT_PUBLIC_GOOGLE_API_KEY as string}
+        onEvent={headerManager.handleEvent}
+        allowedMimeTypes={["application/vnd.google-apps.spreadsheet"]}
+        exportAsBlobs={false}
+      >
+        <HeaderButton>Picker</HeaderButton>
+      </Drive>
+
       <HeaderButton>Login via Discord</HeaderButton>
       <HeaderButton>Login via Google</HeaderButton>
     </Container>
