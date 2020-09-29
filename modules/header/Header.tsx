@@ -103,7 +103,7 @@ export function Header(/* props: HeaderProps */) {
       </HeaderButton>
 
       <Drive
-        clientId={process.env.NEXT_PUBLIC_GOOGLE_ID as string}
+        clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string}
         apiKey={process.env.NEXT_PUBLIC_GOOGLE_API_KEY as string}
         onEvent={headerManager.handleEvent}
         allowedMimeTypes={["application/vnd.google-apps.spreadsheet"]}
