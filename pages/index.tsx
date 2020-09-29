@@ -125,10 +125,10 @@ export default function Main(props: MainProps) {
 
   const [activeTab, setActiveTab] = useState<"preview" | "editor">("preview")
 
-  useWindowEvent("beforeunload", event => {
-    event.preventDefault()
-    event.returnValue = ""
-  })
+  // useWindowEvent("beforeunload", event => {
+  //   event.preventDefault()
+  //   event.returnValue = ""
+  // })
 
   return useObserver(() => (
     <ThemeProvider
