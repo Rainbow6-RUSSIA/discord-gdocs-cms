@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 
-const { NEXT_PUBLIC_SENTRY_DSN: SENTRY_DSN } = process.env
+const { 
+  NEXT_PUBLIC_SENTRY_DSN: SENTRY_DSN,
+  NODE_ENV, NODE_OPTIONS, __NEXT_PROCESSED_ENV,
+  ...otherEnv } = process.env
 
 process.env.SENTRY_DSN = SENTRY_DSN
 
@@ -15,6 +18,7 @@ const config = {
   poweredByHeader: false,
   distDir: "build",
   reactStrictMode: true,
+  env: otherEnv,
 }
 
 try {
