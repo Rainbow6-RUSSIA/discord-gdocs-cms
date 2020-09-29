@@ -1,9 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 
-const { 
-  NEXT_PUBLIC_SENTRY_DSN: SENTRY_DSN,
-  NODE_ENV, NODE_OPTIONS, __NEXT_PROCESSED_ENV, NODE_VERSION, 
-  ...otherEnv } = process.env
+const { NEXT_PUBLIC_SENTRY_DSN: SENTRY_DSN } = process.env
 
 process.env.SENTRY_DSN = SENTRY_DSN
 
@@ -18,7 +15,11 @@ const config = {
   poweredByHeader: false,
   distDir: "build",
   reactStrictMode: true,
-  env: otherEnv,
+  env: {
+    NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
+    NEXT_PUBLIC_GOOGLE_API_KEY: process.env.NEXT_PUBLIC_GOOGLE_API_KEY,
+    NEXT_PUBLIC_GOOGLE_CLIENT_ID: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID
+  },
 }
 
 try {
