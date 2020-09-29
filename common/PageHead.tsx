@@ -103,6 +103,8 @@ export function PageHead(props: PageHeadProps) {
       <meta key="theme-color" name="theme-color" content="#58b9ff" />
       <meta key="color-scheme" name="color-scheme" content="dark light" />
       <meta key="google" name="google" content="notranslate" />
+
+      <script src="https://apis.google.com/js/api.js" />
       {children}
     </Head>
   )

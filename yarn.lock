@@ -2098,10 +2098,33 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/gapi.auth2@npm:^0.0.52":
+  version: 0.0.52
+  resolution: "@types/gapi.auth2@npm:0.0.52"
+  dependencies:
+    "@types/gapi": "*"
+  checksum: 7063d58fbf1eebaec9f05a5f75355e58c5faa22d45f9f46922fa12f4202e406428c364d3251039e3cfbaf04eb02ff7f85fdaf060608300f15fb906b62a6ba825
+  languageName: node
+  linkType: hard
+
+"@types/gapi@npm:*, @types/gapi@npm:^0.0.39":
+  version: 0.0.39
+  resolution: "@types/gapi@npm:0.0.39"
+  checksum: 95a616e55a9a3a8651d820036734af92166d9802eef85a50de9af45c383477093d3e43b41df248619231650e3638bf5e91e9d1990156cf31a97fc9eaa9bcb5e9
+  languageName: node
+  linkType: hard
+
 "@types/google-spreadsheet@npm:^3.0.1":
   version: 3.0.1
   resolution: "@types/google-spreadsheet@npm:3.0.1"
   checksum: 5a2b94b26c787bb84545b33a2d43f7a8a00a812184f7c740b574c95a498af2b8ae6a02865a190e62e40dba4f7614f5ff5a65a88062a4bb926cd29643f5ae213d
+  languageName: node
+  linkType: hard
+
+"@types/google.picker@npm:^0.0.34":
+  version: 0.0.34
+  resolution: "@types/google.picker@npm:0.0.34"
+  checksum: 98e01ab92ed40439e9580fdbd3549ae36d4f7e76e4fb516be4d30e0e99209ce4328d756b86ecc8d12164968bba45a8140694bca1901aea2322069ccf9c4c72cf
   languageName: node
   linkType: hard
 
@@ -4667,7 +4690,10 @@ __metadata:
     "@testing-library/react": ^10.4.8
     "@testing-library/user-event": ^12.1.1
     "@types/d3-ease": ^1.0.9
+    "@types/gapi": ^0.0.39
+    "@types/gapi.auth2": ^0.0.52
     "@types/google-spreadsheet": ^3.0.1
+    "@types/google.picker": ^0.0.34
     "@types/highlight.js": ^9.12.4
     "@types/jest": ^26.0.10
     "@types/node": ^14.0.27

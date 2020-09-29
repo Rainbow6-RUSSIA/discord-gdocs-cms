@@ -1,12 +1,12 @@
 import { useObserver } from "mobx-react-lite"
 import dynamic from "next/dynamic"
 import React from "react"
-import type { DriveProps } from "react-drive"
 import styled, { css } from "styled-components"
 import { ModalManagerContext } from "../../common/modal/ModalManagerContext"
 import { useRequiredContext } from "../../common/state/useRequiredContext"
 import type { BackupsModalProps } from "../database/backup/modal/BackupsModal"
 import { EditorManagerContext } from "../editor/EditorManagerContext"
+import type { GooglePickerProps } from "./GooglePicker"
 import { HeaderManagerContext } from "./HeaderManagerContext"
 
 const AppearanceModal = dynamic<Record<never, unknown>>(async () =>
@@ -21,10 +21,8 @@ const BackupsModal = dynamic<BackupsModalProps>(async () =>
   ),
 )
 
-const Drive = dynamic<DriveProps>(async () =>
-  import(process.browser ? "react-drive" : "./PickerStub").then(
-    module => module.default,
-  ),
+const GooglePicker = dynamic<GooglePickerProps>(async () =>
+  import("./GooglePicker").then(module => module.default),
 )
 
 const Container = styled.header`
@@ -102,15 +100,9 @@ export function Header(/* props: HeaderProps */) {
         Backups
       </HeaderButton>
 
-      <Drive
-        clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string}
-        apiKey={process.env.NEXT_PUBLIC_GOOGLE_API_KEY as string}
-        onEvent={headerManager.handleEvent}
-        allowedMimeTypes={["application/vnd.google-apps.spreadsheet"]}
-        exportAsBlobs={false}
-      >
+      <GooglePicker onEvent={headerManager.handleEvent}>
         <HeaderButton>Picker</HeaderButton>
-      </Drive>
+      </GooglePicker>
 
       <HeaderButton>Login via Discord</HeaderButton>
       <HeaderButton>Login via Google</HeaderButton>
