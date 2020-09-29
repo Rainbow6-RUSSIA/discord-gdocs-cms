@@ -110,11 +110,8 @@ export function ModalOverlay() {
   const router = useRouter()
   const { appearance } = useTheme()
 
-  let side: undefined | "left" | "right" = "left"
-  if (appearance.mobile && router.route === "/") side = undefined
-
   return (
-    <Container side={side}>
+    <Container>
       {transitions.map(transition => (
         <ModalProvider key={transition.key} value={transition.item}>
           <Item>
