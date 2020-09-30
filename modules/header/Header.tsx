@@ -1,4 +1,5 @@
 import { useObserver } from "mobx-react-lite"
+import { useSession, signIn } from "next-auth/client"
 import dynamic from "next/dynamic"
 import React from "react"
 import styled, { css } from "styled-components"
@@ -76,6 +77,9 @@ export function Header(/* props: HeaderProps */) {
   const editorManager = useRequiredContext(EditorManagerContext)
   const headerManager = useRequiredContext(HeaderManagerContext)
 
+  const [ session, loading ] = useSession()
+  console.log(session, loading)
+
   return useObserver(() => (
     <Container>
       <HeaderLink href="https://google.com" rel="noopener">
@@ -100,12 +104,12 @@ export function Header(/* props: HeaderProps */) {
         Backups
       </HeaderButton>
 
-      <GooglePicker onEvent={headerManager.handleEvent}>
-        <HeaderButton>Picker</HeaderButton>
+      <GooglePicker onEvent={headerManager.handlePickerEvent}>
+        <HeaderButton>Select Spreadsheet</HeaderButton>
       </GooglePicker>
 
-      <HeaderButton>Login via Discord</HeaderButton>
-      <HeaderButton>Login via Google</HeaderButton>
+      <HeaderButton onClick={async () => signIn("discord")}>Login via Discord</HeaderButton>
+      <HeaderButton onClick={async () => signIn("google")}>Login via Google</HeaderButton>
     </Container>
   ))
 }

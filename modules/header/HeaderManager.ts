@@ -9,7 +9,7 @@ export class HeaderManager {
   @observable guild?: Guild | null = null
   @observable
   @action
-  handleEvent = console.log
+  handlePickerEvent = console.log
 
   @action loginGoogle() {}
 
