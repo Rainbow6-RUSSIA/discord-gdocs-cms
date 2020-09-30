@@ -1,5 +1,5 @@
 import { useObserver } from "mobx-react-lite"
-import { useSession, signIn } from "next-auth/client"
+import { useSession, signIn, signOut } from "next-auth/client"
 import dynamic from "next/dynamic"
 import React from "react"
 import styled, { css } from "styled-components"
@@ -110,6 +110,7 @@ export function Header(/* props: HeaderProps */) {
 
       <HeaderButton onClick={async () => signIn("discord")}>Login via Discord</HeaderButton>
       <HeaderButton onClick={async () => signIn("google")}>Login via Google</HeaderButton>
+      <HeaderButton onClick={async () => signOut()}>Logout</HeaderButton>
     </Container>
   ))
 }
