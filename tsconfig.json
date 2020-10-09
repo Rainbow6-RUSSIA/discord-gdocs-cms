@@ -15,7 +15,8 @@
     "jsx": "preserve",
     "downlevelIteration": true,
     "importsNotUsedAsValues": "error",
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
   },
   "exclude": ["node_modules"],
   "include": ["**/*.ts", "**/*.tsx", "scripts/*.js"]
