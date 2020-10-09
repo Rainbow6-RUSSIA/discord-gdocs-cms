@@ -1,5 +1,6 @@
 import { action, observable } from "mobx"
-import { Modal, ModalOptions } from "./Modal"
+import { Modal } from "./Modal"
+import type { ModalOptions } from "./Modal"
 
 export class ModalManager {
   @observable modals: Modal[] = []
