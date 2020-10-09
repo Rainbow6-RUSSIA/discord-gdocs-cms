@@ -10,6 +10,27 @@ const config = {
     if (!options.isServer) {
       config.resolve.alias["@sentry/node"] = "@sentry/browser"
     }
+
+    const pathToPolyfills = "./polyfills.js"
+    // Fix [TypeError: Reflect.metadata is not a function] during production build
+    // Thanks to https://leerob.io/blog/things-ive-learned-building-nextjs-apps#polyfills
+    // There is an official example as well: https://git.io/JfqUF
+    const originalEntry = config.entry
+    config.entry = async () => {
+      const entries = await originalEntry()
+      Object.keys(entries).forEach(pageBundleEntryJs => {
+        let sourceFilesIncluded = entries[pageBundleEntryJs]
+        if (!Array.isArray(sourceFilesIncluded)) {
+          entries[pageBundleEntryJs] = [sourceFilesIncluded]
+          sourceFilesIncluded = entries[pageBundleEntryJs]
+        }
+        if (!sourceFilesIncluded.some(file => file.includes("polyfills"))) {
+          sourceFilesIncluded.unshift(pathToPolyfills)
+        }
+      })
+      return entries
+    }
+
     return config
   },
   poweredByHeader: false,
