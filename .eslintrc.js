@@ -63,7 +63,7 @@ module.exports = {
     "@typescript-eslint/prefer-reduce-type-parameter": "warn",
     "@typescript-eslint/prefer-regexp-exec": "warn",
     "@typescript-eslint/prefer-string-starts-ends-with": "warn",
-    "@typescript-eslint/promise-function-async": "error",
+    "@typescript-eslint/promise-function-async": "off",
     "@typescript-eslint/quotes": ["warn", "double", { avoidEscape: true }],
     "@typescript-eslint/require-array-sort-compare": "warn",
     "@typescript-eslint/require-await": "warn",

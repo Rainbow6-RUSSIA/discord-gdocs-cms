@@ -5,6 +5,7 @@ import React from "react"
 import styled, { css } from "styled-components"
 import { ModalManagerContext } from "../../common/modal/ModalManagerContext"
 import { useRequiredContext } from "../../common/state/useRequiredContext"
+import type { CustomSession } from "../../types"
 import type { BackupsModalProps } from "../database/backup/modal/BackupsModal"
 import { EditorManagerContext } from "../editor/EditorManagerContext"
 import type { GooglePickerProps } from "./GooglePicker"
@@ -77,7 +78,10 @@ export function Header(/* props: HeaderProps */) {
   const editorManager = useRequiredContext(EditorManagerContext)
   const headerManager = useRequiredContext(HeaderManagerContext)
 
-  const [ session, loading ] = useSession()
+  const [session, loading] = (useSession() as unknown) as [
+    CustomSession,
+    boolean,
+  ]
   console.log(session, loading)
 
   return useObserver(() => (
@@ -108,8 +112,14 @@ export function Header(/* props: HeaderProps */) {
         <HeaderButton>Select Spreadsheet</HeaderButton>
       </GooglePicker>
 
-      <HeaderButton onClick={async () => signIn("discord")}>Login via Discord</HeaderButton>
-      <HeaderButton onClick={async () => signIn("google")}>Login via Google</HeaderButton>
+      <HeaderButton onClick={async () => signIn("discord")}>
+        {!loading && session.discord
+          ? `${session.discord.username}#${session.discord.discriminator}`
+          : "Login via Discord"}
+      </HeaderButton>
+      <HeaderButton onClick={async () => signIn("google")}>
+        {!loading && session.google ? session.google.name : "Login via Google"}
+      </HeaderButton>
       <HeaderButton onClick={async () => signOut()}>Logout</HeaderButton>
     </Container>
   ))
