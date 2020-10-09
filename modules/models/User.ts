@@ -1,29 +1,18 @@
-import Adapters, { TypeORMUserModel } from "next-auth/adapters"
+import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
 
-// Extend the built-in models using class inheritance
-export class User { // TypeORM.Models.User.model
-  // You can extend the options in a model but you should not remove the base
-  // properties or change the order of the built-in options on the constructor
+@Entity()
+export class User extends BaseEntity { // TypeORM.Models.User.model
+  constructor (fields?: Partial<User>) {
+    super();
+    Object.assign(this, fields);
+  }
 
-  // eslint-disable-next-line @typescript-eslint/no-useless-constructor
-}
+  @PrimaryGeneratedColumn("uuid")
+  id!: string
 
-export const UserSchema = {
-  name: "User",
-  target: User,
-  columns: {
-    id: {
-      primary: true,
-      type: "uuid",
-      generated: true
-    },
-    createdAt: {
-      type: "timestamp",
-      createDate: true
-    },
-    updatedAt: {
-      type: "timestamp",
-      updateDate: true
-    }
-  },
+  @CreateDateColumn()
+  createDate!: Date
+
+  @UpdateDateColumn()
+  updateDate!: Date
 }

@@ -1,20 +1,11 @@
-import { Account, AccountSchema } from "./Account"
-import { Session, SessionSchema } from "./Session"
-import { User, UserSchema } from "./User"
+import { Account } from "./Account"
+import { Session } from "./Session"
+import { User } from "./User"
 
 export default {
-  Account: {
-    model: Account,
-    schema: AccountSchema
-  },
-  User: {
-    model: User,
-    schema: UserSchema
-  },
-  Session: {
-    model: Session,
-    schema: SessionSchema
-  }
+  Account,
+  User,
+  Session,
 }
 
 /*
