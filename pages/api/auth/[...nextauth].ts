@@ -1,7 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import nextAuth, { InitOptions } from "next-auth"
-import type { GenericObject } from "next-auth/_utils"
+import nextAuth from "next-auth"
+import type { AppOptions, InitOptions } from "next-auth"
+import Adapters from "next-auth/adapters"
 import Providers from "next-auth/providers"
+import type { ConnectionOptions } from "typeorm"
+import Models from "../../../modules/models"
 
 const discordConfig = {
     clientId: process.env.DISCORD_CLIENT_ID as string,
@@ -15,49 +18,36 @@ const googleConfig = {
     scope: "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/spreadsheets"
 }
 
+const adapter = Adapters.TypeORM.Adapter(process.env.DATABASE_URL as ConnectionOptions , { models: Models })
+
 const options: InitOptions = {
+    callbacks: {
+        session: async (session, user) => {
+            // const {  } = await adapter.getAdapter({} as AppOptions);
+            // // console.log("Session", session, user)
+            // console.log(await getUser(user.id));
+            const sessionObj = {
+                id: user.id,
+                accessToken: session.accessToken,
+                expires: session.expires,
+                google: {},
+                discord: {},
+            }
+            return sessionObj
+        },
+        // signIn: async (user, account, profile) => {
+        //     console.log("SignIn", user, account, profile)
+        //     return true
+        // }
+    },
+
     providers: [
         Providers.Discord(discordConfig),
         Providers.Google(googleConfig),
     ],
-    callbacks: {
-        session: async (session, user) => {
-            console.log("Session", session, user)
-            return Promise.resolve(session)
-        },
-        jwt: async (token, user, account, profile, isNewUser) => {
-            console.log("JWT", token, account, profile)
-            /* switch (account?.provider) {
-                case "discord": {
-                    const res: GenericObject = {
-                        google: token.google,
-                        discord: {
-                            id: account.id,
-                            tag: `${profile.username}#${profile.discriminator}`,
-                            av: token.image,
-                            accessToken: account.accessToken
-                        }
-                    }        
-                    return Promise.resolve(res)
-                }
-                case "google": {
-                    const res: GenericObject = {
-                        discord: token.discord,
-                        google: {
-                            name: profile.name,
-                            email: profile.email,
-                            av: token.image,
-                            accessToken: account.accessToken
-                        }
-                    }        
-                    return Promise.resolve(res)
-                }
 
-            } */
-            return Promise.resolve(token)
-        }
-    },
-    // database: process.env.DATABASE_URL
+    // database: process.env.DATABASE_URL,
+    adapter,
 }
 
 export default async (req: NextApiRequest, res: NextApiResponse) => nextAuth(req, res, options)
