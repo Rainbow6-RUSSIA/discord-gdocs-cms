@@ -1,12 +1,20 @@
 import { randomBytes } from "crypto"
-import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, Unique, UpdateDateColumn } from "typeorm"
+import {
+  BaseEntity,
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  Unique,
+  UpdateDateColumn,
+} from "typeorm"
 
 @Entity()
 @Unique(["accessToken", "sessionToken"])
 export class Session extends BaseEntity {
-  constructor (fields?: Pick<Session, "userId" | "expires"> & Partial<Session>) {
+  constructor(fields?: Pick<Session, "userId" | "expires"> & Partial<Session>) {
     super()
-    Object.assign(this, fields);
+    Object.assign(this, fields)
     this.sessionToken = fields?.sessionToken ?? randomBytes(32).toString("hex")
     this.accessToken = fields?.accessToken ?? randomBytes(32).toString("hex")
   }
@@ -15,16 +23,16 @@ export class Session extends BaseEntity {
   id!: string
 
   @Column("uuid")
-  userId!: string;
+  userId!: string
 
   @Column()
-  expires!: Date;
+  expires!: Date
 
   @Column()
-  sessionToken: string;
+  sessionToken: string
 
   @Column()
-  accessToken: string;
+  accessToken: string
 
   @CreateDateColumn()
   createDate!: Date
