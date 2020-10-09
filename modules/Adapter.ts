@@ -14,9 +14,9 @@ export const Adapter = (typeOrmConfig: string) => {
   async function getAdapter(appOptions: AppOptions) {
     const url = new URL(typeOrmConfig)
     const config: ConnectionOptions = {
-      type: url.protocol.slice(0, -1),
+      type: "postgres",
       host: url.hostname,
-      port: url.port,
+      port: parseInt(url.port),
       username: url.username,
       password: url.password,
       database: url.pathname.split("/")[1],
