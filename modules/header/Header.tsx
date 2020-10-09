@@ -79,7 +79,7 @@ export function Header(/* props: HeaderProps */) {
   const headerManager = useRequiredContext(HeaderManagerContext)
 
   const [session, loading] = (useSession() as unknown) as [
-    CustomSession,
+    CustomSession | null,
     boolean,
   ]
   console.log(session, loading)
@@ -113,12 +113,14 @@ export function Header(/* props: HeaderProps */) {
       </GooglePicker>
 
       <HeaderButton onClick={async () => signIn("discord")}>
-        {!loading && session.discord
+        {!loading && session?.discord
           ? `${session.discord.username}#${session.discord.discriminator}`
           : "Login via Discord"}
       </HeaderButton>
       <HeaderButton onClick={async () => signIn("google")}>
-        {!loading && session.google ? session.google.name : "Login via Google"}
+        {!loading && session?.google
+          ? session.google.name
+          : "Login via Google"}
       </HeaderButton>
       <HeaderButton onClick={async () => signOut()}>Logout</HeaderButton>
     </Container>
