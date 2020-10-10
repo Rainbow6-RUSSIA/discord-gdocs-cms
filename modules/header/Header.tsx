@@ -108,13 +108,14 @@ export function Header(/* props: HeaderProps */) {
         Backups
       </HeaderButton>
 
-      {!loading && session?.google
-        ? <GooglePicker accessToken={session.google.accessToken} onEvent={headerManager.handlePickerEvent}>
-            <HeaderButton>Select Spreadsheet</HeaderButton>
-          </GooglePicker>
-        : null
-      }
-      
+      {!loading && session?.google ? (
+        <GooglePicker
+          accessToken={session.google.accessToken}
+          onEvent={headerManager.handlePickerEvent}
+        >
+          <HeaderButton>Select Spreadsheet</HeaderButton>
+        </GooglePicker>
+      ) : null}
 
       <HeaderButton onClick={async () => signIn("discord")}>
         {!loading && session?.discord
@@ -122,9 +123,7 @@ export function Header(/* props: HeaderProps */) {
           : "Login via Discord"}
       </HeaderButton>
       <HeaderButton onClick={async () => signIn("google")}>
-        {!loading && session?.google
-          ? session.google.name
-          : "Login via Google"}
+        {!loading && session?.google ? session.google.name : "Login via Google"}
       </HeaderButton>
       <HeaderButton onClick={async () => signOut()}>Logout</HeaderButton>
     </Container>

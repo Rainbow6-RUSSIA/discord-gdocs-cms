@@ -43,7 +43,7 @@ const options: InitOptions = {
         const googleUser = await fetch(
           "https://www.googleapis.com/oauth2/v3/userinfo",
           { headers: { Authorization: `Bearer ${google.accessToken}` } },
-          ).then(d => d.json())
+        ).then(d => d.json())
         if (googleUser.error) {
           await google.remove()
         } else {
