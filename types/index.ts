@@ -26,4 +26,5 @@ export type GoogleProfile = {
   name: string
   picture: string
   sub: string
+  accessToken: string
 }

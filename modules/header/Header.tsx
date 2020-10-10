@@ -108,9 +108,13 @@ export function Header(/* props: HeaderProps */) {
         Backups
       </HeaderButton>
 
-      <GooglePicker onEvent={headerManager.handlePickerEvent}>
-        <HeaderButton>Select Spreadsheet</HeaderButton>
-      </GooglePicker>
+      {!loading && session?.google
+        ? <GooglePicker accessToken={session.google.accessToken} onEvent={headerManager.handlePickerEvent}>
+            <HeaderButton>Select Spreadsheet</HeaderButton>
+          </GooglePicker>
+        : null
+      }
+      
 
       <HeaderButton onClick={async () => signIn("discord")}>
         {!loading && session?.discord
