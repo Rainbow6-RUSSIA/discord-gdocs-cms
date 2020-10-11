@@ -44,7 +44,7 @@ const config = {
   },
   poweredByHeader: false,
   distDir: "build",
-  reactStrictMode: true
+  reactStrictMode: true,
 }
 
 try {

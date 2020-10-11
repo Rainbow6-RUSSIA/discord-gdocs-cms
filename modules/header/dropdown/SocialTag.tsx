@@ -20,7 +20,7 @@ const SocialProfile = styled.div`
   }
 
   svg:hover ~ span {
-    color: #F04747;
+    color: #f04747;
     transition: 0.5s;
   }
 
@@ -63,7 +63,7 @@ export const ServiceAuthButton = (props: GoogleProps | DiscordProps) => {
     const { id, avatar, username, discriminator } = props.profile
     return (
       <SocialProfile>
-        <UnlinkIcon onClick={props.handleUnlink}/>
+        <UnlinkIcon onClick={props.handleUnlink} />
         <Avatar
           src={`https://cdn.discordapp.com/avatars/${id}/${avatar}.webp?size=32`}
         />
@@ -75,7 +75,7 @@ export const ServiceAuthButton = (props: GoogleProps | DiscordProps) => {
   const { name, picture } = props.profile
   return (
     <SocialProfile>
-      <UnlinkIcon onClick={props.handleUnlink}/>
+      <UnlinkIcon onClick={props.handleUnlink} />
       <Avatar src={picture} />
       <span>{name}</span>
     </SocialProfile>

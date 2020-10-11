@@ -4,7 +4,7 @@ describe("formatTimestamp", () => {
   if (process.platform !== "win32") {
     it("formats timestamps correctly", () => {
       const base = new Date("2019-04-22T11:02:04.000Z")
-  
+
       const timestamps = [
         {
           date: new Date("2019-08-15T01:21:05.715Z"),
@@ -30,7 +30,7 @@ describe("formatTimestamp", () => {
           date: new Date("2019-04-19T00:08:15.000Z"),
           formatted: "Last Friday at 12:08 AM",
         },
-  
+
         // AM/PM
         {
           date: new Date("2019-04-22T23:59:59.999Z"),
@@ -64,7 +64,7 @@ describe("formatTimestamp", () => {
           date: new Date("2019-04-22T13:00:00.000Z"),
           formatted: "Today at 01:00 PM",
         },
-  
+
         // Edge cases
         {
           date: new Date("2019-04-29T11:02:04.000Z"),
@@ -83,7 +83,7 @@ describe("formatTimestamp", () => {
           formatted: "Tomorrow at 11:02 AM",
         },
       ]
-  
+
       for (const { date, formatted } of timestamps) {
         expect(formatTimestamp(date, base)).toEqual(formatted)
       }
