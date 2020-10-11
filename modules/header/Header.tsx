@@ -8,6 +8,7 @@ import { useRequiredContext } from "../../common/state/useRequiredContext"
 import type { CustomSession } from "../../types"
 import type { BackupsModalProps } from "../database/backup/modal/BackupsModal"
 import { EditorManagerContext } from "../editor/EditorManagerContext"
+import { ServiceAuthButton } from "./dropdown/SocialTag"
 import type { GooglePickerProps } from "./GooglePicker"
 import { HeaderManagerContext } from "./HeaderManagerContext"
 
@@ -29,6 +30,7 @@ const GooglePicker = dynamic<GooglePickerProps>(async () =>
 
 const Container = styled.header`
   display: flex;
+  flex-wrap: wrap;
 
   background: ${({ theme }) => theme.background.secondary};
 
@@ -46,7 +48,9 @@ const Container = styled.header`
     font-size: 15px;
     color: ${({ theme }) => theme.header.primary};
     line-height: 38px;
+  }
 
+  & > button {
     &:hover {
       border-bottom-color: ${({ theme }) => theme.accent.primary};
       text-decoration: none;
@@ -117,15 +121,20 @@ export function Header(/* props: HeaderProps */) {
         </GooglePicker>
       ) : null}
 
-      <HeaderButton onClick={async () => signIn("discord")}>
-        {!loading && session?.discord
-          ? `${session.discord.username}#${session.discord.discriminator}`
-          : "Login via Discord"}
-      </HeaderButton>
-      <HeaderButton onClick={async () => signIn("google")}>
-        {!loading && session?.google ? session.google.name : "Login via Google"}
-      </HeaderButton>
-      <HeaderButton onClick={async () => signOut()}>Logout</HeaderButton>
+      <ServiceAuthButton
+        type="google"
+        profile={session?.google}
+        handleSignIn={() => signIn("google")}
+        handleUnlink={console.log}
+      />
+      <ServiceAuthButton
+        type="discord"
+        profile={session?.discord}
+        handleSignIn={() => signIn("discord")}
+        handleUnlink={console.log}
+      />
+
+      <HeaderButton onClick={() => signOut()}>Logout</HeaderButton>
     </Container>
   ))
 }
