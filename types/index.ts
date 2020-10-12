@@ -15,7 +15,7 @@ export type DiscordProfile = {
   mfa_enabled: boolean
   public_flags: number
   username: string
-  guilds: DiscordPartialGuild
+  guilds: (DiscordPartialGuild & { isBotPresent: boolean })[]
 }
 
 export type DiscordPartialGuild = {
@@ -23,7 +23,8 @@ export type DiscordPartialGuild = {
   name: string
   icon: string
   owner: boolean
-  permissions: string
+  permissions_new: string
+  features: string[]
 }
 
 export type GoogleProfile = {

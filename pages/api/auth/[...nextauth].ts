@@ -4,9 +4,11 @@ import type { InitOptions } from "next-auth"
 import type { Adapter as IAdapter } from "next-auth/adapters"
 import Providers from "next-auth/providers"
 import { Adapter } from "../../../modules/AuthAdapter"
+import { BotClient } from "../../../modules/bot"
 import { Account } from "../../../modules/models/Account"
 import type {
   CustomSession,
+  DiscordPartialGuild,
   DiscordProfile,
   GoogleProfile,
 } from "../../../types"
@@ -64,18 +66,22 @@ const options: InitOptions = {
           },
         ).then(d => d.json())
 
-        const discordGuilds = await fetch(
+        const discordGuilds: DiscordPartialGuild[] = await fetch(
           "https://discord.com/api/users/@me/guilds",
           {
             headers: { Authorization: `Bearer ${discord.accessToken}` },
           },
         ).then(d => d.json())
 
+        console.log("discordUser", discordUser)
+        console.log("discordGuilds", discordGuilds.length ?? discordGuilds)
+        
         if (discordUser.message) {
           await discord.remove()
         } else {
           sessionObj.discord = discordUser
-          sessionObj.discord.guilds = discordGuilds
+          sessionObj.discord.guilds = Array.isArray(discordGuilds) ? discordGuilds.map(g => ({ ...g, isBotPresent: BotClient.guilds.cache.has(g.id) })) : []
+          
         }
       }
 
