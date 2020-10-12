@@ -10,7 +10,7 @@ export class ExternalServiceManager {
   @observable discordUser: DiscordProfile | null = null
   @observable sheetId = ""
   @observable guild?: Guild | null = null
-  @observable session?: CustomSession
+  @observable session?: CustomSession | null
 
   @action link = (type: "Discord" | "Google") => signIn(type.toLowerCase())
 
@@ -28,6 +28,7 @@ export class ExternalServiceManager {
 
   @action init = async () => {
     const session = await getCustomSession()
+    console.log(session)
     this.ready = true
     this.session = session
     this.discordUser = session?.discord ?? null
@@ -35,6 +36,11 @@ export class ExternalServiceManager {
   }
 
   constructor() {
+    try {
+      throw new Error("MANAGER CONSTRUCTED")
+    } catch (error) {
+      console.warn(error)
+    }
     void this.init()
   }
 }

@@ -6,5 +6,6 @@ import type { ExternalServiceManagerProp } from "../BaseAccountModal"
 export function GoogleBody({
   externalServiceManager,
 }: ExternalServiceManagerProp) {
-  return useObserver(() => "GoogleBody")
+  const user = externalServiceManager.googleUser!
+  return useObserver(() => <span>GoogleBody</span>)
 }

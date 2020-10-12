@@ -10,6 +10,8 @@ import { BaseModalHeader } from "../../../common/modal/styles/BaseModalHeader"
 import { useRequiredContext } from "../../../common/state/useRequiredContext"
 import type { SocialTypeProps } from "../../../types"
 import type { ExternalServiceManager } from "../ExternalServiceManager"
+import { DiscordBody } from "./services/DiscordBody"
+import { GoogleBody } from "./services/GoogleBody"
 
 export type ExternalServiceManagerProp = {
   externalServiceManager: ExternalServiceManager
@@ -17,21 +19,31 @@ export type ExternalServiceManagerProp = {
 
 export function BaseAccountModal({
   type,
-  externalServiceManager,
+  externalServiceManager: serviceManager,
 }: SocialTypeProps & ExternalServiceManagerProp) {
   const modal = useRequiredContext(ModalContext)
 
   const [loading, setLoading] = useState(false)
   const handleUnlink = async () => {
     setLoading(true)
-    await externalServiceManager.unlink(type)
+    await serviceManager.unlink(type)
     modal.dismiss()
   }
 
   return useObserver(() => (
     <BaseModal>
       <BaseModalHeader>{type} Settings</BaseModalHeader>
-      <BaseModalBody>Body</BaseModalBody>
+      <BaseModalBody>
+        {!serviceManager.session?.[type.toLowerCase() as "discord" | "google"]
+          ? `Sign in via ${type} is required`
+          : null}
+        {type === "Google" && serviceManager.googleUser ? (
+          <GoogleBody externalServiceManager={serviceManager} />
+        ) : null}
+        {type === "Discord" && serviceManager.discordUser ? (
+          <DiscordBody externalServiceManager={serviceManager} />
+        ) : null}
+      </BaseModalBody>
       <BaseModalFooter>
         <Button size="medium" accent="danger" onClick={handleUnlink}>
           Unlink {type}{" "}
