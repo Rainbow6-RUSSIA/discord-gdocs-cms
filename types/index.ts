@@ -28,3 +28,5 @@ export type GoogleProfile = {
   sub: string
   accessToken: string
 }
+
+export type SocialTypeProps = { type: "Discord" | "Google" }

@@ -6,6 +6,7 @@
     "start": "NODE_OPTIONS=--max-http-header-size=81920 next start",
     "build": "next build",
     "dev": "NODE_OPTIONS=--max-http-header-size=81920 NODE_OPTIONS=--inspect next dev",
+    "analyze": "ANALYZE=true next build",
     "test": "NODE_ENV=test TZ=UTC jest",
     "test:watch": "yarn run test --watch",
     "test:cov": "yarn run test --coverage",

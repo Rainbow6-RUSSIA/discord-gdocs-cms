@@ -1,19 +1,21 @@
 import { useObserver } from "mobx-react-lite"
 import React from "react"
 import styled from "styled-components"
+import { LoadingIcon } from "../../../common/icons/Loading"
+import { ModalManagerContext } from "../../../common/modal/ModalManagerContext"
 import { useRequiredContext } from "../../../common/state/useRequiredContext"
-import LoadingSvg from "../../../public/static/loading.svg"
-import UnlinkSvg from "../../../public/static/unlink.svg"
+import type { SocialTypeProps } from "../../../types"
 import { ExternalServiceManagerContext } from "../ExternalServiceManagerContext"
+import { BaseAccountModal } from "./BaseAccountModal"
 
-const SocialProfile = styled.div`
+export const SocialProfile = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: default;
 
-  & > * {
-    margin: 0 5px;
+  & > *:not(:last-child) {
+    margin-right: 5px;
     transition: 0.5s;
   }
 
@@ -33,23 +35,18 @@ const SocialProfile = styled.div`
   }
 `
 
-const Avatar = styled.img`
+export const Avatar = styled.img`
   height: 32px;
   width: 32px;
   border-radius: 50%;
 `
 
-const LoadingIcon = styled(LoadingSvg)`
-  fill: ${({ theme }) => theme.header.primary};
-`
-
-type SocialProps = { type: "Discord" | "Google" }
-
-export const ServiceAuthButton = ({ type }: SocialProps) => {
-  const headerManager = useRequiredContext(ExternalServiceManagerContext)
+export const ServiceAuthButton = ({ type }: SocialTypeProps) => {
+  const serviceManager = useRequiredContext(ExternalServiceManagerContext)
+  const modalManager = useRequiredContext(ModalManagerContext)
 
   const Fallback = (
-    <button onClick={() => headerManager.link(type)}>Login via {type}</button>
+    <button onClick={() => serviceManager.link(type)}>Login via {type}</button>
   )
 
   const Loading = (
@@ -58,15 +55,21 @@ export const ServiceAuthButton = ({ type }: SocialProps) => {
     </SocialProfile>
   )
 
+  const handleClick = () =>
+    modalManager.spawn({
+      render: () => (
+        <BaseAccountModal type={type} externalServiceManager={serviceManager} />
+      ),
+    })
+
   return useObserver(() => {
-    if (!headerManager.ready) return Loading
+    if (!serviceManager.ready) return Loading
 
     if (type === "Discord") {
-      if (!headerManager.discordUser) return Fallback
-      const { id, avatar, username, discriminator } = headerManager.discordUser
+      if (!serviceManager.discordUser) return Fallback
+      const { id, avatar, username, discriminator } = serviceManager.discordUser
       return (
-        <SocialProfile>
-          <UnlinkSvg onClick={() => headerManager.unlink(type)} />
+        <SocialProfile onClick={handleClick}>
           <Avatar
             src={`https://cdn.discordapp.com/avatars/${id}/${avatar}.webp?size=32`}
           />
@@ -77,11 +80,10 @@ export const ServiceAuthButton = ({ type }: SocialProps) => {
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (type === "Google") {
-      if (!headerManager.googleUser) return Fallback
-      const { name, picture } = headerManager.googleUser
+      if (!serviceManager.googleUser) return Fallback
+      const { name, picture } = serviceManager.googleUser
       return (
-        <SocialProfile>
-          <UnlinkSvg onClick={() => headerManager.unlink(type)} />
+        <SocialProfile onClick={handleClick}>
           <Avatar src={picture} />
           <span>{name}</span>
         </SocialProfile>

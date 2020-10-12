@@ -61,17 +61,15 @@ export default class MyApp extends App {
           <ThemeProvider theme={this.appearanceManager.theme}>
             <GlobalStyle />
             <ErrorBoundary>
-              <AuthProvider session={pageProps.session}>
-                <AppearanceManagerProvider value={this.appearanceManager}>
-                  <ModalManagerProvider value={this.modalManager}>
-                    <PopoverManagerProvider value={this.popoverManager}>
-                      <Component {...pageProps} />
-                      <ModalOverlay />
-                      <PopoverOverlay />
-                    </PopoverManagerProvider>
-                  </ModalManagerProvider>
-                </AppearanceManagerProvider>
-              </AuthProvider>
+              <AppearanceManagerProvider value={this.appearanceManager}>
+                <ModalManagerProvider value={this.modalManager}>
+                  <PopoverManagerProvider value={this.popoverManager}>
+                    <Component {...pageProps} />
+                    <ModalOverlay />
+                    <PopoverOverlay />
+                  </PopoverManagerProvider>
+                </ModalManagerProvider>
+              </AppearanceManagerProvider>
             </ErrorBoundary>
           </ThemeProvider>
         )}

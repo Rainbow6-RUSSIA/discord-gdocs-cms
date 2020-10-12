@@ -6,7 +6,7 @@ import { ModalManagerContext } from "../../common/modal/ModalManagerContext"
 import { useRequiredContext } from "../../common/state/useRequiredContext"
 import type { BackupsModalProps } from "../database/backup/modal/BackupsModal"
 import { EditorManagerContext } from "../editor/EditorManagerContext"
-import { ServiceAuthButton } from "./account/SocialTag"
+import { ServiceAuthButton } from "./account/ServiceAuthButton"
 
 const AppearanceModal = dynamic<Record<never, unknown>>(async () =>
   import("../../common/style/AppearanceModal").then(
@@ -40,9 +40,7 @@ const Container = styled.header`
     font-size: 15px;
     color: ${({ theme }) => theme.header.primary};
     line-height: 38px;
-  }
 
-  & > button {
     &:hover {
       border-bottom-color: ${({ theme }) => theme.accent.primary};
       text-decoration: none;

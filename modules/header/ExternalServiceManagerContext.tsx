@@ -4,7 +4,7 @@ import type { ExternalServiceManager } from "./ExternalServiceManager"
 export const ExternalServiceManagerContext = createContext<ExternalServiceManager | null>(
   null,
 )
-ExternalServiceManagerContext.displayName = "EditorManagerContext"
+ExternalServiceManagerContext.displayName = "ExternalServiceManagerContext"
 
 export const ExternalServiceManagerProvider =
   ExternalServiceManagerContext.Provider
