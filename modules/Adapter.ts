@@ -201,7 +201,7 @@ export const Adapter = (typeOrmConfig: string) => {
       updateSession,
       deleteSession,
 
-      getUserByEmail: async (...args: any) => console.log(args),
+      getUserByEmail: () => {},
     })
   }
 

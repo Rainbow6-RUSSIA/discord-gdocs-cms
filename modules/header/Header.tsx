@@ -1,5 +1,4 @@
 import { useObserver } from "mobx-react-lite"
-import {} from "next-auth/client"
 import dynamic from "next/dynamic"
 import React from "react"
 import styled, { css } from "styled-components"
@@ -8,7 +7,6 @@ import { useRequiredContext } from "../../common/state/useRequiredContext"
 import type { BackupsModalProps } from "../database/backup/modal/BackupsModal"
 import { EditorManagerContext } from "../editor/EditorManagerContext"
 import { ServiceAuthButton } from "./account/SocialTag"
-import { HeaderManagerContext } from "./HeaderManagerContext"
 
 const AppearanceModal = dynamic<Record<never, unknown>>(async () =>
   import("../../common/style/AppearanceModal").then(
@@ -74,7 +72,6 @@ export type HeaderProps = {
 export function Header(/* props: HeaderProps */) {
   const modalManager = useRequiredContext(ModalManagerContext)
   const editorManager = useRequiredContext(EditorManagerContext)
-  const headerManager = useRequiredContext(HeaderManagerContext)
 
   return useObserver(() => (
     <Container>

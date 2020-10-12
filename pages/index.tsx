@@ -14,8 +14,8 @@ import { Editor } from "../modules/editor/Editor"
 import { EditorManager } from "../modules/editor/EditorManager"
 import { EditorManagerProvider } from "../modules/editor/EditorManagerContext"
 import { Header } from "../modules/header/Header"
-import { HeaderManager } from "../modules/header/HeaderManager"
-import { HeaderManagerProvider } from "../modules/header/HeaderManagerContext"
+import { ExternalServiceManager } from "../modules/header/ExternalServiceManager"
+import { ExternalServiceManagerProvider } from "../modules/header/ExternalServiceManagerContext"
 import type { MessageData } from "../modules/message/data/MessageData"
 import { decodeMessage } from "../modules/message/helpers/decodeMessage"
 import { INITIAL_MESSAGE_DATA } from "../modules/message/initialMessageData"
@@ -100,7 +100,9 @@ export default function Main(props: MainProps) {
   const { message, mobile } = props
 
   const editorManager = useLazyValue(() => new EditorManager(message))
-  const headerManager = useLazyValue(() => new HeaderManager())
+  const externalServiceManager = useLazyValue(
+    () => new ExternalServiceManager(),
+  )
 
   // const cancelRef = useRef<() => void>()
   // useAutorun(() => {
@@ -145,9 +147,9 @@ export default function Main(props: MainProps) {
           <meta key="referrer" name="referrer" content="strict-origin" />
         </PageHead>
         <Container translate="no">
-          <HeaderManagerProvider value={headerManager}>
+          <ExternalServiceManagerProvider value={externalServiceManager}>
             <Header />
-          </HeaderManagerProvider>
+          </ExternalServiceManagerProvider>
           {mobile && (
             <TabSwitcher>
               <Tab

@@ -1,9 +1,10 @@
-import { getSession, signIn, signOut, useSession } from "next-auth/client"
+import { useObserver } from "mobx-react-lite"
 import React from "react"
 import styled from "styled-components"
+import { useRequiredContext } from "../../../common/state/useRequiredContext"
 import LoadingSvg from "../../../public/static/loading.svg"
 import UnlinkSvg from "../../../public/static/unlink.svg"
-import type { CustomSession } from "../../../types"
+import { ExternalServiceManagerContext } from "../ExternalServiceManagerContext"
 
 const SocialProfile = styled.div`
   display: flex;
@@ -45,13 +46,10 @@ const LoadingIcon = styled(LoadingSvg)`
 type SocialProps = { type: "Discord" | "Google" }
 
 export const ServiceAuthButton = ({ type }: SocialProps) => {
-  const [session, loading] = (useSession() as unknown) as [
-    CustomSession | null,
-    boolean,
-  ]
+  const headerManager = useRequiredContext(ExternalServiceManagerContext)
 
   const Fallback = (
-    <button onClick={() => signIn(type.toLowerCase())}>Login via {type}</button>
+    <button onClick={() => headerManager.link(type)}>Login via {type}</button>
   )
 
   const Loading = (
@@ -60,42 +58,36 @@ export const ServiceAuthButton = ({ type }: SocialProps) => {
     </SocialProfile>
   )
 
-  if (loading) return Loading
+  return useObserver(() => {
+    if (!headerManager.ready) return Loading
 
-  if (type === "Discord") {
-    if (!session?.discord) return Fallback
-    const { id, avatar, username, discriminator } = session.discord
-    return (
-      <SocialProfile>
-        <UnlinkSvg
-          onClick={() =>
-            fetch("/api/auth/provider/discord/unlink", { method: "POST" }).then((res) => void (res.status === 204 && signOut()))
-          }
-        />
-        <Avatar
-          src={`https://cdn.discordapp.com/avatars/${id}/${avatar}.webp?size=32`}
-        />
-        <span>{`${username}#${discriminator}`}</span>
-      </SocialProfile>
-    )
-  }
+    if (type === "Discord") {
+      if (!headerManager.discordUser) return Fallback
+      const { id, avatar, username, discriminator } = headerManager.discordUser
+      return (
+        <SocialProfile>
+          <UnlinkSvg onClick={() => headerManager.unlink(type)} />
+          <Avatar
+            src={`https://cdn.discordapp.com/avatars/${id}/${avatar}.webp?size=32`}
+          />
+          <span>{`${username}#${discriminator}`}</span>
+        </SocialProfile>
+      )
+    }
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (type === "Google") {
-    if (!session?.google) return Fallback
-    const { name, picture } = session.google
-    return (
-      <SocialProfile>
-        <UnlinkSvg
-          onClick={() =>
-            fetch("/api/auth/provider/google/unlink", { method: "POST" }).then((res) => void (res.status === 204 && signOut()))
-          }
-        />
-        <Avatar src={picture} />
-        <span>{name}</span>
-      </SocialProfile>
-    )
-  }
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (type === "Google") {
+      if (!headerManager.googleUser) return Fallback
+      const { name, picture } = headerManager.googleUser
+      return (
+        <SocialProfile>
+          <UnlinkSvg onClick={() => headerManager.unlink(type)} />
+          <Avatar src={picture} />
+          <span>{name}</span>
+        </SocialProfile>
+      )
+    }
 
-  return null
+    return null
+  })
 }

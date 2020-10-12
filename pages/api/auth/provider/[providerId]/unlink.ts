@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import { getSession, getProviders } from "next-auth/client"
+import { getSession } from "next-auth/client"
 import { Account } from "../../../../../modules/models/Account"
 import { Session } from "../../../../../modules/models/Session"
 import { User } from "../../../../../modules/models/User"
@@ -41,7 +41,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       }
 
       return res.status(200).end()
-
     }
     throw ""
   } catch {
