@@ -1,14 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import { getSession } from "next-auth/client"
+import { getCustomSession } from "../../../../../modules/AuthAdapter"
 import { Account } from "../../../../../modules/models/Account"
 import { Session } from "../../../../../modules/models/Session"
 import { User } from "../../../../../modules/models/User"
-import type { CustomSession } from "../../../../../types"
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const session = ((await getSession({
-    req,
-  })) as unknown) as CustomSession | null
+  const session = await getCustomSession({req})
   const { providerId } = req.query
 
   try {

@@ -15,6 +15,15 @@ export type DiscordProfile = {
   mfa_enabled: boolean
   public_flags: number
   username: string
+  guilds: DiscordPartialGuild
+}
+
+export type DiscordPartialGuild = {
+  id: string
+  name: string
+  icon: string
+  owner: boolean
+  permissions: string
 }
 
 export type GoogleProfile = {

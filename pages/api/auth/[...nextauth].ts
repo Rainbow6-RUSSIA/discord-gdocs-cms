@@ -3,9 +3,13 @@ import nextAuth from "next-auth"
 import type { InitOptions } from "next-auth"
 import type { Adapter as IAdapter } from "next-auth/adapters"
 import Providers from "next-auth/providers"
-import { Adapter } from "../../../modules/Adapter"
+import { Adapter } from "../../../modules/AuthAdapter"
 import { Account } from "../../../modules/models/Account"
-import type { CustomSession } from "../../../types"
+import type {
+  CustomSession,
+  DiscordProfile,
+  GoogleProfile,
+} from "../../../types"
 
 const discordConfig = {
   clientId: process.env.DISCORD_CLIENT_ID!,
@@ -40,25 +44,38 @@ const options: InitOptions = {
       const discord = accounts.find(a => a.providerId === "discord")
 
       if (google) {
-        const googleUser = await fetch(
-          "https://www.googleapis.com/oauth2/v3/userinfo",
-          { headers: { Authorization: `Bearer ${google.accessToken}` } },
-        ).then(d => d.json())
+        const googleUser: GoogleProfile & {
+          error: string
+        } = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+          headers: { Authorization: `Bearer ${google.accessToken}` },
+        }).then(d => d.json())
         if (googleUser.error) {
           await google.remove()
         } else {
           sessionObj.google = googleUser
-          sessionObj.google!.accessToken = google.accessToken!
+          sessionObj.google.accessToken = google.accessToken!
         }
       }
       if (discord) {
-        const discordUser = await fetch("https://discord.com/api/users/@me", {
-          headers: { Authorization: `Bearer ${discord.accessToken}` },
-        }).then(d => d.json())
+        const discordUser: DiscordProfile & { message: string } = await fetch(
+          "https://discord.com/api/users/@me",
+          {
+            headers: { Authorization: `Bearer ${discord.accessToken}` },
+          },
+        ).then(d => d.json())
+
+        const discordGuilds = await fetch(
+          "https://discord.com/api/users/@me/guilds",
+          {
+            headers: { Authorization: `Bearer ${discord.accessToken}` },
+          },
+        ).then(d => d.json())
+
         if (discordUser.message) {
           await discord.remove()
         } else {
           sessionObj.discord = discordUser
+          sessionObj.discord.guilds = discordGuilds
         }
       }
 
