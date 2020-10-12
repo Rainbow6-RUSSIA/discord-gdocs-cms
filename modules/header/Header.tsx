@@ -1,15 +1,13 @@
 import { useObserver } from "mobx-react-lite"
-import { useSession, signIn, signOut } from "next-auth/client"
+import {} from "next-auth/client"
 import dynamic from "next/dynamic"
 import React from "react"
 import styled, { css } from "styled-components"
 import { ModalManagerContext } from "../../common/modal/ModalManagerContext"
 import { useRequiredContext } from "../../common/state/useRequiredContext"
-import type { CustomSession } from "../../types"
 import type { BackupsModalProps } from "../database/backup/modal/BackupsModal"
 import { EditorManagerContext } from "../editor/EditorManagerContext"
-import { ServiceAuthButton } from "./dropdown/SocialTag"
-import type { GooglePickerProps } from "./GooglePicker"
+import { ServiceAuthButton } from "./account/SocialTag"
 import { HeaderManagerContext } from "./HeaderManagerContext"
 
 const AppearanceModal = dynamic<Record<never, unknown>>(async () =>
@@ -22,10 +20,6 @@ const BackupsModal = dynamic<BackupsModalProps>(async () =>
   import("../database/backup/modal/BackupsModal").then(
     module => module.BackupsModal,
   ),
-)
-
-const GooglePicker = dynamic<GooglePickerProps>(async () =>
-  import("./GooglePicker").then(module => module.default),
 )
 
 const Container = styled.header`
@@ -82,12 +76,6 @@ export function Header(/* props: HeaderProps */) {
   const editorManager = useRequiredContext(EditorManagerContext)
   const headerManager = useRequiredContext(HeaderManagerContext)
 
-  const [session, loading] = (useSession() as unknown) as [
-    CustomSession | null,
-    boolean,
-  ]
-  console.log(session, loading)
-
   return useObserver(() => (
     <Container>
       <HeaderLink href="https://google.com" rel="noopener">
@@ -112,29 +100,8 @@ export function Header(/* props: HeaderProps */) {
         Backups
       </HeaderButton>
 
-      {!loading && session?.google ? (
-        <GooglePicker
-          accessToken={session.google.accessToken}
-          onEvent={headerManager.handlePickerEvent}
-        >
-          <HeaderButton>Select Spreadsheet</HeaderButton>
-        </GooglePicker>
-      ) : null}
-
-      <ServiceAuthButton
-        type="google"
-        profile={session?.google}
-        handleSignIn={() => signIn("google")}
-        handleUnlink={console.log}
-      />
-      <ServiceAuthButton
-        type="discord"
-        profile={session?.discord}
-        handleSignIn={() => signIn("discord")}
-        handleUnlink={console.log}
-      />
-
-      <HeaderButton onClick={() => signOut()}>Logout</HeaderButton>
+      <ServiceAuthButton type="Google" />
+      <ServiceAuthButton type="Discord" />
     </Container>
   ))
 }
