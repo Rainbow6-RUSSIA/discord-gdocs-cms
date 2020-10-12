@@ -5,7 +5,7 @@ import { Session } from "../../../../../modules/models/Session"
 import { User } from "../../../../../modules/models/User"
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const session = await getCustomSession({req})
+  const session = await getCustomSession({ req })
   const { providerId } = req.query
 
   try {

@@ -1,7 +1,8 @@
 import type { Guild } from "discord.js"
 import { action, observable } from "mobx"
-import { getSession, signIn, signOut } from "next-auth/client"
+import { signIn, signOut } from "next-auth/client"
 import type { CustomSession, DiscordProfile, GoogleProfile } from "../../types"
+import { getCustomSession } from "../AuthAdapter"
 
 export class ExternalServiceManager {
   @observable ready = false
@@ -26,9 +27,7 @@ export class ExternalServiceManager {
   @action pickSheet() {}
 
   @action init = async () => {
-    const session = ((await getSession()) as unknown) as
-      | CustomSession
-      | undefined
+    const session = await getCustomSession()
     this.ready = true
     this.session = session
     this.discordUser = session?.discord ?? null

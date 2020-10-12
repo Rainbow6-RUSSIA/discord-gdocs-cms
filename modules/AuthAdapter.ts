@@ -212,4 +212,6 @@ export const Adapter = (typeOrmConfig: string) => {
   }
 }
 
-export const getCustomSession = getSession as unknown as (...args: Parameters<typeof getSession>) => Promise<CustomSession | null | undefined>
+export const getCustomSession = (getSession as unknown) as (
+  ...args: Parameters<typeof getSession>
+) => Promise<CustomSession | null | undefined>
