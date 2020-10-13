@@ -2,9 +2,35 @@ import React, { Component } from "react"
 
 const CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string
 
+export type GoogleDriveItem = {
+  description: string
+  driveSuccess: boolean
+  embedUrl: string
+  iconUrl: string
+  id: string
+  lastEditedUtc: number
+  mimeType: string
+  name: string
+  parentId: string
+  serviceId: string
+  sizeBytes: number
+  type: string
+  url: string
+}
+
+export type GooglePickerCallback =
+  | {
+      action: "loaded" | "cancel"
+    }
+  | {
+      action: "picked"
+      docs: GoogleDriveItem[]
+      viewToken: unknown[]
+    }
+
 export type GooglePickerProps = {
   children: JSX.Element
-  onEvent: (event: unknown) => unknown
+  onEvent: (event: GooglePickerCallback) => unknown
   accessToken: string
 }
 

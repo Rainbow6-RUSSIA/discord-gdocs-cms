@@ -13,17 +13,19 @@ import type { ExternalServiceManager } from "../ExternalServiceManager"
 import { DiscordBody } from "./services/DiscordBody"
 import { GoogleBody } from "./services/GoogleBody"
 
-export type ExternalServiceManagerProp = {
+export type AccountModalProp = {
   externalServiceManager: ExternalServiceManager
+  loading: boolean
 }
 
 export function BaseAccountModal({
   type,
   externalServiceManager: serviceManager,
-}: SocialTypeProps & ExternalServiceManagerProp) {
+  loading = false,
+}: SocialTypeProps & AccountModalProp) {
   const modal = useRequiredContext(ModalContext)
 
-  const [loading, setLoading] = useState(false)
+  const [isLoading, setLoading] = useState(loading)
   const handleUnlink = async () => {
     setLoading(true)
     await serviceManager.unlink(type)
@@ -38,16 +40,22 @@ export function BaseAccountModal({
           ? `Sign in via ${type} is required`
           : null}
         {type === "Google" && serviceManager.googleUser ? (
-          <GoogleBody externalServiceManager={serviceManager} />
+          <GoogleBody
+            loading={isLoading}
+            externalServiceManager={serviceManager}
+          />
         ) : null}
         {type === "Discord" && serviceManager.discordUser ? (
-          <DiscordBody externalServiceManager={serviceManager} />
+          <DiscordBody
+            loading={isLoading}
+            externalServiceManager={serviceManager}
+          />
         ) : null}
       </BaseModalBody>
       <BaseModalFooter>
         <Button size="medium" accent="danger" onClick={handleUnlink}>
           Unlink {type}{" "}
-          {loading ? <LoadingIcon style={{ verticalAlign: "sub" }} /> : null}
+          {isLoading ? <LoadingIcon style={{ verticalAlign: "sub" }} /> : null}
         </Button>
         <Button size="medium" onClick={() => modal.dismiss()}>
           Close

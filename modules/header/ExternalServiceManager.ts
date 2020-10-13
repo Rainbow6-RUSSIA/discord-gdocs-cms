@@ -3,12 +3,18 @@ import { action, observable } from "mobx"
 import { signIn, signOut } from "next-auth/client"
 import type { CustomSession, DiscordProfile, GoogleProfile } from "../../types"
 import { getCustomSession } from "../AuthAdapter"
+import type {
+  GoogleDriveItem,
+  GooglePickerCallback,
+} from "./account/GooglePicker"
 
 export class ExternalServiceManager {
   @observable ready = false
   @observable googleUser: GoogleProfile | null = null
   @observable discordUser: DiscordProfile | null = null
-  @observable sheetId = ""
+  @observable sheet:
+    | (Partial<GoogleDriveItem> & Pick<GoogleDriveItem, "id">)
+    | null = null
   @observable guild?: Guild | null = null
   @observable session?: CustomSession | null
 
@@ -24,7 +30,16 @@ export class ExternalServiceManager {
     return this.init()
   }
 
-  @action pickSheet() {}
+  @action handleSheetSelection = (event: GooglePickerCallback) => {
+    console.log(event)
+    if (event.action === "picked") {
+      this.sheet = event.docs[0]
+    }
+  }
+
+  @action handleCreateNew = () => {
+    console.log("CREATE NEW")
+  }
 
   @action init = async () => {
     const session = await getCustomSession()
@@ -36,11 +51,6 @@ export class ExternalServiceManager {
   }
 
   constructor() {
-    try {
-      throw new Error("MANAGER CONSTRUCTED")
-    } catch (error) {
-      console.warn(error)
-    }
     void this.init()
   }
 }
