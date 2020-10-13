@@ -20,12 +20,11 @@ export type AccountModalProp = {
 
 export function BaseAccountModal({
   type,
-  externalServiceManager: serviceManager,
-  loading = false,
-}: SocialTypeProps & AccountModalProp) {
+  externalServiceManager: serviceManager
+}: SocialTypeProps & Omit<AccountModalProp, "loading">) {
   const modal = useRequiredContext(ModalContext)
 
-  const [isLoading, setLoading] = useState(loading)
+  const [isLoading, setLoading] = useState(false)
   const handleUnlink = async () => {
     setLoading(true)
     await serviceManager.unlink(type)
