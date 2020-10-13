@@ -4,8 +4,8 @@ import { getCustomSession } from "../../../modules/AuthAdapter"
 import { BotClient } from "../../../modules/bot"
 
 export type Responce = {
-    guild: Guild,
-    members: GuildMember[]
+  guild: Guild
+  members: GuildMember[]
 }[]
 
 export default async function handler(
@@ -25,7 +25,7 @@ export default async function handler(
       .filter(g => guilds.has(g.id))
       .map((g): Responce[0] => ({
         guild: g,
-        members: g.members.cache.array()
+        members: g.members.cache.array(),
       })),
   )
 }

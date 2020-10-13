@@ -4,15 +4,9 @@ import styled from "styled-components"
 import { Button } from "../../../../common/input/Button"
 import { InputField } from "../../../../common/input/InputField"
 import { FlexContainer } from "../../../editor/styles/FlexContainer"
-import type { ExternalServiceManagerProp } from "../BaseAccountModal"
+import type { AccountModalProp } from "../BaseAccountModal"
 
-// const CreateBackupButton = styled(Button)`
-//   width: 80px;
-// `
-
-export function DiscordBody({
-  externalServiceManager,
-}: ExternalServiceManagerProp) {
+export function DiscordBody({ externalServiceManager }: AccountModalProp) {
   const user = externalServiceManager.discordUser!
   const [value, setValue] = useState(`${user.username}#${user.discriminator}`)
   return useObserver(() => (
@@ -26,7 +20,9 @@ export function DiscordBody({
       <Button
         disabled
         // onClick={}
-      > Save
+      >
+        {" "}
+        Save
       </Button>
     </FlexContainer>
   ))

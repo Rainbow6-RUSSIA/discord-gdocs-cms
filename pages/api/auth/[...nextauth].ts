@@ -73,15 +73,16 @@ const options: InitOptions = {
           },
         ).then(d => d.json())
 
-        console.log("discordUser", discordUser)
-        console.log("discordGuilds", discordGuilds.length ?? discordGuilds)
-        
         if (discordUser.message) {
           await discord.remove()
         } else {
           sessionObj.discord = discordUser
-          sessionObj.discord.guilds = Array.isArray(discordGuilds) ? discordGuilds.map(g => ({ ...g, isBotPresent: BotClient.guilds.cache.has(g.id) })) : []
-          
+          sessionObj.discord.guilds = Array.isArray(discordGuilds)
+            ? discordGuilds.map(g => ({
+                ...g,
+                isBotPresent: BotClient.guilds.cache.has(g.id),
+              }))
+            : []
         }
       }
 
