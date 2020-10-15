@@ -20,7 +20,7 @@ export type AccountModalProp = {
 
 export function BaseAccountModal({
   type,
-  externalServiceManager: serviceManager
+  externalServiceManager: serviceManager,
 }: SocialTypeProps & Omit<AccountModalProp, "loading">) {
   const modal = useRequiredContext(ModalContext)
 
