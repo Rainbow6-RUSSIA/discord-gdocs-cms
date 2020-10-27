@@ -1,11 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import nextAuth from "next-auth"
 import type { InitOptions } from "next-auth"
+import type { SessionBase } from "next-auth/_utils"
 import type { Adapter as IAdapter } from "next-auth/adapters"
 import Providers from "next-auth/providers"
 import { Adapter } from "../../../modules/AuthAdapter"
 import { BotClient } from "../../../modules/bot"
 import { Account } from "../../../modules/models/Account"
+import type { User } from "../../../modules/models/User"
 import type {
   CustomSession,
   DiscordPartialGuild,
@@ -28,9 +30,9 @@ const googleConfig = {
 
 const adapter = (Adapter(process.env.DATABASE_URL!) as unknown) as IAdapter // сука кривые типы
 
-const options: InitOptions = {
+const options = {
   callbacks: {
-    session: async (session, user) => {
+    session: async (session: SessionBase, user: User) => {
       const sessionObj: CustomSession = {
         id: user.id,
         accessToken: session.accessToken!,
@@ -95,4 +97,4 @@ const options: InitOptions = {
 }
 
 export default async (req: NextApiRequest, res: NextApiResponse) =>
-  nextAuth(req, res, options)
+  nextAuth(req, res, options as unknown as InitOptions)
