@@ -71,7 +71,9 @@ export const ServiceAuthButton = ({ type }: SocialTypeProps) => {
       return (
         <SocialProfile onClick={handleClick}>
           <Avatar
-            src={`https://cdn.discordapp.com/avatars/${id}/${avatar}.${avatar.startsWith("a_") ? "gif" : "png"}?size=32`}
+            src={`https://cdn.discordapp.com/avatars/${id}/${avatar}.${
+              avatar.startsWith("a_") ? "gif" : "png"
+            }?size=32`}
           />
           <span>{`${username}#${discriminator}`}</span>
         </SocialProfile>

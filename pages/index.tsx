@@ -1,12 +1,8 @@
 import { useObserver } from "mobx-react-lite"
 import type { GetServerSidePropsContext } from "next"
-// import Router from "next/router"
-import React, { useEffect, /* useRef, */ useState } from "react"
+import React, { useEffect, useState } from "react"
 import styled, { css, ThemeProvider } from "styled-components"
-// import { base64UrlEncode } from "../common/base64/base64UrlEncode"
-import { useWindowEvent } from "../common/dom/useWindowEvent"
 import { PageHead } from "../common/PageHead"
-// import { useAutorun } from "../common/state/useAutorun"
 import { useLazyValue } from "../common/state/useLazyValue"
 import { useRequiredContext } from "../common/state/useRequiredContext"
 import { AppearanceManagerContext } from "../common/style/AppearanceManagerContext"
@@ -17,10 +13,8 @@ import { ExternalServiceManager } from "../modules/header/ExternalServiceManager
 import { ExternalServiceManagerProvider } from "../modules/header/ExternalServiceManagerContext"
 import { Header } from "../modules/header/Header"
 import type { MessageData } from "../modules/message/data/MessageData"
-import { decodeMessage } from "../modules/message/helpers/decodeMessage"
 import { INITIAL_MESSAGE_DATA } from "../modules/message/initialMessageData"
 import { MessagePreview } from "../modules/message/MessagePreview"
-// import { timeout } from "../modules/message/timeout"
 
 const Container = styled.div`
   display: flex;

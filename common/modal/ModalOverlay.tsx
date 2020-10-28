@@ -1,11 +1,10 @@
 import { easeQuadInOut } from "d3-ease"
 import { useObserver } from "mobx-react-lite"
-import { useRouter } from "next/router"
 import { cover, rgb } from "polished"
 import React from "react"
 import { FocusOn } from "react-focus-on"
 import { animated, useTransition } from "react-spring"
-import styled, { css, useTheme } from "styled-components"
+import styled, { css } from "styled-components"
 import { Z_INDEX_MODALS, Z_INDEX_MODAL_CONTAINER } from "../constants"
 import { useRequiredContext } from "../state/useRequiredContext"
 import { ModalProvider } from "./ModalContext"
@@ -107,8 +106,8 @@ export function ModalOverlay() {
     },
   })
 
-  const router = useRouter()
-  const { appearance } = useTheme()
+  // const router = useRouter()
+  // const { appearance } = useTheme()
 
   return (
     <Container>

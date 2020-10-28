@@ -1,6 +1,5 @@
 import { useObserver } from "mobx-react-lite"
 import React, { useState } from "react"
-import styled from "styled-components"
 import { Button } from "../../../../common/input/Button"
 import { InputField } from "../../../../common/input/InputField"
 import { FlexContainer } from "../../../editor/styles/FlexContainer"

@@ -97,4 +97,4 @@ const options = {
 }
 
 export default async (req: NextApiRequest, res: NextApiResponse) =>
-  nextAuth(req, res, options as unknown as InitOptions)
+  nextAuth(req, res, (options as unknown) as InitOptions)
