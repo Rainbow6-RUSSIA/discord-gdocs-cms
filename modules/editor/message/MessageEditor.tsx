@@ -50,34 +50,6 @@ export function MessageEditor() {
           </MultiEditor>
         )}
       </Observer>
-      {/* <Observer>
-        {() => (
-          <InputGroup>
-            <InputField
-              id={`message-${editorManager.message.id}-username`}
-              value={editorManager.message.username}
-              onChange={username => {
-                editorManager.message.username = username
-              }}
-              label="Override username"
-              placeholder={editorManager.webhook.name}
-              maxLength={80}
-            />
-            <InputField
-              id={`message-${editorManager.message.id}-avatar`}
-              value={editorManager.message.avatar}
-              onChange={avatar => {
-                editorManager.message.avatar = avatar
-              }}
-              label="Override avatar"
-              placeholder={editorManager.webhook.avatarUrl}
-              validate={url =>
-                /^https?:\/\//.test(url) ? undefined : "Invalid URL"
-              }
-            />
-          </InputGroup>
-        )}
-      </Observer>*/}
       <FileInput
         id={`message-${editorManager.message.id}-files`}
         files={editorManager.message.files}

@@ -69,7 +69,6 @@ export class BackupManager {
     if (!backup) return
 
     this.editorManager.message = Message.of(backup.message)
-    this.editorManager.webhook.url = backup.webhookUrl ?? ""
   }
 
   async saveBackup(backup: string | Backup) {
@@ -79,7 +78,6 @@ export class BackupManager {
       backup = {
         id,
         name: backup,
-        webhookUrl: this.editorManager.webhook.url || undefined,
         message: {
           ...this.editorManager.message.getMessageData(),
           files: undefined,

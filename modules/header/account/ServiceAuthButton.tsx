@@ -5,7 +5,6 @@ import { LoadingIcon } from "../../../common/icons/Loading"
 import { ModalManagerContext } from "../../../common/modal/ModalManagerContext"
 import { useRequiredContext } from "../../../common/state/useRequiredContext"
 import type { SocialTypeProps } from "../../../types"
-import { DISCORD_AVATARS_CDN_BASE_URL } from "../../webhook/constants"
 import { ExternalServiceManagerContext } from "../ExternalServiceManagerContext"
 import { BaseAccountModal } from "./BaseAccountModal"
 
@@ -72,7 +71,7 @@ export const ServiceAuthButton = ({ type }: SocialTypeProps) => {
       return (
         <SocialProfile onClick={handleClick}>
           <Avatar
-            src={`${DISCORD_AVATARS_CDN_BASE_URL}/${id}/${avatar}.${avatar.startsWith("a_") ? "gif" : "png"}?size=32`}
+            src={`https://cdn.discordapp.com/avatars/${id}/${avatar}.${avatar.startsWith("a_") ? "gif" : "png"}?size=32`}
           />
           <span>{`${username}#${discriminator}`}</span>
         </SocialProfile>

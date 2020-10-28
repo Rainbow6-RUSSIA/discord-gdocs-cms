@@ -134,8 +134,8 @@ export function MessageHeader(props: MessageHeaderProps) {
 
   return useObserver(() => {
     if (editorManager) {
-      if (!username) username = editorManager.webhook.displayName
-      if (!avatarUrl) avatarUrl = editorManager.webhook.displayAvatarUrl
+      if (!username) username = editorManager.displayName
+      if (!avatarUrl) avatarUrl = editorManager.displayAvatarUrl
     }
 
     let info = [

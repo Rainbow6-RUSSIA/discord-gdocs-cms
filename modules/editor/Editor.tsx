@@ -5,7 +5,6 @@ import { DARK_THEME } from "../../common/style/themes/darkTheme"
 import { JsonInput } from "./JsonInput"
 import { MessageEditor } from "./message/MessageEditor"
 import { FlexContainer } from "./styles/FlexContainer"
-import { WebhookControls } from "./webhook/WebhookControls"
 
 const EditorContainer = styled.div`
   position: relative;
@@ -38,7 +37,6 @@ export function Editor() {
           Discohook requires JavaScript to be enabled, please turn it on in your
           browser settings to use this app.
         </JavaScriptWarning>
-        <WebhookControls />
         <MessageEditor />
         <JsonInput />
       </EditorInnerContainer>
