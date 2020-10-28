@@ -86,14 +86,14 @@ const Preview = styled(MessagePreview)`
 `
 
 export type MainProps = {
-  message: MessageData
+  messages: MessageData[]
   mobile: boolean
 }
 
 export default function Main(props: MainProps) {
-  const { message, mobile } = props
+  const { messages, mobile } = props
 
-  const editorManager = useLazyValue(() => new EditorManager(message))
+  const editorManager = useLazyValue(() => new EditorManager(messages))
   const externalServiceManager = useLazyValue(
     () => new ExternalServiceManager(),
   )
@@ -163,7 +163,19 @@ export default function Main(props: MainProps) {
           <View>
             {(!mobile || activeTab === "preview") && (
               <ScrollContainer>
-                <Preview message={editorManager.message} />
+                {[...editorManager.allMessages.entries()].map(
+                  ([id, msg], i) => (
+                    <Preview
+                      clickHandler={() => {
+                        setActiveTab("editor")
+                        editorManager.index = i
+                      }}
+                      first={i === 0}
+                      key={id}
+                      message={msg}
+                    />
+                  ),
+                )}
               </ScrollContainer>
             )}
             {(!mobile || activeTab === "editor") && (
@@ -181,14 +193,15 @@ export default function Main(props: MainProps) {
 export const getServerSideProps = (
   context: GetServerSidePropsContext,
 ): { props: MainProps } => {
-  const message =
-    decodeMessage(String(context.query.message ?? "")) ?? INITIAL_MESSAGE_DATA
+  const messages = new Array(5)
+    .fill(null)
+    .map(() => ({ ...INITIAL_MESSAGE_DATA, content: Math.random().toString() }))
 
   const mobile = /mobile/i.test(context.req.headers["user-agent"] ?? "")
 
   return {
     props: {
-      message,
+      messages,
       mobile,
     },
   }

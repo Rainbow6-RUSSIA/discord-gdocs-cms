@@ -5,7 +5,7 @@ import { Embed } from "./Embed"
 import { Field } from "./Field"
 
 export class Message {
-  readonly id: number
+  readonly id: string
 
   @observable content = ""
   @observable embeds: Embed[] = []
@@ -13,7 +13,7 @@ export class Message {
   @observable avatar = ""
   @observable files: File[] = []
 
-  constructor(message?: Message, id = getUniqueId()) {
+  constructor(message?: Message, id = getUniqueId().toString()) {
     this.id = id
 
     if (message) {

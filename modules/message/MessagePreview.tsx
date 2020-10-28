@@ -2,7 +2,7 @@ import { Observer, useObserver } from "mobx-react-lite"
 import dynamic from "next/dynamic"
 import { rem } from "polished"
 import React from "react"
-import styled, { css } from "styled-components"
+import styled, { css, useTheme } from "styled-components"
 import { SCREEN_SMALL } from "../../common/breakpoints"
 import { Markdown } from "../markdown/Markdown"
 import { MarkdownContainer } from "../markdown/styles/MarkdownContainer"
@@ -15,17 +15,17 @@ const Attachment = dynamic<AttachmentProps>(async () =>
   import("./preview/attachment/Attachment").then(module => module.Attachment),
 )
 
-const Container = styled.div`
+const Container = styled.div<{ first: boolean }>`
   position: relative;
 
-  margin-top: ${rem(16)};
+  margin-top: ${props => (props.first ? rem(16) : rem(3))};
 
   ${({ theme }) =>
     theme.appearance.display === "cozy" &&
     css`
       padding: ${rem(2)} 16px ${rem(2)} ${rem(72)};
 
-      min-height: ${rem(44)};
+      /* min-height: ${rem(44)}; */
 
       ${({ theme }) =>
         theme.appearance.fontSize > 16 &&
@@ -43,7 +43,7 @@ const Container = styled.div`
     css`
       padding: ${rem(2)} ${rem(16)} ${rem(2)} 80px;
 
-      min-height: ${rem(22)};
+      /* min-height: ${rem(22)}; */
 
       text-indent: calc(${rem(16)} - 80px);
 
@@ -51,6 +51,10 @@ const Container = styled.div`
         display: inline;
       }
     `}
+
+  &:hover {
+    background-color: ${props => props.theme.backgroundModifier.hover};
+  }
 `
 
 const ExtrasContainer = styled.div`
@@ -71,14 +75,19 @@ const ExtrasContainer = styled.div`
 export type MessagePreviewProps = {
   message: Message
   className?: string
+  first: boolean
+  clickHandler: () => unknown
 }
 
 export function MessagePreview(props: MessagePreviewProps) {
-  const { message, className } = props
+  const { message, className, first: isFirst, clickHandler } = props
+  const theme = useTheme()
 
   return useObserver(() => (
-    <Container className={className}>
-      <MessageHeader username={message.username} avatarUrl={message.avatar} />
+    <Container onClick={clickHandler} first={isFirst} className={className}>
+      {(isFirst || theme.appearance.display === "compact") && (
+        <MessageHeader username={message.username} avatarUrl={message.avatar} />
+      )}
       {message.hasContent && (
         <Observer>
           {() => <Markdown content={message.content} type="message-content" />}

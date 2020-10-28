@@ -1,7 +1,7 @@
 import type { EmbedData } from "./EmbedData"
 
 export type MessageData = {
-  readonly id?: number
+  readonly id?: string
   readonly content?: string
   readonly embeds?: readonly EmbedData[]
   readonly username?: string

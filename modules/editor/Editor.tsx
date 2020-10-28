@@ -1,7 +1,10 @@
 import { useObserver } from "mobx-react-lite"
 import React from "react"
 import styled from "styled-components"
+import { Button } from "../../common/input/Button"
+import { useRequiredContext } from "../../common/state/useRequiredContext"
 import { DARK_THEME } from "../../common/style/themes/darkTheme"
+import { EditorManagerContext } from "./EditorManagerContext"
 import { JsonInput } from "./JsonInput"
 import { MessageEditor } from "./message/MessageEditor"
 import { FlexContainer } from "./styles/FlexContainer"
@@ -30,8 +33,23 @@ const JavaScriptWarning = styled.noscript`
 `
 
 export function Editor() {
+  const editorManager = useRequiredContext(EditorManagerContext)
+
   return useObserver(() => (
     <EditorContainer>
+      <Button
+        disabled={!editorManager.index}
+        onClick={editorManager.handlePrevious}
+      >
+        Previous
+      </Button>
+      {`Message: ${editorManager.index + 1}/${editorManager.allMessages.size}`}
+      <Button
+        disabled={editorManager.index === editorManager.allMessages.size - 1}
+        onClick={editorManager.handleNext}
+      >
+        Next
+      </Button>
       <EditorInnerContainer>
         <JavaScriptWarning>
           Discohook requires JavaScript to be enabled, please turn it on in your
