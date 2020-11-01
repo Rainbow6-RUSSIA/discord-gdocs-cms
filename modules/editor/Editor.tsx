@@ -32,6 +32,10 @@ const JavaScriptWarning = styled.noscript`
   color: ${DARK_THEME.header.primary};
 `
 
+const PageNumber = styled.span`
+  font-family: ${({ theme }) => theme.font.mono};
+`
+
 export function Editor() {
   const editorManager = useRequiredContext(EditorManagerContext)
 
@@ -43,7 +47,10 @@ export function Editor() {
       >
         Previous
       </Button>
-      {`Message: ${editorManager.index + 1}/${editorManager.allMessages.size}`}
+      Message:{" "}
+      <PageNumber>{`${editorManager.index + 1}/${
+        editorManager.allMessages.size
+      }`}</PageNumber>
       <Button
         disabled={editorManager.index === editorManager.allMessages.size - 1}
         onClick={editorManager.handleNext}
@@ -52,8 +59,8 @@ export function Editor() {
       </Button>
       <EditorInnerContainer>
         <JavaScriptWarning>
-          Discohook requires JavaScript to be enabled, please turn it on in your
-          browser settings to use this app.
+          Discord GDocs CMS requires JavaScript to be enabled, please turn it on
+          in your browser settings to use this app.
         </JavaScriptWarning>
         <MessageEditor />
         <JsonInput />

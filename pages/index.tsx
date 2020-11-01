@@ -2,6 +2,7 @@ import { useObserver } from "mobx-react-lite"
 import type { GetServerSidePropsContext } from "next"
 import React, { useEffect, useState } from "react"
 import styled, { css, ThemeProvider } from "styled-components"
+import { Button } from "../common/input/Button"
 import { PageHead } from "../common/PageHead"
 import { useLazyValue } from "../common/state/useLazyValue"
 import { useRequiredContext } from "../common/state/useRequiredContext"
@@ -166,16 +167,22 @@ export default function Main(props: MainProps) {
                 {[...editorManager.allMessages.entries()].map(
                   ([id, msg], i) => (
                     <Preview
-                      clickHandler={() => {
-                        setActiveTab("editor")
-                        editorManager.index = i
-                      }}
-                      first={i === 0}
                       key={id}
+                      tabSetter={setActiveTab}
                       message={msg}
+                      index={i}
+                      editorManager={editorManager}
                     />
                   ),
                 )}
+                <Button
+                  onClick={editorManager.handleAdd}
+                  disabled={
+                    editorManager.allMessages.size >= editorManager.maxMessages
+                  }
+                >
+                  Add more
+                </Button>
               </ScrollContainer>
             )}
             {(!mobile || activeTab === "editor") && (
@@ -193,7 +200,7 @@ export default function Main(props: MainProps) {
 export const getServerSideProps = (
   context: GetServerSidePropsContext,
 ): { props: MainProps } => {
-  const messages = new Array(5)
+  const messages = new Array(3)
     .fill(null)
     .map(() => ({ ...INITIAL_MESSAGE_DATA, content: Math.random().toString() }))
 

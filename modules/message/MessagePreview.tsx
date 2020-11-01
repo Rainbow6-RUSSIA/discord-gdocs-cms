@@ -4,6 +4,8 @@ import { rem } from "polished"
 import React from "react"
 import styled, { css, useTheme } from "styled-components"
 import { SCREEN_SMALL } from "../../common/breakpoints"
+import DeleteSvg from "../../public/static/unlink.svg"
+import type { EditorManager } from "../editor/EditorManager"
 import { Markdown } from "../markdown/Markdown"
 import { MarkdownContainer } from "../markdown/styles/MarkdownContainer"
 import type { Message } from "./Message"
@@ -55,6 +57,10 @@ const Container = styled.div<{ first: boolean }>`
   &:hover {
     background-color: ${props => props.theme.backgroundModifier.hover};
   }
+
+  &:hover > svg {
+    display: block;
+  }
 `
 
 const ExtrasContainer = styled.div`
@@ -72,19 +78,37 @@ const ExtrasContainer = styled.div`
   }
 `
 
+export const DeleteIcon = styled(DeleteSvg)`
+  position: absolute;
+  right: ${rem(4)};
+  top: ${rem(4)};
+  display: none;
+  zoom: 1.25;
+`
+
 export type MessagePreviewProps = {
+  tabSetter: React.Dispatch<React.SetStateAction<"preview" | "editor">>
   message: Message
+  index: number
+  editorManager: EditorManager
+
   className?: string
-  first: boolean
-  clickHandler: () => unknown
 }
 
 export function MessagePreview(props: MessagePreviewProps) {
-  const { message, className, first: isFirst, clickHandler } = props
+  const { tabSetter, message, index, editorManager, className } = props
   const theme = useTheme()
+  const isFirst = index === 0
 
   return useObserver(() => (
-    <Container onClick={clickHandler} first={isFirst} className={className}>
+    <Container
+      onClick={() => {
+        tabSetter("editor")
+        editorManager.index = index
+      }}
+      first={isFirst}
+      className={className}
+    >
       {(isFirst || theme.appearance.display === "compact") && (
         <MessageHeader username={message.username} avatarUrl={message.avatar} />
       )}
@@ -104,6 +128,14 @@ export function MessagePreview(props: MessagePreviewProps) {
             )),
           ]}
         </ExtrasContainer>
+      )}
+      {editorManager.allMessages.size > 1 && (
+        <DeleteIcon
+          onClick={e => {
+            editorManager.handleRemove(index)
+            e.stopPropagation() // don't trigger whole preview click
+          }}
+        />
       )}
     </Container>
   ))

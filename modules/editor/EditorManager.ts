@@ -4,6 +4,7 @@ import { Message } from "../message/Message"
 
 export class EditorManager {
   @observable index = 0
+  @observable maxMessages = 5
 
   @action handleNext = () => {
     this.index = this.index === this.allMessages.size - 1 ? 0 : this.index + 1
@@ -13,13 +14,32 @@ export class EditorManager {
     this.index = this.index ? this.index - 1 : this.allMessages.size - 1
   }
 
+  @action handleAdd = () => {
+    const msg = Message.of({ content: "Edit me!" })
+    this.allMessages.set(msg.id, msg)
+    this.index = this.allMessages.size - 1
+
+    console.log([...this.allMessages.keys()], this.message)
+  }
+
+  @action handleRemove = (i?: number) => {
+    this.index = 0
+    this.allMessages.delete(this.getKey(i))
+    // if ((i ?? this.index) >= this.index) this.index -= 1
+
+    console.log([...this.allMessages.keys()], this.message)
+  }
+
   get message() {
     return Array.from(this.allMessages.values())[this.index]
   }
 
   set message(msg: Message) {
-    const key = [...this.allMessages.keys()][this.index]
-    this.allMessages.set(key, msg)
+    this.allMessages.set(this.getKey(), msg)
+  }
+
+  getKey(i?: number) {
+    return [...this.allMessages.keys()][i ?? this.index]
   }
 
   readonly allMessages: ObservableMap<string, Message>
@@ -30,7 +50,7 @@ export class EditorManager {
 
   constructor(messages: MessageData[]) {
     this.allMessages = observable.map(
-      new Map(messages.map((m, i) => [m.id ?? i.toString(), Message.of(m)])),
+      new Map(messages.map(Message.of).map(msg => [msg.id, msg])),
     )
   }
 }

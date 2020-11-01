@@ -71,7 +71,7 @@ module.exports = {
     "@typescript-eslint/return-await": "warn",
     "@typescript-eslint/switch-exhaustiveness-check": "warn",
     "@typescript-eslint/triple-slash-reference": "warn",
-    "@typescript-eslint/unbound-method": "warn",
+    "@typescript-eslint/unbound-method": ["warn", { ignoreStatic: true }],
     "accessor-pairs": ["warn", { enforceForClassMembers: true }],
     "array-callback-return": "error",
     "class-methods-use-this": "warn",
