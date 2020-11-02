@@ -1,6 +1,5 @@
 import * as Sentry from "@sentry/node"
 import { Observer } from "mobx-react-lite"
-import "mobx-react-lite/batchingForReactDom"
 import App, { AppProps } from "next/app"
 import React from "react"
 import { ThemeProvider } from "styled-components"
