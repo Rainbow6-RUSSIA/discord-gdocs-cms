@@ -4,8 +4,8 @@ import React from "react"
 import styled, { css } from "styled-components"
 import { ModalManagerContext } from "../../common/modal/ModalManagerContext"
 import { useRequiredContext } from "../../common/state/useRequiredContext"
-import type { BackupsModalProps } from "../database/backup/modal/BackupsModal"
-import { EditorManagerContext } from "../editor/EditorManagerContext"
+// import type { BackupsModalProps } from "../database/backup/modal/BackupsModal"
+// import { EditorManagerContext } from "../editor/EditorManagerContext"
 import { ServiceAuthButton } from "./account/ServiceAuthButton"
 
 const AppearanceModal = dynamic<Record<never, unknown>>(async () =>
@@ -14,13 +14,13 @@ const AppearanceModal = dynamic<Record<never, unknown>>(async () =>
   ),
 )
 
-const BackupsModal = dynamic<BackupsModalProps>(async () =>
-  import("../database/backup/modal/BackupsModal").then(
-    module => module.BackupsModal,
-  ),
-)
+// const BackupsModal = dynamic<BackupsModalProps>(async () =>
+//   import("../database/backup/modal/BackupsModal").then(
+//     module => module.BackupsModal,
+//   ),
+// )
 
-const Container = styled.header`
+export const HeaderContainer = styled.header`
   display: flex;
   flex-wrap: wrap;
 
@@ -29,6 +29,7 @@ const Container = styled.header`
   z-index: 1;
 
   & > * {
+    align-self: center;
     padding: 0 16px;
 
     background: none;
@@ -67,12 +68,23 @@ export type HeaderProps = {
   // className?: string
 }
 
-export function Header(/* props: HeaderProps */) {
+export function Navigation() {
   const modalManager = useRequiredContext(ModalManagerContext)
-  const editorManager = useRequiredContext(EditorManagerContext)
 
   return useObserver(() => (
-    <Container>
+    <>
+      <HeaderLink href="https://google.com" rel="noopener">
+        Support server
+      </HeaderLink>
+      <HeaderLink href="https://google.com" rel="noopener">
+        Support server
+      </HeaderLink>
+      <HeaderLink href="https://google.com" rel="noopener">
+        Support server
+      </HeaderLink>
+      <HeaderLink href="https://google.com" rel="noopener">
+        Support server
+      </HeaderLink>
       <HeaderLink href="https://google.com" rel="noopener">
         Support server
       </HeaderLink>
@@ -85,7 +97,7 @@ export function Header(/* props: HeaderProps */) {
       >
         Appearance
       </HeaderButton>
-      <HeaderButton
+      {/* <HeaderButton
         onClick={() =>
           modalManager.spawn({
             render: () => <BackupsModal editorManager={editorManager} />,
@@ -93,10 +105,18 @@ export function Header(/* props: HeaderProps */) {
         }
       >
         Backups
-      </HeaderButton>
+      </HeaderButton> */}
+    </>
+  ))
+}
 
+export function Login() {
+  // const editorManager = useRequiredContext(EditorManagerContext)
+
+  return useObserver(() => (
+    <>
       <ServiceAuthButton type="Google" />
       <ServiceAuthButton type="Discord" />
-    </Container>
+    </>
   ))
 }

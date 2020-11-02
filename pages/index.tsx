@@ -1,89 +1,29 @@
 import { useObserver } from "mobx-react-lite"
 import type { GetServerSidePropsContext } from "next"
 import React, { useEffect, useState } from "react"
-import styled, { css, ThemeProvider } from "styled-components"
-import { Button } from "../common/input/Button"
+import styled, { ThemeProvider } from "styled-components"
 import { PageHead } from "../common/PageHead"
 import { useLazyValue } from "../common/state/useLazyValue"
 import { useRequiredContext } from "../common/state/useRequiredContext"
 import { AppearanceManagerContext } from "../common/style/AppearanceManagerContext"
-import { Editor } from "../modules/editor/Editor"
 import { EditorManager } from "../modules/editor/EditorManager"
 import { EditorManagerProvider } from "../modules/editor/EditorManagerContext"
 import { ExternalServiceManager } from "../modules/header/ExternalServiceManager"
 import { ExternalServiceManagerProvider } from "../modules/header/ExternalServiceManagerContext"
-import { Header } from "../modules/header/Header"
+import { TabsContext } from "../modules/header/TabsContext"
+import { Layout } from "../modules/layout"
 import type { MessageData } from "../modules/message/data/MessageData"
 import { INITIAL_MESSAGE_DATA } from "../modules/message/initialMessageData"
-import { MessagePreview } from "../modules/message/MessagePreview"
 
 const Container = styled.div`
-  display: flex;
+  /* display: flex;
   flex-direction: column;
-
-  height: 95%;
-`
-
-const TabSwitcher = styled.div`
-  display: flex;
-
-  background: ${({ theme }) => theme.background.secondary};
-
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-`
-
-const Tab = styled.button.attrs({ type: "button" })<{ active: boolean }>`
-  height: 40px;
-  padding: 0 16px;
-
-  background: none;
-  border: solid transparent;
-  border-width: 2px 0;
-  border-radius: 0;
-
-  font-weight: 500;
-  font-size: 15px;
-  color: ${({ theme }) => theme.header.primary};
-  line-height: 38px;
-
-  ${({ active }) =>
-    active &&
-    css`
-      border-bottom-color: ${({ theme }) => theme.accent.primary};
-    `}
-`
-
-const View = styled.main`
-  display: flex;
-  flex-direction: row-reverse;
-  align-items: stretch;
-
-  flex: 1;
-
-  max-height: 100%;
-
+  flex-grow: 1;
+  height: 100vh;
+  width: 100%;
   & > * {
-    flex: 1;
-  }
-
-  ${({ theme }) =>
-    theme.appearance.mobile &&
-    css`
-      margin: 40px 0 0;
-      max-height: calc(100% - 40px);
-    `}
-`
-
-const ScrollContainer = styled.div`
-  height: 100%;
-  overflow-y: scroll;
-`
-
-const Preview = styled(MessagePreview)`
-  flex: 0 0 auto;
+    flex-basis: 5%;
+  } */
 `
 
 export type MainProps = {
@@ -98,6 +38,8 @@ export default function Main(props: MainProps) {
   const externalServiceManager = useLazyValue(
     () => new ExternalServiceManager(),
   )
+
+  const [activeTab, setActiveTab] = useState<"preview" | "editor">("preview")
 
   // const cancelRef = useRef<() => void>()
   // useAutorun(() => {
@@ -114,18 +56,15 @@ export default function Main(props: MainProps) {
   //     }
   //   }, 500)
   // })
+  // useWindowEvent("beforeunload", event => {
+  //   event.preventDefault()
+  //   event.returnValue = ""
+  // })
 
   const appearanceManager = useRequiredContext(AppearanceManagerContext)
   useEffect(() => {
     appearanceManager.mobile = mobile
   }, [appearanceManager, mobile])
-
-  const [activeTab, setActiveTab] = useState<"preview" | "editor">("preview")
-
-  // useWindowEvent("beforeunload", event => {
-  //   event.preventDefault()
-  //   event.returnValue = ""
-  // })
 
   return useObserver(() => (
     <ThemeProvider
@@ -135,63 +74,19 @@ export default function Main(props: MainProps) {
       })}
     >
       <EditorManagerProvider value={editorManager}>
-        <PageHead
-          title="Discohook | A message and embed generator for Discord webhooks"
-          description="An easy-to-use tool for building and sending Discord messages and embeds using webhooks."
-        >
-          <meta key="referrer" name="referrer" content="strict-origin" />
-        </PageHead>
-        <Container translate="no">
-          <ExternalServiceManagerProvider value={externalServiceManager}>
-            <Header />
-          </ExternalServiceManagerProvider>
-          {mobile && (
-            <TabSwitcher>
-              <Tab
-                active={activeTab === "editor"}
-                onClick={() => setActiveTab("editor")}
-              >
-                Editor
-              </Tab>
-              <Tab
-                active={activeTab === "preview"}
-                onClick={() => setActiveTab("preview")}
-              >
-                Preview
-              </Tab>
-            </TabSwitcher>
-          )}
-          <View>
-            {(!mobile || activeTab === "preview") && (
-              <ScrollContainer>
-                {[...editorManager.allMessages.entries()].map(
-                  ([id, msg], i) => (
-                    <Preview
-                      key={id}
-                      tabSetter={setActiveTab}
-                      message={msg}
-                      index={i}
-                      editorManager={editorManager}
-                    />
-                  ),
-                )}
-                <Button
-                  onClick={editorManager.handleAdd}
-                  disabled={
-                    editorManager.allMessages.size >= editorManager.maxMessages
-                  }
-                >
-                  Add more
-                </Button>
-              </ScrollContainer>
-            )}
-            {(!mobile || activeTab === "editor") && (
-              <ScrollContainer>
-                <Editor />
-              </ScrollContainer>
-            )}
-          </View>
-        </Container>
+        <ExternalServiceManagerProvider value={externalServiceManager}>
+          <TabsContext.Provider value={{ activeTab, setActiveTab }}>
+            <PageHead
+              title="Discohook | A message and embed generator for Discord webhooks"
+              description="An easy-to-use tool for building and sending Discord messages and embeds using webhooks."
+            >
+              <meta key="referrer" name="referrer" content="strict-origin" />
+            </PageHead>
+            <Container translate="no">
+              <Layout />
+            </Container>
+          </TabsContext.Provider>
+        </ExternalServiceManagerProvider>
       </EditorManagerProvider>
     </ThemeProvider>
   ))

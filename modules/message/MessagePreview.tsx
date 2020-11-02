@@ -1,11 +1,12 @@
 import { Observer, useObserver } from "mobx-react-lite"
 import dynamic from "next/dynamic"
 import { rem } from "polished"
-import React from "react"
+import React, { useContext } from "react"
 import styled, { css, useTheme } from "styled-components"
 import { SCREEN_SMALL } from "../../common/breakpoints"
 import DeleteSvg from "../../public/static/unlink.svg"
 import type { EditorManager } from "../editor/EditorManager"
+import { TabsContext } from "../header/TabsContext"
 import { Markdown } from "../markdown/Markdown"
 import { MarkdownContainer } from "../markdown/styles/MarkdownContainer"
 import type { Message } from "./Message"
@@ -87,7 +88,6 @@ export const DeleteIcon = styled(DeleteSvg)`
 `
 
 export type MessagePreviewProps = {
-  tabSetter: React.Dispatch<React.SetStateAction<"preview" | "editor">>
   message: Message
   index: number
   editorManager: EditorManager
@@ -96,14 +96,15 @@ export type MessagePreviewProps = {
 }
 
 export function MessagePreview(props: MessagePreviewProps) {
-  const { tabSetter, message, index, editorManager, className } = props
+  const { message, index, editorManager, className } = props
   const theme = useTheme()
   const isFirst = index === 0
+  const { setActiveTab } = useContext(TabsContext)
 
   return useObserver(() => (
     <Container
       onClick={() => {
-        tabSetter("editor")
+        setActiveTab("editor")
         editorManager.index = index
       }}
       first={isFirst}

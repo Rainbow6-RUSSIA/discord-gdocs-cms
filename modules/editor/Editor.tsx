@@ -9,13 +9,13 @@ import { JsonInput } from "./JsonInput"
 import { MessageEditor } from "./message/MessageEditor"
 import { FlexContainer } from "./styles/FlexContainer"
 
-const EditorContainer = styled.div`
+export const EditorContainer = styled.div`
   position: relative;
 `
 
 const EditorInnerContainer = styled(FlexContainer)`
   display: block;
-  height: 100%;
+  /* height: 100%; */
   padding: 8px;
 
   & > *:not(button) {
@@ -40,7 +40,7 @@ export function Editor() {
   const editorManager = useRequiredContext(EditorManagerContext)
 
   return useObserver(() => (
-    <EditorContainer>
+    <>
       <Button
         disabled={!editorManager.index}
         onClick={editorManager.handlePrevious}
@@ -65,6 +65,6 @@ export function Editor() {
         <MessageEditor />
         <JsonInput />
       </EditorInnerContainer>
-    </EditorContainer>
+    </>
   ))
 }
