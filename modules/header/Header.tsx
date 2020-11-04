@@ -80,19 +80,7 @@ function Navigation() {
 
   return useObserver(() => (
     <HeaderSubContainer>
-      <HeaderLink href="https://google.com" rel="noopener">
-        Support server
-      </HeaderLink>
-      <HeaderLink href="https://google.com" rel="noopener">
-        Support server
-      </HeaderLink>
-      <HeaderLink href="https://google.com" rel="noopener">
-        Support server
-      </HeaderLink>
-      <HeaderLink href="https://google.com" rel="noopener">
-        Support server
-      </HeaderLink>
-      <HeaderLink href="https://google.com" rel="noopener">
+      <HeaderLink href="https://discord.gg/RbTwvbmwYT" rel="noopener">
         Support server
       </HeaderLink>
       <HeaderButton

@@ -81,18 +81,18 @@ export const getServerSideProps = (
   }
 }
 
-  // const cancelRef = useRef<() => void>()
-  // useAutorun(() => {
-  //   const message = editorManager.message.getMessageData()
-  //   const json = JSON.stringify({ message: { ...message, files: undefined } })
-  //   const base64 = base64UrlEncode(json)
-  //   const { current: cancel } = cancelRef
-  //   if (cancel) cancel()
-  //   cancelRef.current = timeout(async () => {
-  //     if (Router.query.message !== base64) {
-  //       await Router.replace(`/?message=${base64}`, `/?message=${base64}`, {
-  //         shallow: true,
-  //       })
-  //     }
-  //   }, 500)
-  // })
+// const cancelRef = useRef<() => void>()
+// useAutorun(() => {
+//   const message = editorManager.message.getMessageData()
+//   const json = JSON.stringify({ message: { ...message, files: undefined } })
+//   const base64 = base64UrlEncode(json)
+//   const { current: cancel } = cancelRef
+//   if (cancel) cancel()
+//   cancelRef.current = timeout(async () => {
+//     if (Router.query.message !== base64) {
+//       await Router.replace(`/?message=${base64}`, `/?message=${base64}`, {
+//         shallow: true,
+//       })
+//     }
+//   }, 500)
+// })

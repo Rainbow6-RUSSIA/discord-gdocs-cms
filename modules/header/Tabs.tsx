@@ -4,7 +4,7 @@ import { TabsContext } from "./TabsContext"
 
 export const TabsContainer = styled.div`
   display: flex;
-  grid-area: tab-bar;
+  grid-area: tabs;
   background: ${({ theme }) => theme.background.secondary};
 `
 
