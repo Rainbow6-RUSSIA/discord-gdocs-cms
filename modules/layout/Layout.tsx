@@ -29,11 +29,11 @@ const MobileGrid = styled.div`
     "editor preview";
 `
 
-export const Layout = () => {
+export const GridLayout = () => {
   const theme = useTheme()
   const ChosenLayout = theme.appearance.mobile ? MobileGrid : DesktopGrid
   return useObserver(() => (
-    <ChosenLayout>
+    <ChosenLayout translate="no">
       <Header />
       <TabBar />
       <Editor />

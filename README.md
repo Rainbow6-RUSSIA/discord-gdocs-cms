@@ -1,6 +1,6 @@
 # Discord GDocs CMS
 
-An intuitive tool for sending and collaborative editing Discord messages via bot user with rich editor. Supports markdown (already 😊), channels (soon™), roles (soon™), emojis (soon™) and embedded link preview (soon™).
+An intuitive tool for sending and collaborative editing Discord messages via bot user with rich CMS-like editor. Supports markdown (already 😊), channels (soon™), roles (soon™), emojis (soon™) and embedded link preview (soon™).
 
 At initial launch app suggests to create or select existing Google Spreadsheet that will be a database where the source texts stored. So whatever happens you won't lose anything. You can [manage access](https://support.google.com/docs/answer/2494893), [see version history and revert back any changes](https://support.google.com/docs/answer/190843) via Google Spreadsheets.
 

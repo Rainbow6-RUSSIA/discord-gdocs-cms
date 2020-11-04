@@ -1,7 +1,7 @@
 import { useObserver } from "mobx-react-lite"
 import type { GetServerSidePropsContext } from "next"
 import React, { useEffect, useState } from "react"
-import styled, { ThemeProvider } from "styled-components"
+import { ThemeProvider } from "styled-components"
 import { PageHead } from "../common/PageHead"
 import { useLazyValue } from "../common/state/useLazyValue"
 import { useRequiredContext } from "../common/state/useRequiredContext"
@@ -11,20 +11,9 @@ import { EditorManagerProvider } from "../modules/editor/EditorManagerContext"
 import { ExternalServiceManager } from "../modules/header/ExternalServiceManager"
 import { ExternalServiceManagerProvider } from "../modules/header/ExternalServiceManagerContext"
 import { TabsContext } from "../modules/header/TabsContext"
-import { Layout } from "../modules/layout/Layout"
+import { GridLayout } from "../modules/layout/Layout"
 import type { MessageData } from "../modules/message/data/MessageData"
 import { INITIAL_MESSAGE_DATA } from "../modules/message/initialMessageData"
-
-const Container = styled.div`
-  /* display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  height: 100vh;
-  width: 100%;
-  & > * {
-    flex-basis: 5%;
-  } */
-`
 
 export type MainProps = {
   messages: MessageData[]
@@ -41,21 +30,6 @@ export default function Main(props: MainProps) {
 
   const [activeTab, setActiveTab] = useState<"preview" | "editor">("preview")
 
-  // const cancelRef = useRef<() => void>()
-  // useAutorun(() => {
-  //   const message = editorManager.message.getMessageData()
-  //   const json = JSON.stringify({ message: { ...message, files: undefined } })
-  //   const base64 = base64UrlEncode(json)
-  //   const { current: cancel } = cancelRef
-  //   if (cancel) cancel()
-  //   cancelRef.current = timeout(async () => {
-  //     if (Router.query.message !== base64) {
-  //       await Router.replace(`/?message=${base64}`, `/?message=${base64}`, {
-  //         shallow: true,
-  //       })
-  //     }
-  //   }, 500)
-  // })
   // useWindowEvent("beforeunload", event => {
   //   event.preventDefault()
   //   event.returnValue = ""
@@ -77,14 +51,12 @@ export default function Main(props: MainProps) {
         <ExternalServiceManagerProvider value={externalServiceManager}>
           <TabsContext.Provider value={{ activeTab, setActiveTab }}>
             <PageHead
-              title="Discohook | A message and embed generator for Discord webhooks"
-              description="An easy-to-use tool for building and sending Discord messages and embeds using webhooks."
+              title="DGDCMS | A messages sending and coediting tool for Discord "
+              description="An intuitive tool for sending and collaborative editing Discord messages via bot user with rich CMS-like editor."
             >
               <meta key="referrer" name="referrer" content="strict-origin" />
             </PageHead>
-            <Container translate="no">
-              <Layout />
-            </Container>
+            <GridLayout />
           </TabsContext.Provider>
         </ExternalServiceManagerProvider>
       </EditorManagerProvider>
@@ -108,3 +80,19 @@ export const getServerSideProps = (
     },
   }
 }
+
+  // const cancelRef = useRef<() => void>()
+  // useAutorun(() => {
+  //   const message = editorManager.message.getMessageData()
+  //   const json = JSON.stringify({ message: { ...message, files: undefined } })
+  //   const base64 = base64UrlEncode(json)
+  //   const { current: cancel } = cancelRef
+  //   if (cancel) cancel()
+  //   cancelRef.current = timeout(async () => {
+  //     if (Router.query.message !== base64) {
+  //       await Router.replace(`/?message=${base64}`, `/?message=${base64}`, {
+  //         shallow: true,
+  //       })
+  //     }
+  //   }, 500)
+  // })
