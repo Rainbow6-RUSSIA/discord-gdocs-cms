@@ -41,7 +41,7 @@ export const GridLayout = () => {
     <ChosenLayout translate="no">
       <Header />
       {isMobile && <TabBar />}
-      {(!isMobile || activeTab === "editor") && <Editor />} 
+      {(!isMobile || activeTab === "editor") && <Editor />}
       {(!isMobile || activeTab === "preview") && <PostPreview />}
     </ChosenLayout>
   ))

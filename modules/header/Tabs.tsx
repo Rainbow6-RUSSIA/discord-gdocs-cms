@@ -9,18 +9,20 @@ export const TabsContainer = styled.div`
 `
 
 export const Tab = styled.button.attrs({ type: "button" })<{ active: boolean }>`
-  height: 40px;
+  height: 42px;
   padding: 0 16px;
 
   background: none;
   border: solid transparent;
   border-width: 2px 0;
   border-radius: 0;
+  flex-grow: 1;
 
   font-weight: 500;
   font-size: 15px;
   color: ${({ theme }) => theme.header.primary};
   line-height: 38px;
+  border-top-color: ${({ theme }) => theme.accent.primary};
 
   ${({ active }) =>
     active &&
