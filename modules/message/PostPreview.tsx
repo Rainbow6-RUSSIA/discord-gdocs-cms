@@ -8,13 +8,15 @@ import { MessagePreview } from "./MessagePreview"
 
 export const PostPreviewContainer = styled.div`
   position: relative;
+  grid-area: preview;
+  overflow-y: scroll;
 `
 
 export const PostPreview = () => {
   const editorManager = useRequiredContext(EditorManagerContext)
 
   return useObserver(() => (
-    <>
+    <PostPreviewContainer>
       {[...editorManager.allMessages.entries()].map(([id, msg], i) => (
         <MessagePreview
           key={id}
@@ -29,6 +31,6 @@ export const PostPreview = () => {
       >
         Add more
       </Button>
-    </>
+    </PostPreviewContainer>
   ))
 }

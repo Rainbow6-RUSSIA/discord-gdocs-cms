@@ -4,7 +4,7 @@ import { TabsContext } from "./TabsContext"
 
 export const TabsContainer = styled.div`
   display: flex;
-
+  grid-area: tab-bar;
   background: ${({ theme }) => theme.background.secondary};
 `
 
@@ -32,7 +32,7 @@ export const Tab = styled.button.attrs({ type: "button" })<{ active: boolean }>`
 export const TabBar = () => {
   const { activeTab, setActiveTab } = useContext(TabsContext)
   return (
-    <>
+    <TabsContainer>
       <Tab
         active={activeTab === "editor"}
         onClick={() => setActiveTab("editor")}
@@ -45,6 +45,6 @@ export const TabBar = () => {
       >
         Preview
       </Tab>
-    </>
+    </TabsContainer>
   )
 }

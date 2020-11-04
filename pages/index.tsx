@@ -11,7 +11,7 @@ import { EditorManagerProvider } from "../modules/editor/EditorManagerContext"
 import { ExternalServiceManager } from "../modules/header/ExternalServiceManager"
 import { ExternalServiceManagerProvider } from "../modules/header/ExternalServiceManagerContext"
 import { TabsContext } from "../modules/header/TabsContext"
-import { Layout } from "../modules/layout"
+import { Layout } from "../modules/layout/Layout"
 import type { MessageData } from "../modules/message/data/MessageData"
 import { INITIAL_MESSAGE_DATA } from "../modules/message/initialMessageData"
 

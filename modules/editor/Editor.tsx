@@ -11,6 +11,8 @@ import { FlexContainer } from "./styles/FlexContainer"
 
 export const EditorContainer = styled.div`
   position: relative;
+  grid-area: editor;
+  overflow-y: scroll;
 `
 
 const EditorInnerContainer = styled(FlexContainer)`
@@ -40,7 +42,7 @@ export function Editor() {
   const editorManager = useRequiredContext(EditorManagerContext)
 
   return useObserver(() => (
-    <>
+    <EditorContainer>
       <Button
         disabled={!editorManager.index}
         onClick={editorManager.handlePrevious}
@@ -65,6 +67,6 @@ export function Editor() {
         <MessageEditor />
         <JsonInput />
       </EditorInnerContainer>
-    </>
+    </EditorContainer>
   ))
 }

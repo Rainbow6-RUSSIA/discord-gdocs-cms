@@ -20,13 +20,21 @@ const AppearanceModal = dynamic<Record<never, unknown>>(async () =>
 //   ),
 // )
 
-export const HeaderContainer = styled.header`
+const Container = styled.header`
+  grid-area: header;
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-between;
 
   background: ${({ theme }) => theme.background.secondary};
 
   z-index: 1;
+`
+
+const HeaderSubContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  /* margin-left: 10px; */
 
   & > * {
     align-self: center;
@@ -48,7 +56,6 @@ export const HeaderContainer = styled.header`
     }
   }
 `
-
 // const Logo
 
 const HeaderButton = styled.button.attrs({ type: "button" })<{
@@ -68,11 +75,11 @@ export type HeaderProps = {
   // className?: string
 }
 
-export function Navigation() {
+function Navigation() {
   const modalManager = useRequiredContext(ModalManagerContext)
 
   return useObserver(() => (
-    <>
+    <HeaderSubContainer>
       <HeaderLink href="https://google.com" rel="noopener">
         Support server
       </HeaderLink>
@@ -106,17 +113,26 @@ export function Navigation() {
       >
         Backups
       </HeaderButton> */}
-    </>
+    </HeaderSubContainer>
   ))
 }
 
-export function Login() {
+function Login() {
   // const editorManager = useRequiredContext(EditorManagerContext)
 
   return useObserver(() => (
-    <>
+    <HeaderSubContainer>
       <ServiceAuthButton type="Google" />
       <ServiceAuthButton type="Discord" />
-    </>
+    </HeaderSubContainer>
   ))
+}
+
+export function Header() {
+  return (
+    <Container>
+      <Navigation />
+      <Login />
+    </Container>
+  )
 }
