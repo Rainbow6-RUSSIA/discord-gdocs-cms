@@ -42,15 +42,15 @@ export class EditorManager {
     return [...this.allMessages.keys()][i ?? this.index]
   }
 
-  readonly allMessages: ObservableMap<string, Message>
+  readonly allMessages: Map<string, Message>
 
   displayName = "Discord GDocs CMS"
   displayAvatarUrl =
     "https://cdn.discordapp.com/avatars/758712995035217970/8bb97fa8fe04785ee714c87dde8d59db.png?size=256"
 
   constructor(messages: MessageData[]) {
-    this.allMessages = observable.map(
-      new Map(messages.map(Message.of).map(msg => [msg.id, msg])),
-    )
+    this.allMessages = new Map(messages.map(Message.of).map(msg => [msg.id, msg]))
+      // observable.map(
+    // )
   }
 }

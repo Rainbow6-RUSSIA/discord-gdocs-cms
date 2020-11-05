@@ -35,9 +35,7 @@ export const SocialProfile = styled.div`
   }
 `
 
-export const Avatar = styled.img`
-  height: 32px;
-  width: 32px;
+export const Avatar = styled.img.attrs({ height: 32, width: 32 })`
   border-radius: 50%;
 `
 
@@ -73,7 +71,8 @@ export const ServiceAuthButton = ({ type }: SocialTypeProps) => {
           <Avatar
             src={`https://cdn.discordapp.com/avatars/${id}/${avatar}.${
               avatar.startsWith("a_") ? "gif" : "png"
-            }?size=32`}
+            }?size=128`}
+            alt="Your Discord Avatar"
           />
           <span>{`${username}#${discriminator}`}</span>
         </SocialProfile>
@@ -86,7 +85,7 @@ export const ServiceAuthButton = ({ type }: SocialTypeProps) => {
       const { name, picture } = serviceManager.googleUser
       return (
         <SocialProfile onClick={handleClick}>
-          <Avatar src={picture} />
+          <Avatar alt="Your Google Avatar" src={picture} />
           <span>{name}</span>
         </SocialProfile>
       )
