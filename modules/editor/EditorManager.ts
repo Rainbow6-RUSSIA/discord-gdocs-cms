@@ -49,8 +49,10 @@ export class EditorManager {
     "https://cdn.discordapp.com/avatars/758712995035217970/8bb97fa8fe04785ee714c87dde8d59db.png?size=256"
 
   constructor(messages: MessageData[]) {
-    this.allMessages = new Map(messages.map(Message.of).map(msg => [msg.id, msg]))
-      // observable.map(
+    this.allMessages = new Map(
+      messages.map(Message.of).map(msg => [msg.id, msg]),
+    )
+    // observable.map(
     // )
   }
 }
