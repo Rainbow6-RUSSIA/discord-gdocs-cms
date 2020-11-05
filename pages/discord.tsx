@@ -11,7 +11,7 @@ const Header = styled.h1`
   color: ${({ theme }) => theme.header.primary};
 `
 
-const DISCORD_INVITE = "https://discord.gg/dtPGCsm"
+const DISCORD_INVITE = "https://discord.gg/RbTwvbmwYT"
 
 export default function Discord() {
   useEffect(() => {
@@ -22,7 +22,7 @@ export default function Discord() {
 
   return (
     <Container>
-      <PageHead title="Discohook Support Server" description="" />
+      <PageHead title="DGDCMS Support Server" description="" />
       <Header>You are being redirected</Header>
       <p>
         If nothing is happenning, please navigate to{" "}

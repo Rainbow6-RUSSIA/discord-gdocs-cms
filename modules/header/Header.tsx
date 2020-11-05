@@ -1,5 +1,6 @@
 import { useObserver } from "mobx-react-lite"
 import dynamic from "next/dynamic"
+import Link from "next/link"
 import React from "react"
 import styled, { css } from "styled-components"
 import { ModalManagerContext } from "../../common/modal/ModalManagerContext"
@@ -68,8 +69,6 @@ const HeaderButton = styled.button.attrs({ type: "button" })<{
     `}
 `
 
-const HeaderLink = styled.a``
-
 export type HeaderProps = {
   // message: Message
   // className?: string
@@ -80,9 +79,7 @@ function Navigation() {
 
   return useObserver(() => (
     <HeaderSubContainer>
-      <HeaderLink href="https://discord.gg/RbTwvbmwYT" rel="noopener">
-        Support server
-      </HeaderLink>
+      <Link href="/discord">Support server</Link>
       <HeaderButton
         onClick={() =>
           modalManager.spawn({

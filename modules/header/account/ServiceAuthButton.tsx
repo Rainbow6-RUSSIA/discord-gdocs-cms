@@ -9,6 +9,7 @@ import { ExternalServiceManagerContext } from "../ExternalServiceManagerContext"
 import { BaseAccountModal } from "./BaseAccountModal"
 
 export const SocialProfile = styled.div`
+  min-width: 100px;
   display: flex;
   align-items: center;
   justify-content: center;

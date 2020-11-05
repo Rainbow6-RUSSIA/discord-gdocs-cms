@@ -1,18 +1,16 @@
-import React, { SyntheticEvent } from "react"
+import React from "react"
 import styled from "styled-components"
 import { Z_INDEX_SLIDER } from "../../common/constants"
 
 const SliderBar = styled.div`
   z-index: ${Z_INDEX_SLIDER};
   grid-area: slider;
-  background: ${({ theme }) => theme.background.secondary};
   transition: 150ms;
 
   &:hover {
-    background: ${({ theme }) => theme.background.secondaryAlt};
-    transform: scaleX(4);
+    background: ${({ theme }) => theme.accent.warning};
+    transform: scaleX(3);
     transition: 150ms;
-    opacity: 0.7;
     cursor: col-resize;
   }
 `
@@ -95,27 +93,3 @@ export class Slider extends React.PureComponent<SliderProps> {
     )
   }
 }
-
-// export const Slider = () => {
-//     const appearanceManager = useRequiredContext(AppearanceManagerContext)
-
-//     const ref = useRef<HTMLDivElement>(null)
-//     useEffect(() => {
-//       const el = ref.current;
-//       if (!el) return
-//       const listener = console.log;
-//       el.addEventListener("mousedown", listener)
-//       el.addEventListener("mouseup", listener)
-//       el.addEventListener("touchstart", listener)
-//       el.addEventListener("touchend", listener)
-//       el.addEventListener("touchcancel", listener)
-
-//       return () => {
-//         el.removeEventListener("click", listener)
-//       }
-//     })
-
-//     return useObserver(() => (
-//       <SliderBar ref={ref} />
-//     ))
-//   }
