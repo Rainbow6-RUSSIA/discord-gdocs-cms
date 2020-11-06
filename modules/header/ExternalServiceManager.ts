@@ -41,6 +41,20 @@ export class ExternalServiceManager {
     console.log("CREATE NEW")
   }
 
+  @action handlePost = async () => {
+    if (!this.sheet) return
+    console.log("HANDLE POST")
+    await fetch("/api/post/", {
+      method: "POST",
+      body: JSON.stringify({
+        spreadsheetId: this.sheet.id,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+  }
+
   @action init = async () => {
     const session = await getCustomSession()
     console.log(session)

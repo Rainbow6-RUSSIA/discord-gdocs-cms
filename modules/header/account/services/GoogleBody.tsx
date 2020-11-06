@@ -33,6 +33,7 @@ export function GoogleBody({
     const {
       handleCreateNew,
       handleSheetSelection,
+      handlePost,
       sheet,
     } = externalServiceManager
 
@@ -60,6 +61,9 @@ export function GoogleBody({
             </a>
           ) : null}
         </Notice>
+        <Button disabled={!sheet} onClick={handlePost}>
+          POST
+        </Button>
       </>
     )
   })

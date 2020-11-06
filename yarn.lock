@@ -2559,6 +2559,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/google-spreadsheet@npm:^3.0.2":
+  version: 3.0.2
+  resolution: "@types/google-spreadsheet@npm:3.0.2"
+  checksum: fefb20308a8ef5fb8db23818309e4563f3a5447295ff0e5a3bfe2e3709bc8556d3d80efc93e5f4b726d100c43707765179237f96b821e51fdb09890a62d3d9ae
+  languageName: node
+  linkType: hard
+
 "@types/google.picker@npm:^0.0.34":
   version: 0.0.34
   resolution: "@types/google.picker@npm:0.0.34"
@@ -3599,6 +3606,15 @@ __metadata:
   version: 1.10.1
   resolution: "aws4@npm:1.10.1"
   checksum: 53f2897324997542e3cfeca0b24f5960e2470eb8527f0b6587432a4607dcb8ca817955aef4297a3b429f1ca5fa688ba1b6bc57d744add41292ffcb59466392bb
+  languageName: node
+  linkType: hard
+
+"axios@npm:^0.19.2":
+  version: 0.19.2
+  resolution: "axios@npm:0.19.2"
+  dependencies:
+    follow-redirects: 1.5.10
+  checksum: bad346deea24050f9953ce09bb8015f85a99a7b8f016806adccfab0b8981827d1fbee9c77c0ef7c70cc48392c1af6bbc65e07c3e88221d17282d2d5fd0a191f6
   languageName: node
   linkType: hard
 
@@ -5183,6 +5199,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"debug@npm:=3.1.0":
+  version: 3.1.0
+  resolution: "debug@npm:3.1.0"
+  dependencies:
+    ms: 2.0.0
+  checksum: 1295acd5e0531761255661d325cd0a80ac8c5f6de8942a53bb23c2197ccb97526972de662ed0e5d9393be83f3428a298a6e7185ecb02f0da6282019cd2ffb4a8
+  languageName: node
+  linkType: hard
+
 "decamelize@npm:^1.2.0":
   version: 1.2.0
   resolution: "decamelize@npm:1.2.0"
@@ -5362,6 +5387,7 @@ __metadata:
     "@testing-library/user-event": ^12.1.10
     "@types/d3-ease": ^1.0.10
     "@types/gapi": ^0.0.39
+    "@types/google-spreadsheet": ^3.0.2
     "@types/google.picker": ^0.0.34
     "@types/highlight.js": ^9.12.4
     "@types/jest": ^26.0.15
@@ -5389,6 +5415,7 @@ __metadata:
     eslint-plugin-react-hooks: ^4.2.0
     eslint-plugin-unicorn: ^21.0.0
     fake-indexeddb: ^3.1.2
+    google-spreadsheet: ^3.0.13
     googleapis: ^61.0.0
     highlight.js: ^9.18.3
     idb: ^5.0.7
@@ -6617,6 +6644,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"follow-redirects@npm:1.5.10":
+  version: 1.5.10
+  resolution: "follow-redirects@npm:1.5.10"
+  dependencies:
+    debug: =3.1.0
+  checksum: 6e58e02c31337b6b41ffc3d5f3d49920b7db428eddcf374537da00ef121fe473983e12d8557f4304287604168d3efcc288d1f009abaf4c9d61e5db0c0cee3c4a
+  languageName: node
+  linkType: hard
+
 "for-in@npm:^0.1.3":
   version: 0.1.8
   resolution: "for-in@npm:0.1.8"
@@ -6814,6 +6850,19 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"gaxios@npm:^4.0.0":
+  version: 4.0.1
+  resolution: "gaxios@npm:4.0.1"
+  dependencies:
+    abort-controller: ^3.0.0
+    extend: ^3.0.2
+    https-proxy-agent: ^5.0.0
+    is-stream: ^2.0.0
+    node-fetch: ^2.3.0
+  checksum: 062e8e07bae36f32082c2683329e18ac7809f358a175cf98ee6194db25c4882a24ac88d6b90ca639bacf7f26c739ffd0b6983b1ba491be652c4304c49a0430bf
+  languageName: node
+  linkType: hard
+
 "gcp-metadata@npm:^4.1.0":
   version: 4.2.0
   resolution: "gcp-metadata@npm:4.2.0"
@@ -6821,6 +6870,16 @@ fsevents@^1.2.7:
     gaxios: ^3.0.0
     json-bigint: ^1.0.0
   checksum: fb8fc8d6b6fa4964f9da5b5a6162d5756f6c524554ce9d226b3708dec8f41e4a8fd59062fd9ffb053c1db19e5b722750806855ada3908f4b59d2bfbbc334757d
+  languageName: node
+  linkType: hard
+
+"gcp-metadata@npm:^4.2.0":
+  version: 4.2.1
+  resolution: "gcp-metadata@npm:4.2.1"
+  dependencies:
+    gaxios: ^4.0.0
+    json-bigint: ^1.0.0
+  checksum: 53a976ad1d0fa040db7b9f305f8b13ad5a38ccdcf0b906a0f96be8d981edf46fff22e424ca5ada0124b7d8367f3a6bd2140c7ec3fed445ce5e77832e8ce50d75
   languageName: node
   linkType: hard
 
@@ -6966,6 +7025,23 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"google-auth-library@npm:^6.0.6":
+  version: 6.1.3
+  resolution: "google-auth-library@npm:6.1.3"
+  dependencies:
+    arrify: ^2.0.0
+    base64-js: ^1.3.0
+    ecdsa-sig-formatter: ^1.0.11
+    fast-text-encoding: ^1.0.0
+    gaxios: ^4.0.0
+    gcp-metadata: ^4.2.0
+    gtoken: ^5.0.4
+    jws: ^4.0.0
+    lru-cache: ^6.0.0
+  checksum: ddf028986085c15f705cfe45b49c298c168243f4c3d3af4ad725be35105b4c0e5d6e66c3277bb82e296f608f8034621a8c30e791846e68b699ddc011f8a66016
+  languageName: node
+  linkType: hard
+
 "google-p12-pem@npm:^3.0.3":
   version: 3.0.3
   resolution: "google-p12-pem@npm:3.0.3"
@@ -6974,6 +7050,17 @@ fsevents@^1.2.7:
   bin:
     gp12-pem: build/src/bin/gp12-pem.js
   checksum: f03565af5fb2e8415277a76f970908fe4338fb304767fad1f453c624e5b93d3e87aeb3f8e8c10e2b48a7d73825845c17b43cc10f9bf1b3843454ddc177168701
+  languageName: node
+  linkType: hard
+
+"google-spreadsheet@npm:^3.0.13":
+  version: 3.0.13
+  resolution: "google-spreadsheet@npm:3.0.13"
+  dependencies:
+    axios: ^0.19.2
+    google-auth-library: ^6.0.6
+    lodash: ^4.17.20
+  checksum: 595e2598fa9ccd73562ee478af39e400d85c88aa508743494c5fc4d7b2d083fb154ee86d57b7c459ca943f3ae2f55007156dcbe34faf1ee916eede18f01c912b
   languageName: node
   linkType: hard
 
@@ -8908,7 +8995,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"lodash@npm:^4.17.11, lodash@npm:^4.17.13, lodash@npm:^4.17.14, lodash@npm:^4.17.15, lodash@npm:^4.17.19":
+"lodash@npm:^4.17.11, lodash@npm:^4.17.13, lodash@npm:^4.17.14, lodash@npm:^4.17.15, lodash@npm:^4.17.19, lodash@npm:^4.17.20":
   version: 4.17.20
   resolution: "lodash@npm:4.17.20"
   checksum: c62101d2500c383b5f174a7e9e6fe8098149ddd6e9ccfa85f36d4789446195f5c4afd3cfba433026bcaf3da271256566b04a2bf2618e5a39f6e67f8c12030cb6

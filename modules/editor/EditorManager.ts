@@ -50,9 +50,7 @@ export class EditorManager {
 
   constructor(messages: MessageData[]) {
     this.allMessages = observable.map(
-      new Map(
-        messages.map(Message.of).map(msg => [msg.id, msg]),
-      )
+      new Map(messages.map(Message.of).map(msg => [msg.id, msg])),
     )
   }
 }
