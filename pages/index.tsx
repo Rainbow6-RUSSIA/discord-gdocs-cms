@@ -3,6 +3,9 @@ import { destroy, getSnapshot, SnapshotOut } from "mobx-state-tree"
 import type { GetServerSidePropsContext } from "next"
 import React, { useEffect, useRef, useState } from "react"
 import styled from "styled-components"
+import { ServiceAuthButton } from "../collaborative/header/account/ServiceAuthButton"
+import { ExternalServiceManager } from "../collaborative/header/ExternalServiceManager"
+import { ExternalServiceManagerProvider } from "../collaborative/header/ExternalServiceManagerContext"
 import { base64UrlEncode } from "../common/base64/base64UrlEncode"
 import { ModalManagerContext } from "../common/modal/ModalManagerContext"
 import { Header } from "../common/page/Header"
@@ -50,6 +53,8 @@ export default function Main(props: MainProps) {
   const { state, mobile } = props
 
   const editorManager = useLazyValue(() => EditorManager.create(state))
+  const externalServiceManager = useLazyValue(() => new ExternalServiceManager())
+
   useEffect(() => () => destroy(editorManager), [editorManager])
 
   const cancelRef = useRef<() => void>()
@@ -70,6 +75,7 @@ export default function Main(props: MainProps) {
   const [activeTab, setActiveTab] = useState<"Preview" | "Editor">("Preview")
 
   const modalManager = useRequiredContext(ModalManagerContext)
+  
   const spawnSettingsModal = () =>
     modalManager.spawn({ render: () => <PreferencesModal /> })
 
@@ -82,22 +88,27 @@ export default function Main(props: MainProps) {
         <meta key="referrer" name="referrer" content="strict-origin" />
       </PageHead>
       <Container>
-        <Header
-          items={[
-            { name: "Support Server", to: "/discord", newWindow: true },
-            { name: "Discord Bot", to: "/bot", newWindow: true },
-            { name: "Settings", handler: spawnSettingsModal },
-          ]}
-          tabs={
-            mobile
-              ? {
-                  items: ["Editor", "Preview"],
-                  current: activeTab,
-                  onChange: setActiveTab,
-                }
-              : undefined
-          }
-        />
+        <ExternalServiceManagerProvider value={externalServiceManager}>
+          <Header
+            items={[
+              { name: "Support Server", to: "/discord", newWindow: true },
+              { name: "Discord Bot", to: "/bot", newWindow: true },
+              { name: "Settings", handler: spawnSettingsModal },
+            ]}
+            tabs={
+              mobile
+                ? {
+                    items: ["Editor", "Preview"],
+                    current: activeTab,
+                    onChange: setActiveTab,
+                  }
+                : undefined
+            }
+          >
+            <ServiceAuthButton type="Google" />
+            <ServiceAuthButton type="Discord" />
+          </Header>
+        </ExternalServiceManagerProvider>
         <View>
           {(!mobile || activeTab === "Preview") && (
             <div>
