@@ -62,7 +62,7 @@ describe("getTotalCharacterCount", () => {
   it("counts embed footer", () => {
     expect(
       getTotalCharacterCount({
-        embeds: [{ footer: { text: "Sent from Discohook:tm:" } }],
+        embeds: [{ footer: { text: "Sent from QuarrelPost:tm:" } }],
       }),
     ).toEqual(23)
 

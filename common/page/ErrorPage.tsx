@@ -78,7 +78,7 @@ export function ErrorPage(props: ErrorPageProps) {
         </a>
         , or create an issue on the{" "}
         <a
-          href="https://github.com/discohook/site"
+          href="https://github.com/Rainbow6-RUSSIA/discord-gdocs-cms"
           target="blank"
           rel="noopener"
         >

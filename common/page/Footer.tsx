@@ -78,13 +78,12 @@ export function Footer() {
     <Container>
       <BrandContainer>
         {monochromeLogo}
-        <BrandName>Discohook</BrandName>
+        <BrandName>QuarrelPost</BrandName>
       </BrandContainer>
       <Tagline>
-        The easiest way to build and send Discord messages with embeds using
-        webhooks.
+        The easiest way to write, send and edit Discord messages in a team.
       </Tagline>
-      <Info>Email: &quot;hello&quot; at discohook.app</Info>
+      {/* <Info>Email: &quot;hello&quot; at discohook.app</Info> */}
       <NavigationList>
         <NavigationItem href="/discord" target="_blank">
           Discord Support Server
@@ -92,16 +91,16 @@ export function Footer() {
         <NavigationItem href="/bot" target="_blank">
           Discord Bot
         </NavigationItem>
-        <NavigationItem href="https://git.io/discohook" target="_blank">
+        <NavigationItem href="https://github.com/Rainbow6-RUSSIA/discord-gdocs-cms" target="_blank">
           Source Code
         </NavigationItem>
-        <NavigationItem href="https://patreon.com/discohook" target="_blank">
-          Support Discohook
-        </NavigationItem>
+        {/* <NavigationItem href="https://patreon.com/discohook" target="_blank">
+          Support QuarrelPost
+        </NavigationItem> */}
       </NavigationList>
       <LegalInfo>
-        &copy; 2020 The Discohook Authors. Discohook is not affiliated with
-        Discord.
+        &copy; 2020 Rainbow6-RUSSIA. QuarrelPost is not affiliated with
+        Discord. QuarrelPost is a fork of Discohook (discohook.org).
       </LegalInfo>
       <LegalInfo>
         This website is made available under the terms of the GNU AGPL v3

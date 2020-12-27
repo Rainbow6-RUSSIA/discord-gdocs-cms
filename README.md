@@ -1,10 +1,12 @@
-# Discohook
+# QuarrelPost
 
-An easy-to-use tool for building and sending Discord messages and embeds using webhooks.
+An intuitive tool for sending and collaborative editing Discord messages via webhooks with rich CMS-like editor. Supports markdown (already 😊), channels (soon™), roles (soon™), emojis (soon™) and embedded link preview (soon™).
 
-Live instance is available at <https://discohook.org/>.
+At initial launch app suggests to create or select existing Google Spreadsheet that will be a database where the source texts stored. So whatever happens you won't lose anything. You can [manage access](https://support.google.com/docs/answer/2494893), [see version history and revert back any changes](https://support.google.com/docs/answer/190843) via Google Spreadsheets.
 
-## Setup
+Live instance is available at <https://quarrelpost.rainbow6.ru/>.
+
+## Self Hosting
 
 Requires Node.js 12 and the Yarn package manager installed
 

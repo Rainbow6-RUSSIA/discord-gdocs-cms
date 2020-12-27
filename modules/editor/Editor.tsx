@@ -96,7 +96,7 @@ export function Editor() {
         <Markdown
           content={
             "It appears your web browser has prevented this page from " +
-            "executing JavaScript.\nTo use Discohook, please allow this page " +
+            "executing JavaScript.\nTo use QuarrelPost, please allow this page " +
             "to run JavaScript from your browser's settings."
           }
         />

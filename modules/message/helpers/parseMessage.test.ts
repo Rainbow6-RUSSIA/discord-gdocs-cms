@@ -11,7 +11,7 @@ describe("parseMessage", () => {
             "description": "Test embed",
             "author": {
               "name": "Authors have the dreaded snake case icon_url",
-              "icon_url": "https://discohook.org/static/icon-256.png"
+              "icon_url": "https://quarrelpost.rainbow6.ru/static/icon-256.png"
             },
             "fields": [
               {
@@ -45,7 +45,7 @@ describe("parseMessage", () => {
           description: "Test embed",
           author: {
             name: "Authors have the dreaded snake case icon_url",
-            icon_url: "https://discohook.org/static/icon-256.png",
+            icon_url: "https://quarrelpost.rainbow6.ru/static/icon-256.png",
           },
           fields: [
             {
