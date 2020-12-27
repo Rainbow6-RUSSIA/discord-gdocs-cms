@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 
 const config = {
-  target: "serverless",
+  target: "server",
   poweredByHeader: false,
   distDir: "build",
   reactStrictMode: true,

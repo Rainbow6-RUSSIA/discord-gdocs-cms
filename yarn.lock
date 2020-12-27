@@ -1696,6 +1696,7 @@ __metadata:
     mstform: "patch:mstform@1.27.0#./patches/mstform+1.27.0.patch"
     next: ^10.0.1
     next-auth: ^3.1.0
+    page-metadata-parser: ^1.1.4
     pg: ^8.5.1
     polished: ^4.0.3
     prettier: ^2.1.2
@@ -9814,6 +9815,13 @@ mstform@1.27.0:
   version: 1.0.0
   resolution: "packet-reader@npm:1.0.0"
   checksum: fdbf006717eeb21d21398ed264de33d9bc024c78d1ae3828661f13da242d393188bbee470d48135ec6abebbc370b2642da646e43ead06837a7dff53819da4107
+  languageName: node
+  linkType: hard
+
+"page-metadata-parser@npm:^1.1.4":
+  version: 1.1.4
+  resolution: "page-metadata-parser@npm:1.1.4"
+  checksum: 89204b0f7286b261666128d99e296b4bda03d278cafa03b4acf7eb61df3f5b06fb228b12d21bd39b8402d975de1e11ee65dc8b71f9adf558cd5ad2c689e48362
   languageName: node
   linkType: hard
 
