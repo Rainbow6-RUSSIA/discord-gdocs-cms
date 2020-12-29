@@ -6,6 +6,7 @@ import styled from "styled-components"
 import { ServiceAuthButton } from "../collaborative/header/account/ServiceAuthButton"
 import { ExternalServiceManager } from "../collaborative/header/ExternalServiceManager"
 import { ExternalServiceManagerProvider } from "../collaborative/header/ExternalServiceManagerContext"
+import { CollaborationModal } from "../collaborative/modals/CollaborationModal"
 import { base64UrlEncode } from "../common/base64/base64UrlEncode"
 import { ModalManagerContext } from "../common/modal/ModalManagerContext"
 import { Header } from "../common/page/Header"
@@ -53,7 +54,6 @@ export default function Main(props: MainProps) {
   const { state, mobile } = props
 
   const editorManager = useLazyValue(() => EditorManager.create(state))
-  const externalServiceManager = useLazyValue(() => new ExternalServiceManager())
 
   useEffect(() => () => destroy(editorManager), [editorManager])
 
@@ -78,21 +78,24 @@ export default function Main(props: MainProps) {
   
   const spawnSettingsModal = () =>
     modalManager.spawn({ render: () => <PreferencesModal /> })
+  
+  const spawnCollaborationModal = () =>
+    modalManager.spawn({ render: () => <CollaborationModal /> })
 
   return useObserver(() => (
     <EditorManagerProvider value={editorManager}>
       <PageHead
         title="QuarrelPost"
-        description="The easiest way to build and send Discord messages with embeds using webhooks."
+        description="The easiest way to write, send and edit Discord messages in a team."
       >
         <meta key="referrer" name="referrer" content="strict-origin" />
       </PageHead>
       <Container>
-        <ExternalServiceManagerProvider value={externalServiceManager}>
           <Header
             items={[
               { name: "Support Server", to: "/discord", newWindow: true },
               { name: "Discord Bot", to: "/bot", newWindow: true },
+              { name: "Collaboration", handler: spawnCollaborationModal },
               { name: "Settings", handler: spawnSettingsModal },
             ]}
             tabs={
@@ -104,11 +107,7 @@ export default function Main(props: MainProps) {
                   }
                 : undefined
             }
-          >
-            <ServiceAuthButton type="Google" />
-            <ServiceAuthButton type="Discord" />
-          </Header>
-        </ExternalServiceManagerProvider>
+          />
         <View>
           {(!mobile || activeTab === "Preview") && (
             <div>
