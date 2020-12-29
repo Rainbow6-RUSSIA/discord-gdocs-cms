@@ -8,7 +8,7 @@
     "start:collaborative": "node ./build/collaborative/sharedb/server.js",
     "build": "next build",
     "build:collaborative": "tsc -p tsconfig.collaborative.json",
-    "dev": "NODE_OPTIONS='--inspect --max-http-header-size=81920' next dev",
+    "dev": "NODE_OPTIONS='--inspect --max-http-header-size=81920' next dev -H 0.0.0.0",
     "dev:collaborative": "tsc-watch -p \"./tsconfig.collaborative.json\" --onCompilationComplete  \"yarn run start:collaborative\"",
     "test": "NODE_ENV=test TZ=UTC jest",
     "test:watch": "yarn run test --watch",

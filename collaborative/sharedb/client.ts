@@ -1,8 +1,11 @@
 import ReconnectingWebSocket from "reconnecting-websocket";
 import sharedb from "sharedb/lib/client";
 
+export let increment = () => {};
+
+if (process.browser) {
 // Open WebSocket connection to ShareDB server
-const socket = new ReconnectingWebSocket(`ws://${window.location.host}:8080`) as WebSocket;
+const socket = new ReconnectingWebSocket(`ws://${window.location.hostname}:8080`) as WebSocket;
 const connection = new sharedb.Connection(socket);
 
 // Create local Doc instance mapped to 'examples' collection document with id 'counter'
@@ -15,7 +18,7 @@ function showNumbers() {
 // When clicking on the '+1' button, change the number in the local
 // document and sync the change to the server and other connected
 // clients
-function increment() {
+increment = function increment() {
   // Increment `doc.data.numClicks`. See
   // https://github.com/ottypes/json0 for list of valid operations.
   doc.submitOp([{p: ["numClicks"], na: 1}]);
@@ -27,7 +30,8 @@ doc.subscribe(showNumbers);
 // update the number on the page
 doc.on("op", showNumbers);
 
-// Expose to index.html
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-window.increment = increment;
+  window.increment = increment;
+}
+

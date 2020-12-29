@@ -34,6 +34,9 @@ function startServer() {
 
   server.listen(8080);
   console.log("Listening on http://localhost:8080");
+  backend.use("op", ({ id, op,  }, next) => {console.log("OP", { id, op }); next()});
+  backend.use("commit", ({ id, op }, next) => {console.log("COMMIT", { id, op }); next()}); 
+  backend.use("receive", ({ data }, next) => {console.log("RECEIVE", { data }); next()}); 
 }
 
 createDoc(startServer);
