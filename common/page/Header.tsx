@@ -126,11 +126,10 @@ export type HeaderItemOptions = {
 export type HeaderProps<T extends string> = {
   items: HeaderItemOptions[]
   tabs?: HeaderTabsProps<T>
-  children?: React.ReactNode
 }
 
 export function Header<T extends string>(props: HeaderProps<T>) {
-  const { items, tabs, children } = props
+  const { items, tabs } = props
 
   const theme = useTheme()
 
@@ -162,7 +161,6 @@ export function Header<T extends string>(props: HeaderProps<T>) {
             </HeaderItem>
           ),
         )}
-        {children}
       </Navigation>
       <div style={{ flex: 1 }} />
       <OverflowButton>
