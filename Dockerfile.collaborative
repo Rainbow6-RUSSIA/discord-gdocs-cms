@@ -12,6 +12,6 @@ RUN yarn run build:collaborative
 
 USER node
 
-EXPOSE 443
+EXPOSE ${WSS_PORT}
 
 CMD [ "yarn", "run", "start:collaborative" ]

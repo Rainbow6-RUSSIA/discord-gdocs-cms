@@ -4,7 +4,6 @@ import { config } from "dotenv"
 import express from "express";
 import http from "http";
 import ShareDB from "sharedb";
-import { URL } from "url";
 import WebSocket from "ws";
 import { DEFAULT_EDITOR_MANAGER_STATE } from "../../modules/editor/defaultEditorManagerState";
 import { EditorManager } from "../../modules/editor/EditorManager";
@@ -37,9 +36,8 @@ async function main() {
     backend.listen(stream);
   });
 
-  const wssUrl = new URL(process.env.NEXT_PUBLIC_COLLABORATIVE_WSS!)
-  server.listen(wssUrl.port);
-  console.log(`Listening ${wssUrl.href}`);
+  server.listen(process.env.WSS_PORT);
+  console.log(`Listening ${process.env.WSS_PORT}`);
 }
 
 void main();
