@@ -1,14 +1,11 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import WebSocketJSONStream from "@teamwork/websocket-json-stream";
-import { config } from "dotenv"
 import express from "express";
 import http from "http";
 import ShareDB from "sharedb";
 import WebSocket from "ws";
 import { DEFAULT_EDITOR_MANAGER_STATE } from "../../modules/editor/defaultEditorManagerState";
 import { EditorManager } from "../../modules/editor/EditorManager";
-
-config()
 
 const initialData = EditorManager.create(DEFAULT_EDITOR_MANAGER_STATE);
 
