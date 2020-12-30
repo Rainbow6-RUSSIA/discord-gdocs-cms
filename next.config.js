@@ -36,6 +36,12 @@ try {
     .filter(l => l.startsWith("NEXT_PUBLIC_"))
     .join("\n")
   )
-} catch { /* */ }
+} catch { 
+  config.env = Object.fromEntries(
+    Object.entries(process.env).filter(
+       ([key])=>key.startsWith("NEXT_PUBLIC_")
+    )
+ );
+}
 
 module.exports = withSourceMaps(withBundleAnalyzer(config))
