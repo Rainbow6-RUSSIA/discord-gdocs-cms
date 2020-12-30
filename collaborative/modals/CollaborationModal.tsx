@@ -10,7 +10,6 @@ import { ModalContext } from "../../common/modal/ModalContext"
 import { useRequiredContext } from "../../common/state/useRequiredContext"
 import { remove } from "../../icons/remove"
 import { ServiceAuthButton } from "../header/account/ServiceAuthButton"
-import { increment } from "../sharedb/client"
 
 export function CollaborationModal() {
     const modal = useRequiredContext(ModalContext)
@@ -27,7 +26,7 @@ export function CollaborationModal() {
         </ModalHeader>
         <ModalBody>
             <ModalContainer>
-                <PrimaryButton onClick={() => increment()}>Increment</PrimaryButton>
+                <PrimaryButton>Increment</PrimaryButton>
             </ModalContainer>
             <ServiceAuthButton type="Google" />
             <ServiceAuthButton type="Discord" />

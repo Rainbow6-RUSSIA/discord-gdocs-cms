@@ -1,37 +1,43 @@
+import diffMatchPatch from "diff-match-patch"
+import JSONDiff from "json0-ot-diff"
+import { type as json1Type } from "ot-json1"
 import ReconnectingWebSocket from "reconnecting-websocket";
-import sharedb from "sharedb/lib/client";
+import ShareDB from "sharedb/lib/client";
 
-export let increment = () => {};
+ShareDB.types.register(json1Type);
 
-if (process.browser) {
-// Open WebSocket connection to ShareDB server
-const socket = new ReconnectingWebSocket(`ws://${window.location.hostname}:8080`) as WebSocket;
-const connection = new sharedb.Connection(socket);
+export class ShareDBClient {
+  constructor () {
+    this.socket = new ReconnectingWebSocket(`ws://${window.location.hostname}:8080`) as WebSocket
+    this.connection = new ShareDB.Connection(this.socket)
+    this.doc = this.connection.get("app", "post")
 
-// Create local Doc instance mapped to 'examples' collection document with id 'counter'
-const doc = connection.get("examples", "counter");
+    this.doc.subscribe(this.log);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const presence = this.connection.getDocPresence("app", "post");
+    const presenceId = window.crypto.getRandomValues(new Uint32Array(1))[0].toString(16);
+    this.localPresence = presence.create(presenceId);
 
-function showNumbers() {
-  console.log(doc.data.numClicks);
-};
+    presence.on("receive", console.log);
 
-// When clicking on the '+1' button, change the number in the local
-// document and sync the change to the server and other connected
-// clients
-increment = function increment() {
-  // Increment `doc.data.numClicks`. See
-  // https://github.com/ottypes/json0 for list of valid operations.
-  doc.submitOp([{p: ["numClicks"], na: 1}]);
+  }
+  socket: WebSocket;
+  connection: ShareDB.Connection;
+  doc: ShareDB.Doc;
+  localPresence: unknown;
+
+  log = () => {
+    console.log(this.doc.data);
+  }
+
+  setJSON(newData: unknown) {
+    const diff = JSONDiff(
+      this.doc.data,
+      newData,
+      diffMatchPatch
+    )
+    this.doc.submitOp(diff);
+  }
+
 }
-
-// Get initial value of document and subscribe to changes
-doc.subscribe(showNumbers);
-// When document changes (by this client or any other, or the server),
-// update the number on the page
-doc.on("op", showNumbers);
-
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-  window.increment = increment;
-}
-

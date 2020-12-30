@@ -1,42 +1,41 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import WebSocketJSONStream from "@teamwork/websocket-json-stream";
 import express from "express";
 import http from "http";
 import ShareDB from "sharedb";
 import WebSocket from "ws";
+import { DEFAULT_EDITOR_MANAGER_STATE } from "../../modules/editor/defaultEditorManagerState";
+import { EditorManager } from "../../modules/editor/EditorManager";
 
-const backend = new ShareDB();
+const initialData = EditorManager.create(DEFAULT_EDITOR_MANAGER_STATE);
 
-// Create initial document then fire callback
-function createDoc(callback: () => void) {
+async function main() {
+  // @ts-ignore
+  const backend = new ShareDB({presence: true});
   const connection = backend.connect();
-  const doc = connection.get("examples", "counter");
-  doc.fetch((err) => {
-    if (err) throw err;
-    if (doc.type === null) {
-      doc.create({numClicks: 0}, callback);
-      return;
-    }
-    callback();
-  });
-}
+  const doc = connection.get("app", "post");
+  await new Promise((res, rej) => {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    doc.fetch((err) => err ? rej(err) : res(""))
+  })
 
-function startServer() {
-  // Create a web server to serve files and listen to WebSocket connections 
+  if (doc.type === null) {
+    await new Promise(res => { doc.create(initialData, res) } );
+  }
+
   const app = express();
   const server = http.createServer(app);
 
-  // Connect any incoming WebSocket connection to ShareDB
   const wss = new WebSocket.Server({server});
+
   wss.on("connection", (ws) => {
     const stream = new WebSocketJSONStream(ws);
     backend.listen(stream);
   });
 
   server.listen(8080);
-  console.log("Listening on http://localhost:8080");
-  backend.use("op", ({ id, op,  }, next) => {console.log("OP", { id, op }); next()});
-  backend.use("commit", ({ id, op }, next) => {console.log("COMMIT", { id, op }); next()}); 
-  backend.use("receive", ({ data }, next) => {console.log("RECEIVE", { data }); next()}); 
+  console.log("Listening http://localhost:8080");
 }
 
-createDoc(startServer);
+void main();
+

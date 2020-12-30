@@ -3,10 +3,8 @@ import { destroy, getSnapshot, SnapshotOut } from "mobx-state-tree"
 import type { GetServerSidePropsContext } from "next"
 import React, { useEffect, useRef, useState } from "react"
 import styled from "styled-components"
-import { ServiceAuthButton } from "../collaborative/header/account/ServiceAuthButton"
-import { ExternalServiceManager } from "../collaborative/header/ExternalServiceManager"
-import { ExternalServiceManagerProvider } from "../collaborative/header/ExternalServiceManagerContext"
 import { CollaborationModal } from "../collaborative/modals/CollaborationModal"
+import { boundEditorManagerToCollaborativeSession } from "../collaborative/sharedb/editorBinder"
 import { base64UrlEncode } from "../common/base64/base64UrlEncode"
 import { ModalManagerContext } from "../common/modal/ModalManagerContext"
 import { Header } from "../common/page/Header"
@@ -53,7 +51,7 @@ export type MainProps = {
 export default function Main(props: MainProps) {
   const { state, mobile } = props
 
-  const editorManager = useLazyValue(() => EditorManager.create(state))
+  const editorManager = useLazyValue(() => boundEditorManagerToCollaborativeSession(EditorManager.create(state)))
 
   useEffect(() => () => destroy(editorManager), [editorManager])
 
@@ -63,13 +61,13 @@ export default function Main(props: MainProps) {
       data: message.data,
     }))
 
-    cancelRef.current?.()
-    cancelRef.current = timeout(() => {
-      const json = JSON.stringify({ messages })
-      const base64 = base64UrlEncode(json)
+    // cancelRef.current?.()
+    // cancelRef.current = timeout(() => {
+    //   const json = JSON.stringify({ messages })
+    //   const base64 = base64UrlEncode(json)
 
-      history.replaceState({ __N: false }, "", `/?data=${base64}`)
-    }, 500)
+    //   history.replaceState({ __N: false }, "", `/?data=${base64}`)
+    // }, 500)
   })
 
   const [activeTab, setActiveTab] = useState<"Preview" | "Editor">("Preview")
