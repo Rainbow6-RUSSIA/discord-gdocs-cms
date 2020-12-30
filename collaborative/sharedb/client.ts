@@ -8,18 +8,18 @@ ShareDB.types.register(json1Type);
 
 export class ShareDBClient {
   constructor () {
-    this.socket = new ReconnectingWebSocket(`ws://${window.location.hostname}:8080`) as WebSocket
+    this.socket = new ReconnectingWebSocket(process.env.NEXT_PUBLIC_COLLABORATIVE_WSS!) as WebSocket
     this.connection = new ShareDB.Connection(this.socket)
     this.doc = this.connection.get("app", "post")
 
     this.doc.subscribe(this.log);
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const presence = this.connection.getDocPresence("app", "post");
-    const presenceId = window.crypto.getRandomValues(new Uint32Array(1))[0].toString(16);
-    this.localPresence = presence.create(presenceId);
+    // const presence = this.connection.getDocPresence("app", "post");
+    // const presenceId = window.crypto.getRandomValues(new Uint32Array(1))[0].toString(16);
+    // this.localPresence = presence.create(presenceId);
 
-    presence.on("receive", console.log);
+    // presence.on("receive", console.log);
 
   }
   socket: WebSocket;
