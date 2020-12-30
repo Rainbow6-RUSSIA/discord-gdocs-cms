@@ -1,12 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 
-const withBundleAnalyzer = require("@next/bundle-analyzer")({
-  enabled: process.env.ANALYZE === "true",
-})
-const withSourceMaps = require("@zeit/next-source-maps")
-const dotenv = require("dotenv")
-const fs = require("fs")
-
 const config = {
   target: "server",
   poweredByHeader: false,
@@ -28,23 +21,9 @@ const config = {
     ]),
 }
 
-try {
-  config.env = dotenv
-  .parse(
-    fs.readFileSync("./.env", { encoding: "utf-8" })
-    .split("\n")
-    .filter(l => l.startsWith("NEXT_PUBLIC_"))
-    .join("\n")
-  )
-} catch {
-  config.env = Object.fromEntries(
-    Object.entries(process.env).filter(
-       ([key])=>key.startsWith("NEXT_PUBLIC_")
-    )
- );
-}
-
-console.log("ENV:", process.env)
-console.log("Result ENV:", config.env)
+const withBundleAnalyzer = require("@next/bundle-analyzer")({
+  enabled: process.env.ANALYZE === "true",
+})
+const withSourceMaps = require("@zeit/next-source-maps")
 
 module.exports = withSourceMaps(withBundleAnalyzer(config))
