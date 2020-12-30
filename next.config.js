@@ -26,13 +26,16 @@ const config = {
         permanent: false,
       },
     ]),
-  env: dotenv
-    .parse(
-      fs.readFileSync("./.env", { encoding: "utf-8" })
-      .split("\n")
-      .filter(l => l.startsWith("NEXT_PUBLIC_"))
-      .join("\n")
-    )
 }
+
+try {
+  config.env = dotenv
+  .parse(
+    fs.readFileSync("./.env", { encoding: "utf-8" })
+    .split("\n")
+    .filter(l => l.startsWith("NEXT_PUBLIC_"))
+    .join("\n")
+  )
+} catch { /* */ }
 
 module.exports = withSourceMaps(withBundleAnalyzer(config))
