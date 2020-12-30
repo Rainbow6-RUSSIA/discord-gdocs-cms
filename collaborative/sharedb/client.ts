@@ -8,6 +8,7 @@ ShareDB.types.register(json1Type);
 
 export class ShareDBClient {
   constructor () {
+    console.log(`Connecting to WS: ${process.env.NEXT_PUBLIC_COLLABORATIVE_WSS}`)
     this.socket = new ReconnectingWebSocket(process.env.NEXT_PUBLIC_COLLABORATIVE_WSS!) as WebSocket
     this.connection = new ShareDB.Connection(this.socket)
     this.doc = this.connection.get("app", "post")
