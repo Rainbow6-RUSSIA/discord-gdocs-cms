@@ -22,6 +22,9 @@
     "format": "prettier --write './**/*.@(js|jsx|ts|tsx)'",
     "format:check": "prettier --check './**/*.@(js|jsx|ts|tsx)'"
   },
+  "resolutions": {
+    "webpack": "~4.43.0"
+  },
   "dependencies": {
     "@babel/runtime": "^7.12.5",
     "@next/bundle-analyzer": "^10.0.3",
