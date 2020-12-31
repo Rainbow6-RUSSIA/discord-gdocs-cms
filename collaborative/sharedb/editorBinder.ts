@@ -1,5 +1,5 @@
 import { observe } from "mobx";
-import { onSnapshot, applySnapshot, isAlive } from "mobx-state-tree";
+import { onSnapshot, applySnapshot } from "mobx-state-tree";
 import type { EditorManagerLike } from "../../modules/editor/EditorManager";
 import type { ExternalServiceManager } from "../header/ExternalServiceManager";
 import { ShareDBClient } from "./client";
@@ -11,17 +11,9 @@ export function bindEditorManagerToCollaborativeSession(store: EditorManagerLike
             console.log(externalService.googleUser?.email)
             const shareClient = new ShareDBClient();
 
-            if (isAlive(store)) { // HMR check
-                onSnapshot(store, newSnapshot => {
-                    console.log("setJSON", newSnapshot)
-                    shareClient.setJSON(newSnapshot)
-                })
-            }
+            onSnapshot(store, newSnapshot => shareClient.setJSON(newSnapshot))
             
-            shareClient.on("apply", () => {
-                console.log("applySnapshot", shareClient.doc.data)
-                applySnapshot(store, shareClient.doc.data);
-            });
+            shareClient.on("apply", () => applySnapshot(store, shareClient.doc.data));
         })
     }
     return store;

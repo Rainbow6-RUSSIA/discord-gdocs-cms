@@ -17,7 +17,7 @@ export class ShareDBClient extends EventEmitter {
     this.doc = this.connection.get("app", "post")
 
     this.doc.subscribe(this.applyNew)
-    this.doc.on("op", this.applyNew)
+    this.doc.on("op", debounce(this.applyNew, 50))
   }
   socket: WebSocket;
   connection: ShareDB.Connection;
@@ -32,16 +32,13 @@ export class ShareDBClient extends EventEmitter {
         newData,
         diffMatchPatch
       )
-      if (diff.length > 0) {
-        this.doc.submitOp(diff)
-        console.log(diff)
-      }
+      if (diff.length > 0) this.doc.submitOp(diff)
     }
   }
 
   applyNew = () => {
     this.ready = true
-    debounce(() => this.emit("apply", this.doc.data), 50)
+    this.emit("apply", this.doc.data)
+    console.log("received change")
   }
-
 }
