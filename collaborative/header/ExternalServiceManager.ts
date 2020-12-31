@@ -18,7 +18,7 @@ export class ExternalServiceManager {
   @observable guild?: Guild | null = null
   @observable session?: CustomSession | null
 
-  @action link = (type: "Discord" | "Google") => signIn(type.toLowerCase())
+  @action link = async (type: "Discord" | "Google") => signIn(type.toLowerCase())
 
   @action unlink = async (type: "Discord" | "Google") => {
     const res = await fetch(`/api/auth/provider/${type.toLowerCase()}/unlink`, {
