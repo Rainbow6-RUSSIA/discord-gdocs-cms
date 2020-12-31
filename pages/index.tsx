@@ -3,8 +3,9 @@ import { destroy, getSnapshot, SnapshotOut } from "mobx-state-tree"
 import type { GetServerSidePropsContext } from "next"
 import React, { useEffect, useRef, useState } from "react"
 import styled from "styled-components"
+import { ExternalServiceManagerContext } from "../collaborative/header/ExternalServiceManagerContext"
 import { CollaborationModal } from "../collaborative/modals/CollaborationModal"
-import { boundEditorManagerToCollaborativeSession } from "../collaborative/sharedb/editorBinder"
+import { bindEditorManagerToCollaborativeSession } from "../collaborative/sharedb/editorBinder"
 import { base64UrlEncode } from "../common/base64/base64UrlEncode"
 import { ModalManagerContext } from "../common/modal/ModalManagerContext"
 import { Header } from "../common/page/Header"
@@ -51,7 +52,8 @@ export type MainProps = {
 export default function Main(props: MainProps) {
   const { state, mobile } = props
 
-  const editorManager = useLazyValue(() => boundEditorManagerToCollaborativeSession(EditorManager.create(state)))
+  const externalServiceManager = useRequiredContext(ExternalServiceManagerContext)
+  const editorManager = useLazyValue(() => bindEditorManagerToCollaborativeSession(EditorManager.create(state), externalServiceManager))
 
   useEffect(() => () => destroy(editorManager), [editorManager])
 
