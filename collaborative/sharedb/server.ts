@@ -5,17 +5,21 @@ import ShareDB from "sharedb";
 import WebSocket from "ws";
 import { DEFAULT_EDITOR_MANAGER_STATE } from "../../modules/editor/defaultEditorManagerState";
 import { EditorManager } from "../../modules/editor/EditorManager";
+import { TempMemoryDB } from "./TempMemoryDb";
 
 class ShareDBServer {
   static initialData = EditorManager.create(DEFAULT_EDITOR_MANAGER_STATE);
 
   constructor() {
+    this.tempMemoryDb = new TempMemoryDB()
+    this.backend = new ShareDB({ db: this.tempMemoryDb })
     this.connection = this.backend.connect();
     void this.startServer();
   }
 
+  tempMemoryDb: TempMemoryDB
   connection: ShareDB.Connection
-  backend = new ShareDB()
+  backend: ShareDB
 
   initDoc = async (name: string, data: unknown = ShareDBServer.initialData) => {
     const doc = this.connection.get("app", name);
@@ -31,6 +35,8 @@ class ShareDBServer {
 
   startServer = async () => {
     await this.initDoc("post")
+    await this.initDoc("post1")
+    this.tempMemoryDb.deleteDoc("app", "post1")
 
     const app = express();
     const server = http.createServer(app);
