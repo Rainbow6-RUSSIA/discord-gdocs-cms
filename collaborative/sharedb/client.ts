@@ -5,7 +5,6 @@ import { observe } from "mobx";
 import { onSnapshot, onPatch, IDisposer, applySnapshot } from "mobx-state-tree";
 import { type as json1Type } from "ot-json1"
 import ReconnectingWebSocket from "reconnecting-websocket";
-import type { Op } from "sharedb";
 import ShareDB from "sharedb/lib/client";
 import type { EditorManagerLike } from "../../modules/editor/EditorManager";
 import type { ExternalServiceManager } from "../header/ExternalServiceManager";
