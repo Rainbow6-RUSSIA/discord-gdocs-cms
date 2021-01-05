@@ -9,6 +9,7 @@ import {
   types,
 } from "mobx-state-tree"
 import { EditorManager, EditorManagerLike } from "../editor/EditorManager"
+import type { MessageLike } from "../message/state/models/MessageModel"
 import {
   BRANDED_DEFAULT_AVATAR_URL,
   DEFAULT_AVATAR_URL,
@@ -112,12 +113,14 @@ export const WebhookModel = types
       }
     }),
 
-    async save() {
+    save: flow(function* () {
       const editor: EditorManagerLike = getParentOfType(self, EditorManager)
 
       const [method, url] = self.route
 
-      for (const message of editor.messages) {
+      let message: MessageLike
+
+      for (message of editor.messages) {
         const headers: Record<string, string> = {
           "Accept": "application/json",
           "Accept-Language": "en",
@@ -128,14 +131,17 @@ export const WebhookModel = types
           headers["Content-Type"] = "application/json"
         }
 
-        const response = await fetch(url, { method, headers, body })
-        const data = await response.json()
+        const response = yield fetch(url, { method, headers, body })
+        const data = yield response.json()
 
         console.log("Target executed", data)
+
+        // Any parameter except message id doesn't matter
+        self.message = `https://discord.com/channels/1/2/${data.id}`
       }
 
       return null
-    },
+    }),
   }))
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface, @typescript-eslint/consistent-type-definitions
