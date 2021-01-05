@@ -27,7 +27,7 @@ export class ExternalServiceManager {
     if (res.status === 204) {
       await signOut()
     }
-    return this.init()
+    return this.load()
   }
 
   @action handleSheetSelection = (event: GooglePickerCallback) => {
@@ -55,16 +55,12 @@ export class ExternalServiceManager {
     })
   }
 
-  @action init = async () => {
+  @action load = async () => {
     const session = await getCustomSession()
     console.log(session)
     this.ready = true
     this.session = session
     this.discordUser = session?.discord ?? null
     this.googleUser = session?.google ?? null
-  }
-
-  constructor() {
-    void this.init()
   }
 }

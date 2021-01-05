@@ -5,6 +5,7 @@ import React, { useEffect, useRef, useState } from "react"
 import styled from "styled-components"
 import { ExternalServiceManagerContext } from "../collaborative/header/ExternalServiceManagerContext"
 import { CollaborationModal } from "../collaborative/modals/CollaborationModal"
+import { ShareDBClient } from "../collaborative/sharedb/client"
 import { bindEditorManagerToCollaborativeSession } from "../collaborative/sharedb/editorBinder"
 import { base64UrlEncode } from "../common/base64/base64UrlEncode"
 import { ModalManagerContext } from "../common/modal/ModalManagerContext"
@@ -53,7 +54,13 @@ export default function Main(props: MainProps) {
   const { state, mobile } = props
 
   const externalServiceManager = useRequiredContext(ExternalServiceManagerContext)
-  const editorManager = useLazyValue(() => bindEditorManagerToCollaborativeSession(EditorManager.create(state), externalServiceManager))
+  const editorManager = useLazyValue(() => EditorManager.create(state))
+
+  useEffect(() => {
+    const shareClient = new ShareDBClient()
+    shareClient.bind(editorManager, externalServiceManager)
+    return () => shareClient.dispose()
+  }, [editorManager, externalServiceManager])
 
   useEffect(() => () => destroy(editorManager), [editorManager])
 
