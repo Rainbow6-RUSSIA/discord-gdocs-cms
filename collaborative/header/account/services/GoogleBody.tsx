@@ -1,11 +1,11 @@
 import { useObserver } from "mobx-react-lite"
 import React from "react"
 import styled from "styled-components"
-import { Button } from "../../../../common/input/button/Button"
+import { PrimaryButton } from "../../../../common/input/button/PrimaryButton"
+import { ButtonRow } from "../../../../common/layout/ButtonRow"
 import { FlexContainer } from "../../../../common/layout/FlexContainer"
 import { externalLink } from "../../../icons/externalLink"
 import { googleSheets } from "../../../icons/googleSheets"
-import { BodyHeader } from "../AccountModalSectionHeader"
 import type { AccountModalProp } from "../BaseAccountModal"
 import GooglePicker from "../GooglePicker"
 
@@ -26,7 +26,7 @@ const Notice = styled.div`
 
 export function GoogleBody({
   externalServiceManager,
-  loading,
+  ready,
 }: AccountModalProp) {
   return useObserver(() => {
     const user = externalServiceManager.googleUser!
@@ -39,19 +39,21 @@ export function GoogleBody({
 
     return (
       <>
-        <BodyHeader>Select spreadsheet</BodyHeader>
+        Select spreadsheet
         <FlexContainer>
-          <Button disabled={loading} onClick={handleCreateNew}>
-            Create new
-          </Button>
-          <GooglePicker
-            accessToken={user.accessToken}
-            onEvent={handleSheetSelection}
-          >
-            <Button disabled={loading}>Pick existing</Button>
-          </GooglePicker>
+          <ButtonRow>
+            <PrimaryButton disabled={!ready} onClick={handleCreateNew}>
+              Create new
+            </PrimaryButton>
+            <GooglePicker
+              accessToken={user && user.accessToken}
+              onEvent={handleSheetSelection}
+            >
+              <PrimaryButton disabled={!ready}>Pick existing</PrimaryButton>
+            </GooglePicker>
+          </ButtonRow>
         </FlexContainer>
-        <BodyHeader>Chosen spreadsheet</BodyHeader>
+        Chosen spreadsheet
         <Notice>
           {sheet ? googleSheets : null}
           <span>{sheet ? sheet.name : "None"}</span>
@@ -61,9 +63,9 @@ export function GoogleBody({
             </a>
           ) : null}
         </Notice>
-        <Button disabled={!sheet} onClick={handlePost}>
+        <PrimaryButton disabled={!sheet} onClick={handlePost}>
           POST
-        </Button>
+        </PrimaryButton>
       </>
     )
   })

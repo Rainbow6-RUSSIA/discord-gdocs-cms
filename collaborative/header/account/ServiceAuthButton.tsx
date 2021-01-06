@@ -1,6 +1,7 @@
 import { useObserver } from "mobx-react-lite"
 import React from "react"
 import styled from "styled-components"
+import { PrimaryButton } from "../../../common/input/button/PrimaryButton"
 import { ModalManagerContext } from "../../../common/modal/ModalManagerContext"
 import { useRequiredContext } from "../../../common/state/useRequiredContext"
 import { loading } from "../../icons/loading"
@@ -45,7 +46,10 @@ export const ServiceAuthButton = ({ type }: SocialTypeProps) => {
   const modalManager = useRequiredContext(ModalManagerContext)
 
   const Fallback = (
-    <button onClick={() => serviceManager.link(type)}>Login via {type}</button>
+    <>
+      To use collaboration features you must login into a Google account and select spreadsheet for milestone saves.
+      <PrimaryButton onClick={async () => serviceManager.link(type)}>Login via {type}</PrimaryButton>
+    </>
   )
 
   const Loading = (
@@ -54,12 +58,12 @@ export const ServiceAuthButton = ({ type }: SocialTypeProps) => {
     </SocialProfile>
   )
 
-  const handleClick = () =>
-    modalManager.spawn({
-      render: () => (
-        <BaseAccountModal type={type} externalServiceManager={serviceManager} />
-      ),
-    })
+  // const handleClick = () =>
+  //   modalManager.spawn({
+  //     render: () => (
+  //       <BaseAccountModal type={type} externalServiceManager={serviceManager} />
+  //     ),
+  //   })
 
   return useObserver(() => {
     if (!serviceManager.ready) return Loading
@@ -68,7 +72,7 @@ export const ServiceAuthButton = ({ type }: SocialTypeProps) => {
       if (!serviceManager.discordUser) return Fallback
       const { id, avatar, username, discriminator } = serviceManager.discordUser
       return (
-        <SocialProfile onClick={handleClick}>
+        <SocialProfile>
           <Avatar
             src={`https://cdn.discordapp.com/avatars/${id}/${avatar}.${
               avatar.startsWith("a_") ? "gif" : "png"
@@ -85,9 +89,9 @@ export const ServiceAuthButton = ({ type }: SocialTypeProps) => {
       if (!serviceManager.googleUser) return Fallback
       const { name, picture } = serviceManager.googleUser
       return (
-        <SocialProfile onClick={handleClick}>
+        <SocialProfile>
+          <span>Logged as: {name}</span>
           <Avatar alt="Your Google Avatar" src={picture} />
-          <span>{name}</span>
         </SocialProfile>
       )
     }

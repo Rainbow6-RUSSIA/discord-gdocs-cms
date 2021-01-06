@@ -16,7 +16,7 @@ import { GoogleBody } from "./services/GoogleBody"
 
 export type AccountModalProp = {
   externalServiceManager: ExternalServiceManager
-  loading: boolean
+  ready: boolean
 }
 
 export function BaseAccountModal({
@@ -36,7 +36,7 @@ export function BaseAccountModal({
     <ModalContainer>
       <ModalHeader>{type} Settings</ModalHeader>
       <ModalBody>
-        {!serviceManager.session?.[type.toLowerCase() as "discord" | "google"]
+        {/* {!serviceManager.session?.[type.toLowerCase() as "discord" | "google"]
           ? `Sign in via ${type} is required`
           : null}
         {type === "Google" && serviceManager.googleUser ? (
@@ -50,7 +50,7 @@ export function BaseAccountModal({
             loading={isLoading}
             externalServiceManager={serviceManager}
           />
-        ) : null}
+        ) : null} */}
       </ModalBody>
       <ModalFooter>
         <PrimaryButton accent="danger" onClick={handleUnlink}>
