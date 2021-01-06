@@ -2,6 +2,7 @@ import { createHash } from "crypto";
 import diffMatchPatch from "diff-match-patch"
 import { EventEmitter } from "events"
 import JSONDiff from "json0-ot-diff"
+import debounce from "lodash.debounce";
 import { observe } from "mobx";
 import { onSnapshot, onPatch, IDisposer, applySnapshot, IJsonPatch, getSnapshot, applyPatch } from "mobx-state-tree";
 import { type as json1Type } from "ot-json1"
@@ -10,8 +11,6 @@ import type { Op } from "sharedb";
 import ShareDB from "sharedb/lib/client";
 import type { EditorManagerLike } from "../../modules/editor/EditorManager";
 import type { ExternalServiceManager } from "../header/ExternalServiceManager";
-import { debounce } from "../helpers/debounce";
-import { throttle } from "../helpers/throttle";
 
 ShareDB.types.register(json1Type);
 
@@ -63,7 +62,7 @@ export class ShareDBClient extends EventEmitter {
         
         this.init()
 
-        this.disposers.push(onSnapshot(this.editorStore, throttle(this.handleSnapshot, 500)))
+        this.disposers.push(onSnapshot(this.editorStore, debounce(this.handleSnapshot, 500, {maxWait: 1000} )))
         // this.disposers.push(onPatch(this.editorStore, this.handlePatch))
       })
     )
@@ -122,7 +121,7 @@ export class ShareDBClient extends EventEmitter {
     if (isWebhookChanged) {
       void this.editorStore.process("/target/url");
     }
-    
+
     console.log("received change", createHash("md5").update(JSON.stringify(this.doc.data)).digest("base64"))
   }
 

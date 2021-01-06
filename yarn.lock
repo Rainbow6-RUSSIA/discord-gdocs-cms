@@ -1665,6 +1665,7 @@ __metadata:
     "@types/google-spreadsheet": ^3.0.2
     "@types/google.picker": ^0.0.34
     "@types/jest": ^26.0.15
+    "@types/lodash.debounce": ^4
     "@types/next-auth": ^3.1.18
     "@types/node": ^14.14.7
     "@types/react": ^16.9.56
@@ -1697,6 +1698,7 @@ __metadata:
     idb: ^5.0.7
     jest: ^26.6.3
     json0-ot-diff: ^1.0.5
+    lodash.debounce: ^4.0.8
     mobx: ^5.15.7
     mobx-react-lite: ^2.2.2
     mobx-state-tree: ^3.17.2
@@ -2554,6 +2556,22 @@ __metadata:
   version: 0.0.29
   resolution: "@types/json5@npm:0.0.29"
   checksum: 66e9ac0143ec521522c7bb670301e9836ee886207eeed1aab6d4854a1b19b404ab3a54cd8d449f9b1f13acc357f540be96f8ac2d1e86e301eab52ae0f9a4066f
+  languageName: node
+  linkType: hard
+
+"@types/lodash.debounce@npm:^4":
+  version: 4.0.6
+  resolution: "@types/lodash.debounce@npm:4.0.6"
+  dependencies:
+    "@types/lodash": "*"
+  checksum: 64952797f594f4068d2edd1e178a553647ca4ed5716c9b7673f9187d012fe5b5a0141c15ffc82c8f4d29bf13040c53001634a5b43b51a9efdfb6d4fa77ae24aa
+  languageName: node
+  linkType: hard
+
+"@types/lodash@npm:*":
+  version: 4.14.167
+  resolution: "@types/lodash@npm:4.14.167"
+  checksum: 40778f83a86392625b3d52c15f59171a0f6a35436128b8fb1e37f89162f7950dc98570f27bc99ce1e2e04084e64da41cb45146d091d5181e12c6733bcf16fac6
   languageName: node
   linkType: hard
 
