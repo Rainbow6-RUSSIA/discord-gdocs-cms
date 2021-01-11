@@ -83,7 +83,7 @@ export class ShareDBClient extends EventEmitter {
     this.doc = this.connection.get("app", "post")
 
     this.doc.subscribe(this.syncUpdate)
-    this.doc.on("op", debounce(this.syncUpdate, 50))
+    this.doc.on("op", this.syncUpdate) // debounce here causes a jumping cursor bug
   }
 
   handlePatch = (patch: IJsonPatch, reversePatch: IJsonPatch) => {
