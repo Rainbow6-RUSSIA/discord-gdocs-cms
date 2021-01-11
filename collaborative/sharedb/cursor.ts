@@ -23,60 +23,37 @@ export class ShareDBCursor {
     selection: [number, number] | null = null
 
     initTracking = () => {
-        document.addEventListener("focusin", this.focusIn)
-        document.addEventListener("focusout", this.focusOut)
+        document.addEventListener("selectionchange", this.selectionChange);
     }
 
     stopTracking = () => {
-        document.removeEventListener("focusin", this.focusIn)
-        document.removeEventListener("focusout", this.focusOut)
+        document.removeEventListener("selectionchange", this.selectionChange);
     }
 
-    hookChange = (target: TextElement) => { 
-        this.activeElement = target
-        this.path = target.id.split("_").filter(Boolean).map(parseNumbers)
-        target.addEventListener("click", this.cursorHandle)
-        target.addEventListener("input", this.cursorHandle)
-        target.addEventListener("keydown", this.cursorHandle)
-        target.addEventListener("select", this.cursorHandle)
-    }
-    unhookChange = (target: TextElement) => {
-        // this.activeElement = null;
-        // this.path = null;
-        target.removeEventListener("click", this.cursorHandle)
-        target.removeEventListener("input", this.cursorHandle)
-        target.removeEventListener("keydown", this.cursorHandle)
-        target.removeEventListener("select", this.cursorHandle)
-    }
-
-    focusIn = (e: FocusEvent) => {
-        const { target } = e
+    selectionChange = () => {
+        const target = document.activeElement
         if (isAllowedElement(target)) {
-            if (this.activeElement) this.activeElement.style.backgroundColor = ""
-            target.style.backgroundColor = "rebeccapurple"
-            this.hookChange(target)
-            
-            if (isGreedyElement(this.path)) this.cursorHandle(e)
+            if (target.id !== this.activeElement?.id) {
+                if (this.activeElement) this.activeElement.style.backgroundColor = ""
+                target.style.backgroundColor = "rebeccapurple"
+            }
+            this.activeElement = target;
+            this.path = target.id.split("_").filter(Boolean).map(parseNumbers);
+            this.selection = [target.selectionStart ?? 0, target.selectionEnd ?? 0]
+            console.log("SAVE SELECTION", this.selection)
+            this.cursorReport()
         }
     }
 
-    focusOut = ({ target }: FocusEvent) => { 
-        if (isAllowedElement(target)) {
-            // target.style.backgroundColor = ""
-            this.unhookChange(target)
-        }
-    }
-
-    cursorHandle = debounce(
-    (e: Event) => {
+    cursorReport = debounce(() => {
         if (this.activeElement && isValidPath(this.path)) {
-            this.selection = [this.activeElement.selectionStart ?? 0, this.activeElement.selectionEnd ?? 0]
-            console.log("cursorHandle", this.selection, this.path) // setInterval(() => temp1.setSelectionRange(i, i++), 1000)
+            // console.log("cursorReport", this.selection, this.path)
         }
     }, 150, {maxWait: 500})
 
     revertCaretPosition = () => {
         if (this.activeElement && this.selection) {
+            console.log("SET SELECTION", this.selection)
             this.activeElement.setSelectionRange(...this.selection);
         }
     }    
