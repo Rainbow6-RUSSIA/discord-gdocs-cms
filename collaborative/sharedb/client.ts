@@ -11,13 +11,10 @@ import type { Op } from "sharedb";
 import ShareDB from "sharedb/lib/client";
 import type { EditorManagerLike } from "../../modules/editor/EditorManager";
 import type { ExternalServiceManager } from "../header/ExternalServiceManager";
+import { parseNumbers } from "../helpers/parseNumbers";
+import { ShareDBCursor } from "./cursor";
 
 ShareDB.types.register(json1Type);
-
-function parseNumbers(value: string) {
-  const n = Number.parseInt(value, 10);
-  return Number.isNaN(n) ? value : n
-}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function patchToOp(patch: IJsonPatch, reversePatch: IJsonPatch): Op {
@@ -43,15 +40,6 @@ function patchToOp(patch: IJsonPatch, reversePatch: IJsonPatch): Op {
 
 }
 
-const isAllowedElement = (element: EventTarget | null): 
-element is HTMLTextAreaElement | HTMLInputElement =>
-  element instanceof HTMLTextAreaElement
-  || element instanceof HTMLInputElement
-
-const isAllowedEvent = (event: Event) => 
-  !(event instanceof KeyboardEvent)
-  || ["Arrow", "Page", "Home", "End"].some(s => event.key.startsWith(s))
-
 export class ShareDBClient extends EventEmitter {
   socket?: WebSocket;
   connection!: ShareDB.Connection;
@@ -60,6 +48,8 @@ export class ShareDBClient extends EventEmitter {
   externalServiceStore!: ExternalServiceManager
 
   disposers: IDisposer[] = [];
+
+  cursor = new ShareDBCursor();
 
   bind = (editorStore: EditorManagerLike, externalServiceStore: ExternalServiceManager) => {
     this.editorStore = editorStore
@@ -72,65 +62,16 @@ export class ShareDBClient extends EventEmitter {
         if (this.externalServiceStore.googleUser?.email) {
           this.init()
           this.disposers.push(onSnapshot(this.editorStore, debounce(this.handleSnapshot, 500, {maxWait: 1000} )))
-          this.hookFocus()
+          this.cursor.initTracking()
         }
         // this.disposers.push(onPatch(this.editorStore, this.handlePatch))
       })
     )
   }
 
-  hookFocus = () => {
-    document.addEventListener("focusin", this.focusIn)
-    document.addEventListener("focusout", this.focusOut)
-  }
-
-  unhookFocus = () => {
-    document.removeEventListener("focusin", this.focusIn)
-    document.removeEventListener("focusout", this.focusOut)
-  }
-
-  hookChange = (target: HTMLElement) => { 
-    target.addEventListener("click", this.cursorHandle)
-    target.addEventListener("input", this.cursorHandle)
-    target.addEventListener("keydown", this.cursorHandle)
-    target.addEventListener("select", this.cursorHandle)
-  }
-  unhookChange = (target: HTMLElement) => {
-    target.removeEventListener("click", this.cursorHandle)
-    target.removeEventListener("input", this.cursorHandle)
-    target.removeEventListener("keydown", this.cursorHandle)
-    target.removeEventListener("select", this.cursorHandle)
-  }
-
-  focusIn = ({ target }: FocusEvent) => {
-    if (isAllowedElement(target)) {
-      // console.log("FOCUSIN", e.target.tagName, e)
-      target.style.transform = "translate(10px, -10px)"
-      this.hookChange(target)
-      
-    }
-  }
-
-  focusOut = ({ target }: FocusEvent) => { 
-    if (isAllowedElement(target)) {    
-      // console.log("FOCUSOUT", e.target.tagName, e)
-      target.style.transform = ""
-      this.unhookChange(target)
-    }
-  }
-
-  cursorHandle = debounce(
-    (e: Event) => {
-      const { target } = e;
-      if (isAllowedElement(target) && isAllowedEvent(e)) {
-        console.log("cursorHandle", target)
-        console.log(target.selectionStart, target.selectionEnd) // setInterval(() => temp1.setSelectionRange(i, i++), 1000)
-      }
-    }, 50, {maxWait: 100})
-
   dispose = () => {
     for (const dispose of this.disposers) { dispose() }
-    this.unhookFocus();
+    this.cursor.stopTracking();
     this.socket?.close()
     this.removeAllListeners()
   }
@@ -183,7 +124,9 @@ export class ShareDBClient extends EventEmitter {
       void this.editorStore.process("/target/url");
     }
 
-    console.log("received change", createHash("md5").update(JSON.stringify(this.doc.data)).digest("base64"))
+    console.log("received change", createHash("md5").update(JSON.stringify(this.doc.data)).digest("base64"), getSnapshot(this.editorStore))
+
+    this.cursor.revertCaretPosition()
   }
 
   isChanged = () => {
