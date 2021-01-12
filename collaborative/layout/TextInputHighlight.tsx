@@ -10,6 +10,8 @@ const HighlightContainer = styled(FlexContainer)`
   overflow: hidden;
   width: 100%;
   background: ${({ theme }) => theme.background.secondaryAlt};
+  border: 0;
+  border-radius: 3px; // rounded inputs
 `
 
 const SimpleTextInput = styled(Input)`
@@ -19,6 +21,8 @@ const SimpleTextInput = styled(Input)`
     flex: 1;
   }
 `
+
+// There's minor bugs in Firefox, i won't fix they
 
 const EchoInput = styled(Input)`
   position: absolute;
@@ -30,11 +34,11 @@ const EchoInput = styled(Input)`
   left: 9px;
 
   input + & {
-    line-height: 36px; // from Input
+    line-height: 33px; // from Input 36px - 3px
     white-space: nowrap;
     overflow: auto hidden;
     padding: 0;
-    height: calc(100% + 18px);
+    height: calc(100% + 18px); // hide scrollbar at bottom
     right: 9px;
   }
 
@@ -42,9 +46,8 @@ const EchoInput = styled(Input)`
     line-height: normal;
     white-space: pre-wrap; // important for pixel-perfect overlay
     overflow: hidden auto; // important for pixel-perfect overlay
-    padding: 0 9px 5.5px 0; // from Input
-    top: 5.5px;
-    height: calc(100% - 5.5px);
+    padding: 5.5px 9px 5.5px 0; // from Input
+    height: 100%;
   }
 `
 
@@ -74,7 +77,7 @@ const TextInputHighlight = (
       }
     }
   }, [inputRef])
-  
+
   return <HighlightContainer>
     <SimpleTextInput ref={ref ?? inputRef} {...props} />
     <EchoInput ref={echoRef} as="div">{props.id !== "webhook" && props.value}</EchoInput>
