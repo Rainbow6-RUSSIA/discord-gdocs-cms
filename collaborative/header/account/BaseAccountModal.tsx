@@ -9,13 +9,13 @@ import { ModalHeader } from "../../../common/modal/layout/ModalHeader"
 import { ModalContext } from "../../../common/modal/ModalContext"
 import { useRequiredContext } from "../../../common/state/useRequiredContext"
 import { loading } from "../../icons/loading"
+import type { CollaborationManager } from "../../manager/CollaborationManager"
 import type { SocialTypeProps } from "../../types"
-import type { ExternalServiceManager } from "../ExternalServiceManager"
 import { DiscordBody } from "./services/DiscordBody"
 import { GoogleBody } from "./services/GoogleBody"
 
 export type AccountModalProp = {
-  externalServiceManager: ExternalServiceManager
+  externalServiceManager: CollaborationManager
   ready: boolean
 }
 

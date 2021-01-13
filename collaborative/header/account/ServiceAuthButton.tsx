@@ -5,8 +5,8 @@ import { PrimaryButton } from "../../../common/input/button/PrimaryButton"
 import { ModalManagerContext } from "../../../common/modal/ModalManagerContext"
 import { useRequiredContext } from "../../../common/state/useRequiredContext"
 import { loading } from "../../icons/loading"
+import { CollaborationManagerContext } from "../../manager/CollaborationManagerContext"
 import type { SocialTypeProps } from "../../types"
-import { ExternalServiceManagerContext } from "../ExternalServiceManagerContext"
 import { BaseAccountModal } from "./BaseAccountModal"
 
 export const SocialProfile = styled.div`
@@ -42,13 +42,13 @@ export const Avatar = styled.img.attrs({ height: 32, width: 32 })`
 `
 
 export const ServiceAuthButton = ({ type }: SocialTypeProps) => {
-  const serviceManager = useRequiredContext(ExternalServiceManagerContext)
+  const collaborationManager = useRequiredContext(CollaborationManagerContext)
   const modalManager = useRequiredContext(ModalManagerContext)
 
   const Fallback = (
     <>
       To use collaboration features you must login into a Google account and select spreadsheet for milestone saves.
-      <PrimaryButton onClick={async () => serviceManager.link(type)}>Login via {type}</PrimaryButton>
+      <PrimaryButton onClick={async () => collaborationManager.link(type)}>Login via {type}</PrimaryButton>
     </>
   )
 
@@ -66,11 +66,11 @@ export const ServiceAuthButton = ({ type }: SocialTypeProps) => {
   //   })
 
   return useObserver(() => {
-    if (!serviceManager.ready) return Loading
+    if (!collaborationManager.ready) return Loading
 
     if (type === "Discord") {
-      if (!serviceManager.discordUser) return Fallback
-      const { id, avatar, username, discriminator } = serviceManager.discordUser
+      if (!collaborationManager.discordUser) return Fallback
+      const { id, avatar, username, discriminator } = collaborationManager.discordUser
       return (
         <SocialProfile>
           <Avatar
@@ -86,8 +86,8 @@ export const ServiceAuthButton = ({ type }: SocialTypeProps) => {
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (type === "Google") {
-      if (!serviceManager.googleUser) return Fallback
-      const { name, picture } = serviceManager.googleUser
+      if (!collaborationManager.googleUser) return Fallback
+      const { name, picture } = collaborationManager.googleUser
       return (
         <SocialProfile>
           <span>Logged as: {name}</span>

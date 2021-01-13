@@ -40,7 +40,6 @@ export class ShareDBCursor {
             this.activeElement = target;
             this.path = target.id.split("_").filter(Boolean).map(parseNumbers);
             this.selection = [target.selectionStart ?? 0, target.selectionEnd ?? 0]
-            console.log("SAVE SELECTION", this.selection)
             this.cursorReport()
         }
     }
@@ -53,7 +52,6 @@ export class ShareDBCursor {
 
     revertCaretPosition = () => {
         if (this.activeElement && this.selection) {
-            console.log("SET SELECTION", this.selection)
             this.activeElement.setSelectionRange(...this.selection);
         }
     }    

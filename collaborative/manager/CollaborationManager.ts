@@ -2,13 +2,13 @@ import type { Guild } from "discord.js"
 import { action, observable } from "mobx"
 import { signIn, signOut } from "next-auth/client"
 import { getCustomSession } from "../AuthAdapter"
-import type { CustomSession, DiscordProfile, GoogleProfile } from "../types"
 import type {
   GoogleDriveItem,
   GooglePickerCallback,
-} from "./account/GooglePicker"
+} from "../header/account/GooglePicker"
+import type { CustomSession, DiscordProfile, GoogleProfile } from "../types"
 
-export class ExternalServiceManager {
+export class CollaborationManager {
   @observable ready = false
   @observable googleUser: GoogleProfile | null = null
   @observable discordUser: DiscordProfile | null = null

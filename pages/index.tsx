@@ -3,7 +3,7 @@ import { destroy, getSnapshot, SnapshotOut } from "mobx-state-tree"
 import type { GetServerSidePropsContext } from "next"
 import React, { useEffect, useRef, useState } from "react"
 import styled from "styled-components"
-import { ExternalServiceManagerContext } from "../collaborative/header/ExternalServiceManagerContext"
+import { CollaborationManagerContext } from "../collaborative/manager/CollaborationManagerContext"
 import { CollaborationModal } from "../collaborative/modals/CollaborationModal"
 import { ShareDBClient } from "../collaborative/sharedb/client"
 import { base64UrlEncode } from "../common/base64/base64UrlEncode"
@@ -52,14 +52,14 @@ export type MainProps = {
 export default function Main(props: MainProps) {
   const { state, mobile } = props
 
-  const externalServiceManager = useRequiredContext(ExternalServiceManagerContext)
+  const collaborationManager = useRequiredContext(CollaborationManagerContext)
   const editorManager = useLazyValue(() => EditorManager.create(state))
 
   useEffect(() => {
     const shareClient = new ShareDBClient()
-    shareClient.bind(editorManager, externalServiceManager)
+    shareClient.bind(editorManager, collaborationManager)
     return () => shareClient.dispose()
-  }, [editorManager, externalServiceManager])
+  }, [editorManager, collaborationManager])
 
   useEffect(() => () => destroy(editorManager), [editorManager])
 

@@ -3,7 +3,7 @@ import styled from "styled-components"
 import { Input } from "../../common/input/layout/Input"
 import { FlexContainer } from "../../common/layout/FlexContainer"
 import { useRequiredContext } from "../../common/state/useRequiredContext"
-import { ExternalServiceManagerContext } from "../header/ExternalServiceManagerContext"
+import { CollaborationManagerContext } from "../manager/CollaborationManagerContext"
 
 const HighlightContainer = styled(FlexContainer)`
   position: relative;
@@ -101,7 +101,7 @@ const TextInputHighlight = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ref?: any
 ) => {
-  const external = useRequiredContext(ExternalServiceManagerContext)
+  const collaborationManager = useRequiredContext(CollaborationManagerContext)
   const echoRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<CommonInputElement>(ref && "current" in ref ? ref.current : null) // use forwarded ref or create intermediate
   const [pos, setPos] = useState([0, 0])

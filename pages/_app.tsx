@@ -5,8 +5,8 @@ import { Observer } from "mobx-react-lite"
 import App, { AppProps } from "next/app"
 import React from "react"
 import { ThemeProvider } from "styled-components"
-import { ExternalServiceManager } from "../collaborative/header/ExternalServiceManager"
-import { ExternalServiceManagerProvider } from "../collaborative/header/ExternalServiceManagerContext"
+import { CollaborationManager } from "../collaborative/manager/CollaborationManager"
+import { CollaborationManagerProvider } from "../collaborative/manager/CollaborationManagerContext"
 import { ModalManager } from "../common/modal/ModalManager"
 import { ModalManagerProvider } from "../common/modal/ModalManagerContext"
 import { ModalOverlay } from "../common/modal/ModalOverlay"
@@ -27,7 +27,7 @@ export default class Application extends App {
   private readonly modalManager = new ModalManager()
   private readonly popoverManager = new PopoverManager()
   private readonly tooltipManager = new TooltipManager()
-  private readonly externalServiceManager = new ExternalServiceManager()
+  private readonly externalServiceManager = new CollaborationManager()
 
 
   private readonly disposers: (() => void)[] = []
@@ -67,7 +67,7 @@ export default class Application extends App {
             <GlobalStyle />
             <ErrorBoundary>
               <PreferenceManagerProvider value={this.preferenceManager}>
-                <ExternalServiceManagerProvider value={this.externalServiceManager}>
+                <CollaborationManagerProvider value={this.externalServiceManager}>
                   <ModalManagerProvider value={this.modalManager}>
                     <PopoverManagerProvider value={this.popoverManager}>
                       <TooltipManagerProvider value={this.tooltipManager}>
@@ -78,7 +78,7 @@ export default class Application extends App {
                       </TooltipManagerProvider>
                     </PopoverManagerProvider>
                   </ModalManagerProvider>
-                </ExternalServiceManagerProvider>
+                </CollaborationManagerProvider>
               </PreferenceManagerProvider>
             </ErrorBoundary>
           </ThemeProvider>

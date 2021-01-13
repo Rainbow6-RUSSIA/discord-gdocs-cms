@@ -10,8 +10,8 @@ import ReconnectingWebSocket from "reconnecting-websocket";
 import type { Op } from "sharedb";
 import ShareDB from "sharedb/lib/client";
 import type { EditorManagerLike } from "../../modules/editor/EditorManager";
-import type { ExternalServiceManager } from "../header/ExternalServiceManager";
 import { parseNumbers } from "../helpers/parseNumbers";
+import type { CollaborationManager } from "../manager/CollaborationManager";
 import { ShareDBCursor } from "./cursor";
 
 ShareDB.types.register(json1Type);
@@ -45,13 +45,13 @@ export class ShareDBClient extends EventEmitter {
   connection!: ShareDB.Connection;
   doc!: ShareDB.Doc;
   editorStore!: EditorManagerLike
-  externalServiceStore!: ExternalServiceManager
+  externalServiceStore!: CollaborationManager
 
   disposers: IDisposer[] = [];
 
   cursor = new ShareDBCursor();
 
-  bind = (editorStore: EditorManagerLike, externalServiceStore: ExternalServiceManager) => {
+  bind = (editorStore: EditorManagerLike, externalServiceStore: CollaborationManager) => {
     this.editorStore = editorStore
     this.externalServiceStore = externalServiceStore
     this.disposers.push(

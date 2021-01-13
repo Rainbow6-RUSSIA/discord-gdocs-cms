@@ -13,21 +13,21 @@ import { useRequiredContext } from "../../common/state/useRequiredContext"
 import { remove } from "../../icons/remove"
 import { ServiceAuthButton } from "../header/account/ServiceAuthButton"
 import { GoogleBody } from "../header/account/services/GoogleBody"
-import { ExternalServiceManagerContext } from "../header/ExternalServiceManagerContext"
 import { loading } from "../icons/loading"
+import { CollaborationManagerContext } from "../manager/CollaborationManagerContext"
 
 export function CollaborationModal() {
     const modal = useRequiredContext(ModalContext)
-    const serviceManager = useRequiredContext(ExternalServiceManagerContext)
+    const collaborationManager = useRequiredContext(CollaborationManagerContext)
 
     const [isLoading, setLoading] = useState(false)
     const handleUnlink = async () => {
         setLoading(true)
-        await serviceManager.unlink("Google")
+        await collaborationManager.unlink("Google")
         setLoading(false)
     }
 
-    const isReady = Boolean(serviceManager.googleUser)
+    const isReady = Boolean(collaborationManager.googleUser)
 
     return useObserver(() => (
         <ModalContainer>
@@ -43,7 +43,7 @@ export function CollaborationModal() {
                 <Stack gap={8}>
                     <ServiceAuthButton type="Google" />
                     {/* <ServiceAuthButton type="Discord" /> */}
-                    <GoogleBody ready={isReady} externalServiceManager={serviceManager} />
+                    <GoogleBody ready={isReady} externalServiceManager={collaborationManager} />
                 </Stack>
             </ModalBody>
             <ModalFooter>
