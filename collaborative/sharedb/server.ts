@@ -43,7 +43,9 @@ class ShareDBServer {
   
     const wss = new WebSocket.Server({server});
   
-    wss.on("connection", (ws) => {
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+    wss.on("connection", async (ws, req) => {
+      const token = req.headers["sec-websocket-protocol"]
       const stream = new WebSocketJSONStream(ws);
       this.backend.listen(stream);
     });

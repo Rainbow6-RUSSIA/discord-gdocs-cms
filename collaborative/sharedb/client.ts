@@ -41,26 +41,31 @@ function patchToOp(patch: IJsonPatch, reversePatch: IJsonPatch): Op {
 }
 
 export class ShareDBClient extends EventEmitter {
+  constructor(collaborationManager: CollaborationManager){
+    super();
+    this.collaborationManager = collaborationManager;
+  }
+
   socket?: WebSocket;
   connection!: ShareDB.Connection;
   doc!: ShareDB.Doc;
   editorStore!: EditorManagerLike
-  externalServiceStore!: CollaborationManager
+  collaborationManager!: CollaborationManager
 
   disposers: IDisposer[] = [];
 
   cursor = new ShareDBCursor();
 
-  bind = (editorStore: EditorManagerLike, externalServiceStore: CollaborationManager) => {
+  bind = (editorStore: EditorManagerLike) => {
     this.editorStore = editorStore
-    this.externalServiceStore = externalServiceStore
     this.disposers.push(
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
-      observe(this.externalServiceStore, "googleUser", async () => {          
-        console.log("EMAIL", this.externalServiceStore.googleUser?.email)
+      observe(this.collaborationManager, "googleUser", async () => {
+        const token = this.collaborationManager.googleUser?.accessToken; 
+        console.log("EMAIL", this.collaborationManager.googleUser?.email)
         
-        if (this.externalServiceStore.googleUser?.email) {
-          this.init()
+        if (token) {
+          this.init(token)
           this.disposers.push(onSnapshot(this.editorStore, debounce(this.handleSnapshot, 500, {maxWait: 1000} )))
           this.cursor.initTracking()
         }
@@ -76,9 +81,9 @@ export class ShareDBClient extends EventEmitter {
     this.removeAllListeners()
   }
 
-  init = () => {
+  init = (token: string) => {
     console.log("Connecting to WS:", process.env.NEXT_PUBLIC_COLLABORATIVE_WSS)
-    this.socket = new ReconnectingWebSocket(process.env.NEXT_PUBLIC_COLLABORATIVE_WSS!) as WebSocket
+    this.socket = new ReconnectingWebSocket(process.env.NEXT_PUBLIC_COLLABORATIVE_WSS!, token) as WebSocket
     this.connection = new ShareDB.Connection(this.socket)
     this.doc = this.connection.get("app", "post")
 
