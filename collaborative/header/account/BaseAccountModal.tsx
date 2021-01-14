@@ -11,7 +11,7 @@ import { useRequiredContext } from "../../../common/state/useRequiredContext"
 import { loading } from "../../icons/loading"
 import type { CollaborationManager } from "../../manager/CollaborationManager"
 import type { SocialTypeProps } from "../../types"
-import { DiscordBody } from "./services/DiscordBody"
+// import { DiscordBody } from "./services/DiscordBody"
 import { GoogleBody } from "./services/GoogleBody"
 
 export type AccountModalProp = {

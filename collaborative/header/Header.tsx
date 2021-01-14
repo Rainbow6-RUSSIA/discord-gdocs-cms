@@ -93,7 +93,7 @@ function Login() {
   return useObserver(() => (
     <HeaderSubContainer>
       <ServiceAuthButton type="Google" />
-      <ServiceAuthButton type="Discord" />
+      {/* <ServiceAuthButton type="Discord" /> */}
     </HeaderSubContainer>
   ))
 }

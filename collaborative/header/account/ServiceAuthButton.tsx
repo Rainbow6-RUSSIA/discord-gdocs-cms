@@ -68,21 +68,21 @@ export const ServiceAuthButton = ({ type }: SocialTypeProps) => {
   return useObserver(() => {
     if (!collaborationManager.ready) return Loading
 
-    if (type === "Discord") {
-      if (!collaborationManager.discordUser) return Fallback
-      const { id, avatar, username, discriminator } = collaborationManager.discordUser
-      return (
-        <SocialProfile>
-          <Avatar
-            src={`https://cdn.discordapp.com/avatars/${id}/${avatar}.${
-              avatar.startsWith("a_") ? "gif" : "png"
-            }?size=128`}
-            alt="Your Discord Avatar"
-          />
-          <span>{`${username}#${discriminator}`}</span>
-        </SocialProfile>
-      )
-    }
+    // if (type === "Discord") {
+    //   if (!collaborationManager.discordUser) return Fallback
+    //   const { id, avatar, username, discriminator } = collaborationManager.discordUser
+    //   return (
+    //     <SocialProfile>
+    //       <Avatar
+    //         src={`https://cdn.discordapp.com/avatars/${id}/${avatar}.${
+    //           avatar.startsWith("a_") ? "gif" : "png"
+    //         }?size=128`}
+    //         alt="Your Discord Avatar"
+    //       />
+    //       <span>{`${username}#${discriminator}`}</span>
+    //     </SocialProfile>
+    //   )
+    // }
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (type === "Google") {

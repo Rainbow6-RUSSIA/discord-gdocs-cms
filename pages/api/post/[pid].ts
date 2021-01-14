@@ -25,7 +25,7 @@ export default async function handler(
   if (!req.query.pid) return res.status(400).end()
 
   const session = await getCustomSession({ req })
-  if (!session?.discord || !session.google) return res.status(401).end()
+  if (/* !session?.discord ||  */!session?.google) return res.status(401).end()
 
   switch (req.method) {
     case "GET":

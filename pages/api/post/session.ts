@@ -35,7 +35,7 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   const session = await getCustomSession({ req })
-  if (!session?.discord || !session.google) return res.status(401).end()
+  if (/* !session?.discord ||  */!session?.google) return res.status(401).end()
 
   //   let parsedBody = {}
   //   try {

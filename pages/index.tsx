@@ -52,14 +52,13 @@ export type MainProps = {
 export default function Main(props: MainProps) {
   const { state, mobile } = props
 
-  const collaborationManager = useRequiredContext(CollaborationManagerContext)
+  const { shareClient } = useRequiredContext(CollaborationManagerContext)
   const editorManager = useLazyValue(() => EditorManager.create(state))
 
   useEffect(() => {
-    const shareClient = new ShareDBClient()
-    shareClient.bind(editorManager, collaborationManager)
+    shareClient.bind(editorManager)
     return () => shareClient.dispose()
-  }, [editorManager, collaborationManager])
+  }, [editorManager, shareClient])
 
   useEffect(() => () => destroy(editorManager), [editorManager])
 

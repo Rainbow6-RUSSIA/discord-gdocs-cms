@@ -8,7 +8,7 @@ import { Adapter } from "../../../collaborative/AuthAdapter"
 import { BotClient } from "../../../collaborative/bot"
 import { Account } from "../../../collaborative/models/Account"
 import type { User } from "../../../collaborative/models/User"
-import type { CustomSession, DiscordPartialGuild, DiscordProfile, GoogleProfile } from "../../../collaborative/types"
+import type { CustomSession, /* DiscordPartialGuild, DiscordProfile, */ GoogleProfile } from "../../../collaborative/types"
 
 const discordConfig = {
   clientId: process.env.DISCORD_CLIENT_ID!,
@@ -32,7 +32,7 @@ const options = {
         id: user.id,
         accessToken: session.accessToken!,
         expires: session.expires,
-        discord: null,
+        // discord: null,
         google: null,
       }
 
@@ -40,14 +40,14 @@ const options = {
         where: { userId: user.id },
       })
       const google = accounts.find(a => a.providerId === "google")
-      const discord = accounts.find(a => a.providerId === "discord")
+      // const discord = accounts.find(a => a.providerId === "discord")
 
       if (google) {
         const googleUser: GoogleProfile & {
           error: string
         } = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
           headers: { Authorization: `Bearer ${google.accessToken}` },
-        }).then(d => d.json())
+        }).then(async (d) => d.json())
         if (googleUser.error) {
           await google.remove()
         } else {
@@ -55,33 +55,33 @@ const options = {
           sessionObj.google.accessToken = google.accessToken!
         }
       }
-      if (discord) {
-        const discordUser: DiscordProfile & { message: string } = await fetch(
-          "https://discord.com/api/users/@me",
-          {
-            headers: { Authorization: `Bearer ${discord.accessToken}` },
-          },
-        ).then(d => d.json())
+      // if (discord) {
+      //   const discordUser: DiscordProfile & { message: string } = await fetch(
+      //     "https://discord.com/api/users/@me",
+      //     {
+      //       headers: { Authorization: `Bearer ${discord.accessToken}` },
+      //     },
+      //   ).then(d => d.json())
 
-        const discordGuilds: DiscordPartialGuild[] = await fetch(
-          "https://discord.com/api/users/@me/guilds",
-          {
-            headers: { Authorization: `Bearer ${discord.accessToken}` },
-          },
-        ).then(d => d.json())
+      //   const discordGuilds: DiscordPartialGuild[] = await fetch(
+      //     "https://discord.com/api/users/@me/guilds",
+      //     {
+      //       headers: { Authorization: `Bearer ${discord.accessToken}` },
+      //     },
+      //   ).then(d => d.json())
 
-        if (discordUser.message) {
-          await discord.remove()
-        } else {
-          sessionObj.discord = discordUser
-          sessionObj.discord.guilds = Array.isArray(discordGuilds)
-            ? discordGuilds.map(g => ({
-                ...g,
-                isBotPresent: BotClient.guilds.cache.has(g.id),
-              }))
-            : []
-        }
-      }
+      //   if (discordUser.message) {
+      //     await discord.remove()
+      //   } else {
+      //     sessionObj.discord = discordUser
+      //     sessionObj.discord.guilds = Array.isArray(discordGuilds)
+      //       ? discordGuilds.map(g => ({
+      //           ...g,
+      //           isBotPresent: BotClient.guilds.cache.has(g.id),
+      //         }))
+      //       : []
+      //   }
+      // }
 
       return sessionObj
     },

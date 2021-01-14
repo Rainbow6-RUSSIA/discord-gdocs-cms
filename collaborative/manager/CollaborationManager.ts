@@ -1,4 +1,4 @@
-import type { Guild } from "discord.js"
+// import type { Guild } from "discord.js"
 import { action, observable } from "mobx"
 import { signIn, signOut } from "next-auth/client"
 import { getCustomSession } from "../AuthAdapter"
@@ -6,16 +6,19 @@ import type {
   GoogleDriveItem,
   GooglePickerCallback,
 } from "../header/account/GooglePicker"
-import type { CustomSession, DiscordProfile, GoogleProfile } from "../types"
+import { ShareDBClient } from "../sharedb/client"
+import type { CustomSession, /* DiscordProfile,*/ GoogleProfile } from "../types"
 
 export class CollaborationManager {
+  shareClient = new ShareDBClient(this)
+
   @observable ready = false
   @observable googleUser: GoogleProfile | null = null
-  @observable discordUser: DiscordProfile | null = null
+  // @observable discordUser: DiscordProfile | null = null
   @observable sheet:
     | (Partial<GoogleDriveItem> & Pick<GoogleDriveItem, "id">)
     | null = null
-  @observable guild?: Guild | null = null
+  // @observable guild?: Guild | null = null
   @observable session?: CustomSession | null
 
   @action link = async (type: "Discord" | "Google") => signIn(type.toLowerCase())
@@ -60,7 +63,7 @@ export class CollaborationManager {
     console.log(session)
     this.ready = true
     this.session = session
-    this.discordUser = session?.discord ?? null
+    // this.discordUser = session?.discord ?? null
     this.googleUser = session?.google ?? null
   }
 }

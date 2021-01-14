@@ -2,30 +2,30 @@ export type CustomSession = {
   id: string
   accessToken: string
   expires: string
-  discord: null | DiscordProfile
+  // discord: null | DiscordProfile
   google: null | GoogleProfile
 }
 
-export type DiscordProfile = {
-  avatar: string
-  discriminator: string
-  flags: number
-  id: string
-  locale: string
-  mfa_enabled: boolean
-  public_flags: number
-  username: string
-  guilds: (DiscordPartialGuild & { isBotPresent: boolean })[]
-}
+// export type DiscordProfile = {
+//   avatar: string
+//   discriminator: string
+//   flags: number
+//   id: string
+//   locale: string
+//   mfa_enabled: boolean
+//   public_flags: number
+//   username: string
+//   guilds: (DiscordPartialGuild & { isBotPresent: boolean })[]
+// }
 
-export type DiscordPartialGuild = {
-  id: string
-  name: string
-  icon: string
-  owner: boolean
-  permissions_new: string
-  features: string[]
-}
+// export type DiscordPartialGuild = {
+//   id: string
+//   name: string
+//   icon: string
+//   owner: boolean
+//   permissions_new: string
+//   features: string[]
+// }
 
 export type GoogleProfile = {
   email: string
@@ -39,4 +39,4 @@ export type GoogleProfile = {
   accessToken: string
 }
 
-export type SocialTypeProps = { type: "Discord" | "Google" }
+export type SocialTypeProps = { type: /* "Discord" |  */"Google" }
