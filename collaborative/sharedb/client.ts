@@ -3,6 +3,7 @@ import diffMatchPatch from "diff-match-patch"
 import { EventEmitter } from "events"
 import JSONDiff from "json0-ot-diff"
 import debounce from "lodash.debounce";
+import isEqual from "lodash.isequal";
 import { observe } from "mobx";
 import { onSnapshot, onPatch, IDisposer, applySnapshot, IJsonPatch, getSnapshot, applyPatch } from "mobx-state-tree";
 import { type as json1Type } from "ot-json1"
@@ -54,41 +55,53 @@ export class ShareDBClient extends EventEmitter {
 
   disposers: IDisposer[] = [];
 
-  cursor = new ShareDBCursor();
+  cursor: ShareDBCursor | null = null;
 
   bind = (editorStore: EditorManagerLike) => {
     this.editorStore = editorStore
     this.disposers.push(
-      // eslint-disable-next-line @typescript-eslint/no-misused-promises
-      observe(this.collaborationManager, "googleUser", async () => {
-        const token = this.collaborationManager.googleUser?.accessToken; 
-        console.log("EMAIL", this.collaborationManager.googleUser?.email)
-        
-        if (token) {
-          this.init(token)
-          this.disposers.push(onSnapshot(this.editorStore, debounce(this.handleSnapshot, 500, {maxWait: 1000} )))
-          this.cursor.initTracking()
-        }
-        // this.disposers.push(onPatch(this.editorStore, this.handlePatch))
-      })
+      observe(this.collaborationManager, "googleUser", this.connect)
+    )
+    this.disposers.push(
+      observe(this.collaborationManager, "sheet", this.connect)
     )
   }
 
   dispose = () => {
+    this.disconnect()
     for (const dispose of this.disposers) { dispose() }
-    this.cursor.stopTracking();
-    this.socket?.close()
     this.removeAllListeners()
   }
 
-  init = (token: string) => {
-    console.log("Connecting to WS:", process.env.NEXT_PUBLIC_COLLABORATIVE_WSS)
-    this.socket = new ReconnectingWebSocket(process.env.NEXT_PUBLIC_COLLABORATIVE_WSS!, token) as WebSocket
+  connect = () => {
+    const token = this.collaborationManager.googleUser?.accessToken; 
+    const docId = this.collaborationManager.sheet?.id;
+    const postId = this.collaborationManager.post?.id.toString();
+    const wss = process.env.NEXT_PUBLIC_COLLABORATIVE_WSS
+    console.log("EMAIL", this.collaborationManager.googleUser?.email, "DOC", docId)
+    if (token && docId && postId && wss) {
+      this.disconnect()
+      console.log("Connecting to WSS:", wss)
+    } else {
+      console.warn("Cannot connect to WSS", token, docId, postId, wss)
+      return
+    }
+    this.socket = new ReconnectingWebSocket(wss, [token, docId, postId]) as WebSocket
     this.connection = new ShareDB.Connection(this.socket)
-    this.doc = this.connection.get("app", "post")
+    this.doc = this.connection.get(docId, postId)
 
     this.doc.subscribe(this.syncUpdate)
     this.doc.on("op", this.syncUpdate) // debounce here causes a jumping cursor bug
+
+    this.disposers.push(onSnapshot(this.editorStore, debounce(this.handleSnapshot, 500, {maxWait: 1000} )))
+    this.cursor = new ShareDBCursor()
+    this.cursor.initTracking()
+  }
+
+  disconnect = () => {
+    this.cursor?.stopTracking();
+    this.socket?.close()
+    this.disposers.pop()?.()
   }
 
   handlePatch = (patch: IJsonPatch, reversePatch: IJsonPatch) => {
@@ -129,12 +142,10 @@ export class ShareDBClient extends EventEmitter {
       void this.editorStore.process("/target/url");
     }
 
-    console.log("received change", createHash("md5").update(JSON.stringify(this.doc.data)).digest("base64"), getSnapshot(this.editorStore))
+    console.log("received change", createHash("md5").update(JSON.stringify(this.doc.data)).digest("base64"))
 
-    this.cursor.revertCaretPosition()
+    this.cursor!.revertCaretPosition()
   }
 
-  isChanged = () => {
-    return JSON.stringify(getSnapshot(this.editorStore)) !== JSON.stringify(this.doc.data)
-  }
+  isChanged = () => !isEqual(getSnapshot(this.editorStore), this.doc.data)
 }

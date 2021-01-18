@@ -7,19 +7,23 @@ import type {
   GooglePickerCallback,
 } from "../header/account/GooglePicker"
 import { ShareDBClient } from "../sharedb/client"
-import type { CustomSession, /* DiscordProfile,*/ GoogleProfile } from "../types"
+import type { PostMeta, CustomSession, /* DiscordProfile,*/ GoogleProfile } from "../types"
 
 export class CollaborationManager {
   shareClient = new ShareDBClient(this)
 
   @observable ready = false
-  @observable googleUser: GoogleProfile | null = null
+  @observable googleUser: 
+    | GoogleProfile
+    | null = null
   // @observable discordUser: DiscordProfile | null = null
   @observable sheet:
     | (Partial<GoogleDriveItem> & Pick<GoogleDriveItem, "id">)
     | null = null
   // @observable guild?: Guild | null = null
   @observable session?: CustomSession | null
+
+  @observable post: PostMeta | null = null
 
   @action link = async (type: "Discord" | "Google") => signIn(type.toLowerCase())
 
@@ -37,6 +41,7 @@ export class CollaborationManager {
     console.log(event)
     if (event.action === "picked") {
       this.sheet = event.docs[0]
+      localStorage.setItem("pickedSheet", JSON.stringify(this.sheet))
     }
   }
 
@@ -63,7 +68,7 @@ export class CollaborationManager {
     console.log(session)
     this.ready = true
     this.session = session
-    // this.discordUser = session?.discord ?? null
     this.googleUser = session?.google ?? null
+    this.sheet = JSON.parse(localStorage.getItem("pickedSheet") ?? "null")
   }
 }

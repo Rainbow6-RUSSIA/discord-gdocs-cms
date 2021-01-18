@@ -6,6 +6,7 @@ import type { Adapter as IAdapter } from "next-auth/adapters"
 import Providers from "next-auth/providers"
 import { Adapter } from "../../../collaborative/AuthAdapter"
 import { BotClient } from "../../../collaborative/bot"
+import { getGoogleProfile } from "../../../collaborative/helpers/google"
 import { Account } from "../../../collaborative/models/Account"
 import type { User } from "../../../collaborative/models/User"
 import type { CustomSession, /* DiscordPartialGuild, DiscordProfile, */ GoogleProfile } from "../../../collaborative/types"
@@ -42,17 +43,13 @@ const options = {
       const google = accounts.find(a => a.providerId === "google")
       // const discord = accounts.find(a => a.providerId === "discord")
 
-      if (google) {
-        const googleUser: GoogleProfile & {
-          error: string
-        } = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
-          headers: { Authorization: `Bearer ${google.accessToken}` },
-        }).then(async (d) => d.json())
+      if (google?.accessToken) {
+        const googleUser = await getGoogleProfile(google.accessToken)
         if (googleUser.error) {
           await google.remove()
         } else {
           sessionObj.google = googleUser
-          sessionObj.google.accessToken = google.accessToken!
+          sessionObj.google.accessToken = google.accessToken
         }
       }
       // if (discord) {

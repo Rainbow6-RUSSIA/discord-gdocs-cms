@@ -37,6 +37,14 @@ export type GoogleProfile = {
   picture: string
   sub: string
   accessToken: string
+  error?: string
 }
 
 export type SocialTypeProps = { type: /* "Discord" |  */"Google" }
+
+export type PostMeta = {
+  id: number;
+  name: string;
+  part: number;
+  collectionId: number;
+}

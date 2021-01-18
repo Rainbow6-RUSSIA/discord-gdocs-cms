@@ -1666,6 +1666,7 @@ __metadata:
     "@types/google.picker": ^0.0.34
     "@types/jest": ^26.0.15
     "@types/lodash.debounce": ^4
+    "@types/lodash.isequal": ^4
     "@types/next-auth": ^3.1.18
     "@types/node": ^14.14.7
     "@types/react": ^16.9.56
@@ -1696,9 +1697,11 @@ __metadata:
     google-spreadsheet: ^3.0.14
     highlight.js: ^10.3.2
     idb: ^5.0.7
+    isomorphic-unfetch: ^3.1.0
     jest: ^26.6.3
     json0-ot-diff: ^1.0.5
     lodash.debounce: ^4.0.8
+    lodash.isequal: ^4.5.0
     mobx: ^5.15.7
     mobx-react-lite: ^2.2.2
     mobx-state-tree: ^3.17.2
@@ -2565,6 +2568,15 @@ __metadata:
   dependencies:
     "@types/lodash": "*"
   checksum: 64952797f594f4068d2edd1e178a553647ca4ed5716c9b7673f9187d012fe5b5a0141c15ffc82c8f4d29bf13040c53001634a5b43b51a9efdfb6d4fa77ae24aa
+  languageName: node
+  linkType: hard
+
+"@types/lodash.isequal@npm:^4":
+  version: 4.5.5
+  resolution: "@types/lodash.isequal@npm:4.5.5"
+  dependencies:
+    "@types/lodash": "*"
+  checksum: 141df617686010657bb3e46b21facce2dd15b771fdfebd9df2f3d6fd3603d6336b64da4027257402c640f71b65d91eca9305b53d282cf604bcbb88e662034aad
   languageName: node
   linkType: hard
 
@@ -7740,6 +7752,16 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"isomorphic-unfetch@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "isomorphic-unfetch@npm:3.1.0"
+  dependencies:
+    node-fetch: ^2.6.1
+    unfetch: ^4.2.0
+  checksum: 6453f52bfef7adbd59130b9e6727ccf6f80488920fa89b1294cba6ffc5736384fa7dfe49897b0ad48006044fbe52bc5b5d5b131c4ee33123646fd3b3813c4f15
+  languageName: node
+  linkType: hard
+
 "isstream@npm:~0.1.2":
   version: 0.1.2
   resolution: "isstream@npm:0.1.2"
@@ -8741,6 +8763,13 @@ fsevents@^1.2.7:
   version: 3.0.3
   resolution: "lodash.isboolean@npm:3.0.3"
   checksum: e5b7a921f47759773266e66664e4a54f2438cc213fe336c5b96321d4328ebb2785e939bbcd07b29d5a20cdc6140d471abae1e94cdfb25937dc91ddc5150f41a0
+  languageName: node
+  linkType: hard
+
+"lodash.isequal@npm:^4.5.0":
+  version: 4.5.0
+  resolution: "lodash.isequal@npm:4.5.0"
+  checksum: 5b47e094641c18a915497343894c66f7da6aebb9aaa2a3fcc5643455aaf29d19df60ebbed664c8374fb959c8b4ce96810ee6becd8a71ac58c6c2ca8d29762947
   languageName: node
   linkType: hard
 
@@ -13233,6 +13262,13 @@ typescript@^4.0.5:
     core-js-bundle: ^3.6.4
     regenerator-runtime: ^0.13.3
   checksum: 6d009aa83e7f7c7733b6e100d529d70041011daa8c0f3d1e546b1f6fbd7e8203d192afb3986dad9f0202cc72f6e3fd65fb84a2df2fb976841577f4d5bf83c3bf
+  languageName: node
+  linkType: hard
+
+"unfetch@npm:^4.2.0":
+  version: 4.2.0
+  resolution: "unfetch@npm:4.2.0"
+  checksum: a1ec2f1d0fd6e0e9d46d659b6639dac490eefde4dcb5d9a060b78e380a543182bbdf395c7772685a023fb76c8e5d2c8b843f199d727c5f3af3cced88b3dcc741
   languageName: node
   linkType: hard
 
