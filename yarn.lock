@@ -1716,7 +1716,6 @@ __metadata:
     punycode: ^2.1.1
     react: ^16.14.0
     react-dom: ^16.14.0
-    react-dropdown: ^1.9.1
     react-focus-on: ^3.5.0
     react-is: ^16.13.1
     reconnecting-websocket: ^4.4.0
@@ -4414,7 +4413,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"classnames@npm:2.2.6, classnames@npm:^2.2.3":
+"classnames@npm:2.2.6":
   version: 2.2.6
   resolution: "classnames@npm:2.2.6"
   checksum: 490eaeca5931846737ffd33e472a701d268d5b8bc5717dd4cf108a127b06e86e05350e06799abbbe763a0e4c945b4217f6700b7ae00ddc703505682c370e5cf2
@@ -10999,18 +10998,6 @@ mstform@1.27.0:
   peerDependencies:
     react: ^16.14.0
   checksum: a13558f0e7c6d1a98684214460bcd4b9005500015b5048fb1b0d2856786b8764dbc713e6b078a5b1a56e17866400e1d862183c7a0a513ae8351de11f6f6749d2
-  languageName: node
-  linkType: hard
-
-"react-dropdown@npm:^1.9.1":
-  version: 1.9.1
-  resolution: "react-dropdown@npm:1.9.1"
-  dependencies:
-    classnames: ^2.2.3
-  peerDependencies:
-    react: ^0.14.7 || ^15.0.0-0 || ^16.0.0
-    react-dom: ^0.14.7 || ^15.0.0-0 || ^16.0.0
-  checksum: e37200bfc7f220c259082f61bd9a347bdbb10510d61a3a8c7a617d08e393c703498f4f83fbc351a044e8f487b8cc702079a6c9ef8e61d3a775117c6697f7f28c
   languageName: node
   linkType: hard
 
