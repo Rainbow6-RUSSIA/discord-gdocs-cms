@@ -48,3 +48,8 @@ export type PostMeta = {
   part: number;
   collectionId: number;
 }
+
+export type ChannelMeta = {
+  id: string;
+  name: string;
+}
