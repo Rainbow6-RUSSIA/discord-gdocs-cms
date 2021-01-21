@@ -76,17 +76,18 @@ export class ShareDBClient extends EventEmitter {
   connect = () => {
     const token = this.collaborationManager.googleUser?.accessToken; 
     const docId = this.collaborationManager.sheet?.id;
+    const channelId = this.collaborationManager.channel?.id;
     const postId = this.collaborationManager.post?.id.toString();
     const wss = process.env.NEXT_PUBLIC_COLLABORATIVE_WSS
     console.log("EMAIL", this.collaborationManager.googleUser?.email, "DOC", docId)
-    if (token && docId && postId && wss) {
+    if (token && docId && channelId && postId && wss) {
       this.disconnect()
       console.log("Connecting to WSS:", wss)
     } else {
-      console.warn("Cannot connect to WSS", token, docId, postId, wss)
+      console.warn("Cannot connect to WSS", token, docId, channelId, postId, wss)
       return
     }
-    this.socket = new ReconnectingWebSocket(wss, [token, docId, postId]) as WebSocket
+    this.socket = new ReconnectingWebSocket(wss, [token, docId, channelId, postId]) as WebSocket
     this.connection = new ShareDB.Connection(this.socket)
     this.doc = this.connection.get(docId, postId)
 

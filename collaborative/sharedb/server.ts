@@ -51,13 +51,13 @@ class ShareDBServer {
       console.log(req.headers)
       const dataHeader = req.headers["sec-websocket-protocol"]
       if (!dataHeader) return ws.terminate();
-      const [token, docId, postId] = dataHeader.split(", ");
+      const [token, docId, channelId, postId] = dataHeader.split(", ");
 
       try {
         const profile = await getGoogleProfile(token);
         const document = await getDocument(token, docId)
 
-        await this.initDoc(docId, postId)
+        await this.initDoc(docId, `${channelId}/${postId}`)
 
         const stream = new WebSocketJSONStream(ws);
         // console.log(token, ws.protocol)

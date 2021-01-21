@@ -7,7 +7,7 @@ import type {
   GooglePickerCallback,
 } from "../header/account/GooglePicker"
 import { ShareDBClient } from "../sharedb/client"
-import type { PostMeta, CustomSession, /* DiscordProfile,*/ GoogleProfile } from "../types"
+import type { PostMeta, CustomSession, GoogleProfile, ChannelMeta } from "../types"
 
 export class CollaborationManager {
   shareClient = new ShareDBClient(this)
@@ -24,6 +24,15 @@ export class CollaborationManager {
   @observable session?: CustomSession | null
 
   @observable post: PostMeta | null = null
+  @observable channel: ChannelMeta | null = null
+
+  getChannels = () => {
+    console.log("getChannels")
+  }
+
+  getPosts = () => {
+    console.log("getPosts")
+  }
 
   @action link = async (type: "Discord" | "Google") => signIn(type.toLowerCase())
 
@@ -68,7 +77,11 @@ export class CollaborationManager {
     console.log(session)
     this.ready = true
     this.session = session
-    this.googleUser = session?.google ?? null
-    this.sheet = JSON.parse(localStorage.getItem("pickedSheet") ?? "null")
+    if (session?.google) {
+      this.googleUser = session.google
+      this.sheet = JSON.parse(localStorage.getItem("pickedSheet") ?? "null")
+    } else {
+      localStorage.removeItem("pickedSheet")
+    }
   }
 }
