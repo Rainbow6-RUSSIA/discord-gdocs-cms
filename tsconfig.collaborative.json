@@ -15,7 +15,8 @@
     "downlevelIteration": true,
     "importsNotUsedAsValues": "error",
     "experimentalDecorators": true,
-    "outDir": "build"
+    "outDir": "build",
+    "sourceMap": true
   },
   "exclude": ["node_modules", "build", ".yarn"],
   "include": ["**/*.ts", "**/*.tsx", "scripts/*.js"]
