@@ -1,5 +1,7 @@
 FROM node:12-alpine
 
+RUN apk add git
+
 WORKDIR /app
 
 ARG NEXT_PUBLIC_SENTRY_DSN=$NEXT_PUBLIC_SENTRY_DSN
