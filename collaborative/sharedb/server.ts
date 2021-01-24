@@ -1,5 +1,7 @@
 import WebSocketJSONStream from "@teamwork/websocket-json-stream";
 import express from "express";
+import SheetConnection,  { Config } from "google-spreadsheet-orm";
+import { Auth } from "googleapis"
 import http from "http";
 import ShareDB from "sharedb";
 import WebSocket from "ws";
@@ -7,6 +9,7 @@ import { DEFAULT_EDITOR_MANAGER_STATE } from "../../modules/editor/defaultEditor
 import { EditorManager } from "../../modules/editor/EditorManager";
 import { CollaborativeServerContext, getDocument, getGoogleProfile } from "../helpers/google";
 import type { GoogleProfile } from "../types";
+import { CollaborativeSession } from "./CollaborativeSession";
 import { TempMemoryDB } from "./TempMemoryDb";
 
 class ShareDBServer {
@@ -51,13 +54,15 @@ class ShareDBServer {
       console.log(req.headers)
       const dataHeader = req.headers["sec-websocket-protocol"]
       if (!dataHeader) return ws.terminate();
-      const [token, docId, channelId, postId] = dataHeader.split(", ");
+      const [token, spreadsheetId, channelId, postId] = dataHeader.split(", ");
 
       try {
-        const profile = await getGoogleProfile(token);
-        const document = await getDocument(token, docId)
 
-        await this.initDoc(docId, `${channelId}/${postId}`)
+        const collaborativeSession = new CollaborativeSession({ token, spreadsheetId, channelId, postId });
+
+        await collaborativeSession.init();
+        const data = await collaborativeSession.getData()
+        await this.initDoc(spreadsheetId, `${channelId}/${postId}`, data)
 
         const stream = new WebSocketJSONStream(ws);
         // console.log(token, ws.protocol)
@@ -66,8 +71,9 @@ class ShareDBServer {
         // ws.on("", () => console.log("Close"))
 
         // https://github.com/dmapper/sharedb-access/issues/8
-        (this.backend.listen as (stream: WebSocketJSONStream, data: CollaborativeServerContext) => void)(stream, {profile, document});
-      } catch {
+        (this.backend.listen as (stream: WebSocketJSONStream, data: CollaborativeSession) => void)(stream, collaborativeSession);
+      } catch (error) {
+        console.log(error)
         ws.terminate();
       }
     });

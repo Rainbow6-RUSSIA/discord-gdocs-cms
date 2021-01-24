@@ -75,24 +75,24 @@ export class ShareDBClient extends EventEmitter {
 
   connect = () => {
     const token = this.collaborationManager.googleUser?.accessToken; 
-    const docId = this.collaborationManager.sheet?.id;
+    const spreadsheetId = this.collaborationManager.sheet?.id;
     const channelId = this.collaborationManager.channel?.id;
-    const postId = this.collaborationManager.post?.id.toString();
+    const postId = this.collaborationManager.post?.id?.toString();
     const wss = process.env.NEXT_PUBLIC_COLLABORATIVE_WSS
-    console.log("EMAIL", this.collaborationManager.googleUser?.email, "DOC", docId)
-    if (token && docId && channelId && postId && wss) {
+    console.log("EMAIL", this.collaborationManager.googleUser?.email, "DOC", spreadsheetId)
+    if (token && spreadsheetId && channelId && postId && wss) {
       this.disconnect()
       console.log("Connecting to WSS:", wss)
     } else {
-      console.warn("Cannot connect to WSS", token, docId, channelId, postId, wss)
+      console.warn("Cannot connect to WSS", token, spreadsheetId, channelId, postId, wss)
       return
     }
-    this.socket = new ReconnectingWebSocket(wss, [token, docId, channelId, postId]) as WebSocket
+    this.socket = new ReconnectingWebSocket(wss, [token, spreadsheetId, channelId, postId]) as WebSocket
     this.connection = new ShareDB.Connection(this.socket)
-    this.doc = this.connection.get(docId, postId)
+    this.doc = this.connection.get(spreadsheetId, `${channelId}/${postId}`)
 
-    this.doc.subscribe(this.syncUpdate)
-    this.doc.on("op", this.syncUpdate) // debounce here causes a jumping cursor bug
+    this.doc.subscribe(() => console.log("SUBSCRIBE", this.syncUpdate()))
+    this.doc.on("op", () => console.log("OP", this.syncUpdate())) // debounce here causes a jumping cursor bug
 
     this.disposers.push(onSnapshot(this.editorStore, debounce(this.handleSnapshot, 500, {maxWait: 1000} )))
     this.cursor = new ShareDBCursor()

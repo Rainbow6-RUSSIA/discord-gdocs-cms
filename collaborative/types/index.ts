@@ -53,3 +53,10 @@ export type ChannelMeta = {
   id: string;
   name: string;
 }
+
+export type ConnectionParams = {
+  token: string, 
+  spreadsheetId: string,
+  channelId: string,
+  postId: string
+}

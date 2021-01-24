@@ -7,7 +7,9 @@ import type {
   GooglePickerCallback,
 } from "../header/account/GooglePicker"
 import { ShareDBClient } from "../sharedb/client"
-import type { PostMeta, CustomSession, GoogleProfile, ChannelMeta } from "../types"
+import type { ChannelInstance } from "../sheet/channels"
+import type { PostInstance } from "../sheet/posts"
+import type { CustomSession, GoogleProfile } from "../types"
 
 export class CollaborationManager {
   shareClient = new ShareDBClient(this)
@@ -23,8 +25,9 @@ export class CollaborationManager {
   // @observable guild?: Guild | null = null
   @observable session?: CustomSession | null
 
-  @observable post: PostMeta | null = null
-  @observable channel: ChannelMeta | null = null
+  // TODO: use real data
+  @observable post: Partial<PostInstance> | null = { id: 0 }
+  @observable channel: Partial<ChannelInstance> | null = { id: "789853452930383903" }
 
   getChannels = () => {
     console.log("getChannels")
