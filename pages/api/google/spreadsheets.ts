@@ -16,7 +16,14 @@ export default async function handler(
 
     google.options({ auth: getAuthClient(accessToken) })
 
-    const list = await drive.files.list({ q: `"${email}" in writers`, fields: "files(id, name)" })
+    const list = await drive.files.list({
+      q: `createdTime > '2020-09-01' and mimeType = "application/vnd.google-apps.spreadsheet" and "${email}" in writers`,
+      includeItemsFromAllDrives: true,
+      includeTeamDriveItems: true,
+      supportsAllDrives: true,
+      supportsTeamDrives: true,
+      fields: "files(id, name)"
+    })
   
     return res.send(list.data.files ?? [])
   }

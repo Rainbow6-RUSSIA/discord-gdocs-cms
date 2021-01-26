@@ -84,7 +84,7 @@ export const Dropdown = (props: DropdownProps) => {
     
     return <Wrap>
         <Select disabled={props.disabled || props.loading} onChange={handleChange}>
-            {finalOptions.map(({label, value, selected, disabled}) => <option key={label} disabled={disabled} value={value} selected={selected}>{label}</option>)}
+            {finalOptions.map(({label, value, selected, disabled}) => <option key={`${value}.${label}`} disabled={disabled} value={value} selected={selected}>{label}</option>)}
         </Select>
         <Arrow>{props.loading ? loading : chevronDown}</Arrow>
     </Wrap>

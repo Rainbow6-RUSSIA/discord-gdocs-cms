@@ -2,6 +2,7 @@ import type { drive_v3 } from "googleapis"
 import { useObserver } from "mobx-react-lite"
 import React from "react"
 import { useMutation, useQuery } from "react-query"
+import { ReactQueryDevtools } from "react-query/devtools"
 import { PrimaryButton } from "../../common/input/button/PrimaryButton"
 import { Stack } from "../../common/layout/Stack"
 import { ModalAction } from "../../common/modal/layout/ModalAction"
@@ -79,6 +80,7 @@ export function CollaborationModal() {
                         <PrimaryButton>Create new</PrimaryButton>
                     </DropdownRow>
                 </Stack>
+            <div style={{display: "inline"}}><ReactQueryDevtools initialIsOpen/></div>
             </ModalBody>
             <ModalFooter>
                 <PrimaryButton disabled={!isReady} onClick={() => handleUnlink()} accent="danger">
