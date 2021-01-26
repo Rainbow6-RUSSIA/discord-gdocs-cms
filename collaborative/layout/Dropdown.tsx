@@ -1,5 +1,7 @@
 import React from "react"
 import styled from "styled-components"
+import { chevronDown } from "../../icons/chevron";
+import { loading } from "../icons/loading";
 
 type IOption = {
     label: string;
@@ -14,10 +16,25 @@ type IGroup = {
 }
 
 export type DropdownProps = {
-    options: (IOption | IGroup)[]
+    options?: (IOption | IGroup)[]
     // placeholder?: string
     onChange?: (arg?: IOption) => void
+    loading?: boolean;
+    disabled?: boolean;
 }
+
+const Wrap = styled.div`
+    min-width: 60px;
+    position: relative;
+`
+
+const Arrow = styled.div`
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+`
 
 const Select = styled.select`
     background: ${({ theme }) => `${theme.background.secondaryAlt}`};
@@ -26,10 +43,11 @@ const Select = styled.select`
     outline: none;
 
     cursor: pointer;
+    appearance: none;
 
-    min-width: 60px;
     min-height: 36px;
     max-height: 36px;
+    width: 100%;
 
     padding: 0 9px;
     border: 2px solid ${({ theme }) => theme.background.secondaryAlt};
@@ -55,15 +73,19 @@ const Select = styled.select`
 
 const groupGuard = (option: IOption | IGroup): option is IGroup => "group" in option
 
-export const Dropdown = ({ options, onChange = () => {} }: DropdownProps) => {
-    options = [{ label: "Option 1" }, { label: "Option 2", disabled: true }, { group: [{ label: "Option 3" }, { label: "Option 4" }], name: "Group" }]
-    const finalOptions = options.flatMap(opt => 
+export const Dropdown = (props: DropdownProps) => {
+    const finalOptions = props.options?.flatMap(opt => 
         groupGuard(opt)
         ? opt.group.map((o, i) => ({...o, label: `${opt.name}: ${o.label} (${i+1}/${opt.group.length})`}))
         : opt
-    )
-    const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => onChange(finalOptions.find(opt => opt.value === event.target.value))
-    return <Select onChange={handleChange}>
-        {finalOptions.map(({label, value, selected, disabled}) => <option key={label} disabled={disabled} value={value} selected={selected}>{label}</option>)}
-    </Select>
+    ) ?? []
+
+    const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => props.onChange?.(finalOptions.find(opt => opt.value === event.target.value))
+    
+    return <Wrap>
+        <Select disabled={props.disabled || props.loading} onChange={handleChange}>
+            {finalOptions.map(({label, value, selected, disabled}) => <option key={label} disabled={disabled} value={value} selected={selected}>{label}</option>)}
+        </Select>
+        <Arrow>{props.loading ? loading : chevronDown}</Arrow>
+    </Wrap>
 }
