@@ -1695,7 +1695,7 @@ __metadata:
     express: ^4.17.1
     fake-indexeddb: ^3.1.2
     google-spreadsheet: ^3.0.14
-    google-spreadsheet-orm: economia/google-spreadsheet-orm
+    google-spreadsheet-orm: Rainbow6-RUSSIA/google-spreadsheet-orm
     googleapis: ^67.0.0
     highlight.js: ^10.3.2
     idb: ^5.0.7
@@ -6984,13 +6984,13 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-google-spreadsheet-orm@economia/google-spreadsheet-orm:
-  version: 0.0.5
-  resolution: "google-spreadsheet-orm@https://github.com/economia/google-spreadsheet-orm.git#commit=26a79580fbba0dbd2226005f44ae639fbf8d8531"
+google-spreadsheet-orm@Rainbow6-RUSSIA/google-spreadsheet-orm:
+  version: 0.0.6
+  resolution: "google-spreadsheet-orm@https://github.com/Rainbow6-RUSSIA/google-spreadsheet-orm.git#commit=4cbb7fa0b90dcabd965636bf3af3603026d1dd45"
   dependencies:
     googleapis: ^37.2.0
     reflect-metadata: ^0.1.13
-  checksum: 758db359012c9e87921936f062064d6b6917916e6c94fefd2e1227950d2e3bb5c06477cace1ce892aa56e1ea5794ef22641a178e99031ed783f657dc7ded727e
+  checksum: ac4145f80a4bae0ee6ac09f37d0a1d3e756c72647c2c8921fa7e300f799079f6610069c3e1f16c7e9e1afca557a1aabc44f7cf024da50356401a532a2075cd4e
   languageName: node
   linkType: hard
 

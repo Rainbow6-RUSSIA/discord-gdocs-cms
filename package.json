@@ -41,7 +41,7 @@
     "domino": "^2.1.6",
     "express": "^4.17.1",
     "google-spreadsheet": "^3.0.14",
-    "google-spreadsheet-orm": "economia/google-spreadsheet-orm",
+    "google-spreadsheet-orm": "Rainbow6-RUSSIA/google-spreadsheet-orm",
     "googleapis": "^67.0.0",
     "highlight.js": "^10.3.2",
     "idb": "^5.0.7",
