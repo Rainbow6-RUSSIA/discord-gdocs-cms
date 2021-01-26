@@ -1,5 +1,6 @@
 
 import { GoogleSpreadsheet } from "google-spreadsheet";
+import { Auth } from "googleapis";
 import fetch from "isomorphic-unfetch";
 import type { GoogleProfile } from "../types";
 
@@ -25,4 +26,10 @@ export const getGoogleProfile =
 
 export const getCollaborativePost = async (doc: GoogleSpreadsheet) => {
 
+}
+
+export const getAuthClient = (access_token: string) => {
+    const authClient = new Auth.OAuth2Client()
+    authClient.setCredentials({ access_token })
+    return authClient
 }

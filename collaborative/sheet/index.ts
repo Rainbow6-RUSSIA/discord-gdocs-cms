@@ -1,7 +1,7 @@
 import type { GoogleSpreadsheet } from "google-spreadsheet";
 import SheetConnection, { AbstractModel, Config } from "google-spreadsheet-orm";
 import { Auth } from "googleapis";
-import { getDocument } from "../helpers/google";
+import { getAuthClient, getDocument } from "../helpers/google";
 import type { ConnectionParams } from "../types";
 import { ChannelModel, initChannelModel } from "./channels";
 import { initPostModel, PostModel } from "./posts";
@@ -15,11 +15,10 @@ export class SheetORM {
     init = async () => {
         this.document = await getDocument(this.config.token, this.config.spreadsheetId)
 
-        const authClient = new Auth.OAuth2Client()
-        authClient.setCredentials({ access_token: this.config.token })
+        
         const config = { 
             spreadsheetId: this.config.spreadsheetId,
-            authClient,
+            authClient: getAuthClient(this.config.token),
             disableSingleton: true,
             migrate: "drop",
             logger: console
