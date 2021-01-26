@@ -64,6 +64,7 @@
     "react-dom": "^16.14.0",
     "react-focus-on": "^3.5.0",
     "react-is": "^16.13.1",
+    "react-query": "^3.6.0",
     "reconnecting-websocket": "^4.4.0",
     "reflect-metadata": "^0.1.13",
     "regenerator-runtime": "^0.13.7",
