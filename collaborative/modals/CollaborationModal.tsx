@@ -1,12 +1,8 @@
 import type { drive_v3 } from "googleapis"
 import { useObserver } from "mobx-react-lite"
-import { signOut } from "next-auth/client"
-import React, { useEffect, useState } from "react"
-import { useQuery } from "react-query"
-import styled from "styled-components"
+import React from "react"
+import { useMutation, useQuery } from "react-query"
 import { PrimaryButton } from "../../common/input/button/PrimaryButton"
-import { ButtonRow } from "../../common/layout/ButtonRow"
-import { FlexContainer } from "../../common/layout/FlexContainer"
 import { Stack } from "../../common/layout/Stack"
 import { ModalAction } from "../../common/modal/layout/ModalAction"
 import { ModalBody } from "../../common/modal/layout/ModalBody"
@@ -37,12 +33,7 @@ export function CollaborationModal() {
     
     const isReady = Boolean(user)
 
-    const [isLoading, setLoading] = useState(false)
-    const handleUnlink = async () => {
-        setLoading(true)
-        await collaborationManager.unlink()
-        setLoading(false)
-    }
+    const { isLoading: isUnlinking, mutate: handleUnlink } = useMutation(collaborationManager.unlink)
 
     const fetchSpreadsheets = async (): Promise<NonNullableObject<drive_v3.Schema$File>[]> => {
         const res = await fetch("/api/google/spreadsheets")
@@ -90,10 +81,10 @@ export function CollaborationModal() {
                 </Stack>
             </ModalBody>
             <ModalFooter>
-                <PrimaryButton disabled={!isReady} onClick={handleUnlink} accent="danger">
+                <PrimaryButton disabled={!isReady} onClick={() => handleUnlink()} accent="danger">
                     Logout
                     {" "}
-                    {isLoading ? loading : null}
+                    {isUnlinking ? loading : null}
                 </PrimaryButton>
                 <PrimaryButton onClick={() => modal.dismiss()}>Close</PrimaryButton>
             </ModalFooter>
