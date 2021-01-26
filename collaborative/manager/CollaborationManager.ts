@@ -1,33 +1,22 @@
-// import type { Guild } from "discord.js"
 import { action, observable } from "mobx"
 import { signIn, signOut } from "next-auth/client"
-import { getCustomSession } from "../AuthAdapter"
 import type {
-  GoogleDriveItem,
-  GooglePickerCallback,
-} from "../header/account/GooglePicker"
+  GoogleDriveItem
+} from "../account/GooglePicker"
+import { getCustomSession } from "../AuthAdapter"
 import { ShareDBClient } from "../sharedb/client"
 import type { ChannelInstance } from "../sheet/channels"
 import type { PostInstance } from "../sheet/posts"
-import type { CustomSession, GoogleProfile } from "../types"
+import type { CustomSession } from "../types"
 
 export class CollaborationManager {
   shareClient = new ShareDBClient(this)
-
-  @observable ready = false
-  @observable googleUser: 
-    | GoogleProfile
-    | null = null
-  // @observable discordUser: DiscordProfile | null = null
-  @observable sheet:
-    | (Partial<GoogleDriveItem> & Pick<GoogleDriveItem, "id">)
-    | null = null
-  // @observable guild?: Guild | null = null
   @observable session?: CustomSession | null
-
+  
   // TODO: use real data
-  @observable post: Partial<PostInstance> | null = { id: 0 }
-  @observable channel: Partial<ChannelInstance> | null = { id: "789853452930383903" }
+  @observable spreadsheet: GoogleDriveItem | null = null
+  @observable post: PostInstance | null = null
+  @observable channel: ChannelInstance | null = null
 
   getChannels = () => {
     console.log("getChannels")
@@ -37,52 +26,48 @@ export class CollaborationManager {
     console.log("getPosts")
   }
 
-  @action link = async (type: "Discord" | "Google") => signIn(type.toLowerCase())
+  @action link = async () => signIn("google")
 
-  @action unlink = async (type: "Discord" | "Google") => {
-    const res = await fetch(`/api/auth/provider/${type.toLowerCase()}/unlink`, {
-      method: "POST",
-    })
+  @action unlink = async () => {
+    const res = await fetch("/api/auth/provider/google/unlink", { method: "POST" })
     if (res.status === 204) {
       await signOut()
     }
     return this.load()
   }
 
-  @action handleSheetSelection = (event: GooglePickerCallback) => {
-    console.log(event)
-    if (event.action === "picked") {
-      this.sheet = event.docs[0]
-      localStorage.setItem("pickedSheet", JSON.stringify(this.sheet))
-    }
-  }
+  // @action handleSheetSelection = (event: GooglePickerCallback) => {
+  //   console.log(event)
+  //   if (event.action === "picked") {
+  //     this.sheet = event.docs[0]
+  //     localStorage.setItem("pickedSheet", JSON.stringify(this.sheet))
+  //   }
+  // }
 
-  @action handleCreateNew = () => {
-    console.log("CREATE NEW")
-  }
+  // @action handleCreateNew = () => {
+  //   console.log("CREATE NEW")
+  // }
 
-  @action handlePost = async () => {
-    if (!this.sheet) return
-    console.log("HANDLE POST")
-    await fetch("/api/post/", {
-      method: "POST",
-      body: JSON.stringify({
-        spreadsheetId: this.sheet.id,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-  }
+  // @action handlePost = async () => {
+  //   if (!this.sheet) return
+  //   console.log("HANDLE POST")
+  //   await fetch("/api/post/", {
+  //     method: "POST",
+  //     body: JSON.stringify({
+  //       spreadsheetId: this.sheet.id,
+  //     }),
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //   })
+  // }
 
   @action load = async () => {
     const session = await getCustomSession()
     console.log(session)
-    this.ready = true
     this.session = session
     if (session?.google) {
-      this.googleUser = session.google
-      this.sheet = JSON.parse(localStorage.getItem("pickedSheet") ?? "null")
+      this.spreadsheet = JSON.parse(localStorage.getItem("pickedSheet") ?? "null")
     } else {
       localStorage.removeItem("pickedSheet")
     }

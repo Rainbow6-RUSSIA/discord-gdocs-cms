@@ -60,10 +60,10 @@ export class ShareDBClient extends EventEmitter {
   bind = (editorStore: EditorManagerLike) => {
     this.editorStore = editorStore
     this.disposers.push(
-      observe(this.collaborationManager, "googleUser", this.connect)
+      observe(this.collaborationManager, "session", this.connect)
     )
     this.disposers.push(
-      observe(this.collaborationManager, "sheet", this.connect)
+      observe(this.collaborationManager, "spreadsheet", this.connect)
     )
   }
 
@@ -74,12 +74,12 @@ export class ShareDBClient extends EventEmitter {
   }
 
   connect = () => {
-    const token = this.collaborationManager.googleUser?.accessToken; 
-    const spreadsheetId = this.collaborationManager.sheet?.id;
+    const token = this.collaborationManager.session?.google?.accessToken; 
+    const spreadsheetId = this.collaborationManager.spreadsheet?.id;
     const channelId = this.collaborationManager.channel?.id;
-    const postId = this.collaborationManager.post?.id?.toString();
+    const postId = this.collaborationManager.post?.id.toString();
     const wss = process.env.NEXT_PUBLIC_COLLABORATIVE_WSS
-    console.log("EMAIL", this.collaborationManager.googleUser?.email, "DOC", spreadsheetId)
+    console.log("EMAIL", this.collaborationManager.session?.google?.email, "DOC", spreadsheetId)
     if (token && spreadsheetId && channelId && postId && wss) {
       this.disconnect()
       console.log("Connecting to WSS:", wss)

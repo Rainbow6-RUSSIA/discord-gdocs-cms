@@ -1,5 +1,8 @@
+import type { drive_v3 } from "googleapis"
 import { useObserver } from "mobx-react-lite"
+import { signOut } from "next-auth/client"
 import React, { useEffect, useState } from "react"
+import { useQuery } from "react-query"
 import styled from "styled-components"
 import { PrimaryButton } from "../../common/input/button/PrimaryButton"
 import { ButtonRow } from "../../common/layout/ButtonRow"
@@ -14,59 +17,51 @@ import { ModalTitle } from "../../common/modal/layout/ModalTitle"
 import { ModalContext } from "../../common/modal/ModalContext"
 import { useRequiredContext } from "../../common/state/useRequiredContext"
 import { remove } from "../../icons/remove"
-import GooglePicker from "../header/account/GooglePicker"
-import { ServiceAuthButton } from "../header/account/ServiceAuthButton"
-import { externalLink } from "../icons/externalLink"
-import { googleSheets } from "../icons/googleSheets"
+import { GoogleAuthButton } from "../account/ServiceAuthButton"
 import { loading } from "../icons/loading"
 import { Dropdown } from "../layout/Dropdown"
 import { DropdownRow } from "../layout/DropdownRow"
 import { CollaborationManagerContext } from "../manager/CollaborationManagerContext"
+import type { ConnectionParams } from "../types"
 
-const Notice = styled.div`
-  margin: 8px;
+type NonNullableObject<T> = {
+    [P in keyof T]-?: NonNullable<T[P]>;
+};
 
-  line-height: 1.375;
-
-  & > * {
-    vertical-align: middle;
-    margin-left: 3px;
-  }
-
-  & > a {
-    line-height: 16px;
-  }
-`
 
 export function CollaborationModal() {
     const modal = useRequiredContext(ModalContext)
     const collaborationManager = useRequiredContext(CollaborationManagerContext)
 
-    const user = collaborationManager.googleUser
-    const {
-      handleCreateNew,
-      handleSheetSelection,
-      handlePost,
-      sheet,
-    } = collaborationManager
+    const user = collaborationManager.session?.google
     
     const isReady = Boolean(user)
 
     const [isLoading, setLoading] = useState(false)
     const handleUnlink = async () => {
         setLoading(true)
-        await collaborationManager.unlink("Google")
+        await collaborationManager.unlink()
         setLoading(false)
     }
 
-    // const [] = useState(null)
+    const fetchSpreadsheets = async (): Promise<NonNullableObject<drive_v3.Schema$File>[]> => {
+        const res = await fetch("/api/google/spreadsheets")
+        if (!res.ok) throw new Error("Network error")
+        return res.json()
+    }
 
-    // useEffect(() => {
+    const fetchChannels = () => {
 
-    // }, [])
+    }
 
-    const googlePickButton = <PrimaryButton disabled={!isReady}>Pick existing</PrimaryButton>
+    const fetchPosts = () => {
 
+    }
+
+    const resultSSs = useQuery("spreadsheets", fetchSpreadsheets, { enabled: Boolean(user) })
+    const resultChannels = useQuery("channels", fetchChannels, { enabled: false })
+    const resultPosts = useQuery("posts", fetchPosts, { enabled: false })
+    
     return useObserver(() => (
         <ModalContainer>
             <ModalHeader>
@@ -79,37 +74,17 @@ export function CollaborationModal() {
             </ModalHeader>
             <ModalBody>
                 <Stack gap={8}>
-                    <ServiceAuthButton type="Google" />
-                    Select spreadsheet
-                    <FlexContainer>
-                    <ButtonRow>
-                        <PrimaryButton disabled={!isReady} onClick={handleCreateNew}>
-                        Create new
-                        </PrimaryButton>
-                        {user?.accessToken
-                        ? <GooglePicker accessToken={user.accessToken} onEvent={handleSheetSelection}>
-                            {googlePickButton}
-                        </GooglePicker>
-                        : googlePickButton
-                        }
-                        
-                    </ButtonRow>
-                    </FlexContainer>
-                    Chosen spreadsheet
-                    <Notice>
-                    {sheet ? googleSheets : null}
-                    <span>{sheet ? sheet.name : "None"}</span>
-                    {sheet ? (
-                        <a target="_blank" rel="noreferrer" href={sheet.url}>
-                        {externalLink}
-                        </a>
-                    ) : null}
-                    </Notice>
-                    Select Discord channel:
-                    <Dropdown options={[]}/>
-                    Select post:
+                    <GoogleAuthButton />
+                    Select a spreadsheet:
                     <DropdownRow>
-                        <Dropdown options={[]}/>
+                        <Dropdown disabled={resultSSs.isIdle} loading={resultSSs.isLoading} options={resultSSs.data?.map(({ id, name }) => ({ label: name, value: id }))}/>
+                        <PrimaryButton>Create new</PrimaryButton>
+                    </DropdownRow>
+                    Select Discord channel:
+                    <Dropdown disabled={resultChannels.isIdle} loading={resultChannels.isLoading} options={[]}/>
+                    Select a post:
+                    <DropdownRow>
+                        <Dropdown disabled={resultPosts.isIdle} loading={resultPosts.isLoading} options={[]}/>
                         <PrimaryButton>Create new</PrimaryButton>
                     </DropdownRow>
                 </Stack>

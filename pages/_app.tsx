@@ -4,6 +4,7 @@ import { autorun } from "mobx"
 import { Observer } from "mobx-react-lite"
 import App, { AppProps } from "next/app"
 import React from "react"
+import { QueryClientProvider, QueryClient } from "react-query"
 import { ThemeProvider } from "styled-components"
 import { CollaborationManager } from "../collaborative/manager/CollaborationManager"
 import { CollaborationManagerProvider } from "../collaborative/manager/CollaborationManagerContext"
@@ -27,8 +28,8 @@ export default class Application extends App {
   private readonly modalManager = new ModalManager()
   private readonly popoverManager = new PopoverManager()
   private readonly tooltipManager = new TooltipManager()
-  private readonly externalServiceManager = new CollaborationManager()
-
+  private readonly collaborationManager = new CollaborationManager()
+  private readonly queryClient = new QueryClient()
 
   private readonly disposers: (() => void)[] = []
 
@@ -42,8 +43,8 @@ export default class Application extends App {
 
   componentDidMount() {
     this.preferenceManager.load()
-    this.externalServiceManager.load()
-    
+    this.collaborationManager.load()
+
     this.disposers.push(
       autorun(() => this.preferenceManager.dump(), {
         delay: 500,
@@ -67,17 +68,19 @@ export default class Application extends App {
             <GlobalStyle />
             <ErrorBoundary>
               <PreferenceManagerProvider value={this.preferenceManager}>
-                <CollaborationManagerProvider value={this.externalServiceManager}>
-                  <ModalManagerProvider value={this.modalManager}>
-                    <PopoverManagerProvider value={this.popoverManager}>
-                      <TooltipManagerProvider value={this.tooltipManager}>
-                        <Component {...pageProps} />
-                        <ModalOverlay />
-                        <PopoverOverlay />
-                        <TooltipOverlay />
-                      </TooltipManagerProvider>
-                    </PopoverManagerProvider>
-                  </ModalManagerProvider>
+                <CollaborationManagerProvider value={this.collaborationManager}>
+                  <QueryClientProvider client={this.queryClient}>
+                    <ModalManagerProvider value={this.modalManager}>
+                      <PopoverManagerProvider value={this.popoverManager}>
+                        <TooltipManagerProvider value={this.tooltipManager}>
+                          <Component {...pageProps} />
+                          <ModalOverlay />
+                          <PopoverOverlay />
+                          <TooltipOverlay />
+                        </TooltipManagerProvider>
+                      </PopoverManagerProvider>
+                    </ModalManagerProvider>
+                  </QueryClientProvider>
                 </CollaborationManagerProvider>
               </PreferenceManagerProvider>
             </ErrorBoundary>

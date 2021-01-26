@@ -2,11 +2,8 @@ import { useObserver } from "mobx-react-lite"
 import React from "react"
 import styled from "styled-components"
 import { PrimaryButton } from "../../common/input/button/PrimaryButton"
-import { ModalManagerContext } from "../../common/modal/ModalManagerContext"
 import { useRequiredContext } from "../../common/state/useRequiredContext"
-import { loading } from "../icons/loading"
 import { CollaborationManagerContext } from "../manager/CollaborationManagerContext"
-import type { SocialTypeProps } from "../types"
 
 export const SocialProfile = styled.div`
   min-width: 100px;
@@ -40,28 +37,19 @@ export const Avatar = styled.img.attrs({ height: 32, width: 32 })`
   border-radius: 50%;
 `
 
-export const ServiceAuthButton = ({ type }: SocialTypeProps) => {
+export const GoogleAuthButton = () => {
   const collaborationManager = useRequiredContext(CollaborationManagerContext)
-  const modalManager = useRequiredContext(ModalManagerContext)
 
   const Fallback = (
     <>
       To use collaboration features you must login into a Google account and select spreadsheet for milestone saves.
-      <PrimaryButton onClick={async () => collaborationManager.link(type)}>Login via {type}</PrimaryButton>
+      <PrimaryButton onClick={async () => collaborationManager.link()}>Login via Google</PrimaryButton>
     </>
   )
 
-  const Loading = (
-    <SocialProfile>
-      {loading}
-    </SocialProfile>
-  )
-
   return useObserver(() => {
-    if (!collaborationManager.ready) return Loading
-
-    if (!collaborationManager.googleUser) return Fallback
-    const { name, picture } = collaborationManager.googleUser
+    if (!collaborationManager.session?.google) return Fallback
+    const { name, picture } = collaborationManager.session.google
     return (
       <SocialProfile>
         <span>Logged as: {name}</span>
