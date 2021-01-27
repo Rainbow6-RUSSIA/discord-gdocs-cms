@@ -1,6 +1,5 @@
 import type { GoogleSpreadsheet } from "google-spreadsheet";
-import SheetConnection, { AbstractModel, Config } from "google-spreadsheet-orm";
-import { Auth } from "googleapis";
+import SheetConnection, { Config } from "google-spreadsheet-orm";
 import { getAuthClient, getDocument } from "../helpers/google";
 import type { ConnectionParams } from "../types";
 import { ChannelModel, initChannelModel } from "./channels";
@@ -9,37 +8,24 @@ import { initPostModel, PostModel } from "./posts";
 export class SheetORM {
     constructor(config: ConnectionParams) {
         this.config = config;
-        global.models = [] // skip further validation
     }
 
     init = async () => {
         this.document = await getDocument(this.config.token, this.config.spreadsheetId)
 
-        
         const config = { 
             spreadsheetId: this.config.spreadsheetId,
             authClient: getAuthClient(this.config.token),
             disableSingleton: true,
-            migrate: "drop",
+            migrate: "safe",
             logger: console
         } as unknown as Config
         this.connection = await SheetConnection.connect(config);
 
         const channelSheetId = this.getSheetIdByTitle("channels")
         this.ChannelClass = initChannelModel(channelSheetId)
-        await this.validateModel(this.ChannelClass)
+        await this.connection.validateModel(this.ChannelClass)
         console.log("Model is ok, channels sheet id", channelSheetId)
-
-        // this.models = {
-        //     post: PostModelClass,
-        //     channel: ChannelModelClass,
-        // }
-    }
-
-    validateModel = async <T extends AbstractModel> (model: new () => T) => {
-        global.models = [model]
-        await this.connection.validateModels()
-        global.models = []
     }
 
     getSheetIdByTitle = (title: string) => Number.parseInt(this.document.sheetsByTitle[title].sheetId, 10)
@@ -52,7 +38,7 @@ export class SheetORM {
 
         const postSheetId = this.document.sheetsByTitle[`#${channels[0].name}`].sheetId
         this.PostClass = initPostModel(Number.parseInt(postSheetId, 10))
-        await this.validateModel(this.PostClass)
+        await this.connection.validateModel(this.PostClass)
         console.log("Model is ok, posts sheet id", postSheetId)
     }
 

@@ -1663,7 +1663,6 @@ __metadata:
     "@types/express": ^4.17.9
     "@types/gapi": ^0.0.39
     "@types/google-spreadsheet": ^3.0.2
-    "@types/google.picker": ^0.0.34
     "@types/jest": ^26.0.15
     "@types/lodash.debounce": ^4
     "@types/lodash.isequal": ^4
@@ -1695,7 +1694,7 @@ __metadata:
     express: ^4.17.1
     fake-indexeddb: ^3.1.2
     google-spreadsheet: ^3.0.14
-    google-spreadsheet-orm: Rainbow6-RUSSIA/google-spreadsheet-orm
+    google-spreadsheet-orm: "https://github.com/Rainbow6-RUSSIA/google-spreadsheet-orm.git#commit=82b4793162376df7a776ceaf16d54f26bca402cd"
     googleapis: ^67.0.0
     highlight.js: ^10.3.2
     idb: ^5.0.7
@@ -2487,13 +2486,6 @@ __metadata:
   version: 3.0.2
   resolution: "@types/google-spreadsheet@npm:3.0.2"
   checksum: fefb20308a8ef5fb8db23818309e4563f3a5447295ff0e5a3bfe2e3709bc8556d3d80efc93e5f4b726d100c43707765179237f96b821e51fdb09890a62d3d9ae
-  languageName: node
-  linkType: hard
-
-"@types/google.picker@npm:^0.0.34":
-  version: 0.0.34
-  resolution: "@types/google.picker@npm:0.0.34"
-  checksum: 98e01ab92ed40439e9580fdbd3549ae36d4f7e76e4fb516be4d30e0e99209ce4328d756b86ecc8d12164968bba45a8140694bca1901aea2322069ccf9c4c72cf
   languageName: node
   linkType: hard
 
@@ -6985,13 +6977,13 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-google-spreadsheet-orm@Rainbow6-RUSSIA/google-spreadsheet-orm:
-  version: 0.0.6
-  resolution: "google-spreadsheet-orm@https://github.com/Rainbow6-RUSSIA/google-spreadsheet-orm.git#commit=4cbb7fa0b90dcabd965636bf3af3603026d1dd45"
+"google-spreadsheet-orm@https://github.com/Rainbow6-RUSSIA/google-spreadsheet-orm.git#commit=82b4793162376df7a776ceaf16d54f26bca402cd":
+  version: 0.1.0
+  resolution: "google-spreadsheet-orm@https://github.com/Rainbow6-RUSSIA/google-spreadsheet-orm.git#commit=82b4793162376df7a776ceaf16d54f26bca402cd"
   dependencies:
     googleapis: ^37.2.0
     reflect-metadata: ^0.1.13
-  checksum: ac4145f80a4bae0ee6ac09f37d0a1d3e756c72647c2c8921fa7e300f799079f6610069c3e1f16c7e9e1afca557a1aabc44f7cf024da50356401a532a2075cd4e
+  checksum: 55b1659d5f8f1b60efde3e659866b1af84be3c1440d4de7ee8f4a86fbf96c3f1f0de376fda1353dd47294e65c16c3240cacce4267e4d9de844105679e5b3ed15
   languageName: node
   linkType: hard
 
