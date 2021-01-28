@@ -17,7 +17,6 @@ export type SheetOrmConfig = {
 
 export class SheetORM {
     constructor(config: SheetOrmConfig) {
-        global.models = []
         this.config = { validate: true, ...config };
     }
 

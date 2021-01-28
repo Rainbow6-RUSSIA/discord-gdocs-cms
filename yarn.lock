@@ -1694,7 +1694,7 @@ __metadata:
     express: ^4.17.1
     fake-indexeddb: ^3.1.2
     google-spreadsheet: ^3.0.14
-    google-spreadsheet-orm: "https://github.com/Rainbow6-RUSSIA/google-spreadsheet-orm.git#commit=82b4793162376df7a776ceaf16d54f26bca402cd"
+    google-spreadsheet-orm: "https://github.com/Rainbow6-RUSSIA/google-spreadsheet-orm.git#commit=43285b0906d8f50c64256b9cd2ad67f8fe258991"
     googleapis: ^67.0.0
     highlight.js: ^10.3.2
     idb: ^5.0.7
@@ -6977,13 +6977,13 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"google-spreadsheet-orm@https://github.com/Rainbow6-RUSSIA/google-spreadsheet-orm.git#commit=82b4793162376df7a776ceaf16d54f26bca402cd":
+"google-spreadsheet-orm@https://github.com/Rainbow6-RUSSIA/google-spreadsheet-orm.git#commit=43285b0906d8f50c64256b9cd2ad67f8fe258991":
   version: 0.1.0
-  resolution: "google-spreadsheet-orm@https://github.com/Rainbow6-RUSSIA/google-spreadsheet-orm.git#commit=82b4793162376df7a776ceaf16d54f26bca402cd"
+  resolution: "google-spreadsheet-orm@https://github.com/Rainbow6-RUSSIA/google-spreadsheet-orm.git#commit=43285b0906d8f50c64256b9cd2ad67f8fe258991"
   dependencies:
     googleapis: ^37.2.0
     reflect-metadata: ^0.1.13
-  checksum: 55b1659d5f8f1b60efde3e659866b1af84be3c1440d4de7ee8f4a86fbf96c3f1f0de376fda1353dd47294e65c16c3240cacce4267e4d9de844105679e5b3ed15
+  checksum: 8a86f154ad38330f2573561dc71e3d74af166a3fbfa3e4527b0b08b591890a3a9ec76971c5f4204e649e689e13a8a19dd72c6973c092c2fed33de8bbee68cde0
   languageName: node
   linkType: hard
 
