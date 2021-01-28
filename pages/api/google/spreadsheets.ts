@@ -22,7 +22,7 @@ export default async function handler(
       includeTeamDriveItems: true,
       supportsAllDrives: true,
       supportsTeamDrives: true,
-      fields: "files(id, name)"
+      fields: "files(id, name, starred)"
     })
   
     return res.send(list.data.files ?? [])
