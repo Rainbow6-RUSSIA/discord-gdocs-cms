@@ -1,24 +1,26 @@
 import React from "react"
 import styled from "styled-components"
 import { chevronDown } from "../../icons/chevron";
-import { loading } from "../icons/loading";
+import { loading as loadingIcon } from "../icons/loading";
 
-type IOption = {
+export type DropdownOption = {
     label: string;
     value?: string;
     selected?: boolean;
     disabled?: boolean;
 };
 
-type IGroup = {
+export type DropdownGroup = {
     name: string
-    group: IOption[]
+    group: DropdownOption[]
 }
 
+export type DropdownOptions = (DropdownOption | DropdownGroup)[]
+
 export type DropdownProps = {
-    options?: (IOption | IGroup)[]
-    // placeholder?: string
-    onChange?: (arg?: IOption) => void
+    options?: DropdownOptions
+    placeholder?: string
+    onChange?: (event: React.ChangeEvent<HTMLSelectElement>) => void
     loading?: boolean;
     disabled?: boolean;
 }
@@ -71,21 +73,37 @@ const Select = styled.select`
     }
 `
 
-const groupGuard = (option: IOption | IGroup): option is IGroup => "group" in option
+const groupGuard = (option: DropdownOption | DropdownGroup): option is DropdownGroup => "group" in option
 
-export const Dropdown = (props: DropdownProps) => {
-    const finalOptions = props.options?.flatMap(opt => 
+const optionMap = ({label, value, selected, disabled}: DropdownOption) => <option key={`${value}.${label}`} disabled={disabled} value={value} selected={selected}>{label}</option>
+
+export const Dropdown = ({
+    options = [],
+    disabled = false,
+    loading = false,
+    placeholder,
+    onChange = () => {}
+}: DropdownProps) => {
+
+    const restOptions = options.map(opt => 
         groupGuard(opt)
-        ? opt.group.map((o, i) => ({...o, label: `${opt.name}: ${o.label} (${i+1}/${opt.group.length})`}))
-        : opt
-    ) ?? []
-
-    const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => props.onChange?.(finalOptions.find(opt => opt.value === event.target.value))
+        ? <optgroup key={`${opt.name}.${opt.group.length}`} label={opt.name}>
+            {opt.group.map(optionMap)}
+        </optgroup>
+        : optionMap(opt)
+    )
+    
+    const placeholderOption = !disabled
+        ? loading 
+            ? <option>loading...</option>
+            : placeholder && <option>{placeholder}</option>
+        : null;
     
     return <Wrap>
-        <Select disabled={props.disabled || props.loading} onChange={handleChange}>
-            {finalOptions.map(({label, value, selected, disabled}) => <option key={`${value}.${label}`} disabled={disabled} value={value} selected={selected}>{label}</option>)}
+        <Select disabled={disabled || loading} onChange={onChange}>
+            {placeholderOption}
+            {restOptions}
         </Select>
-        <Arrow>{props.loading ? loading : chevronDown}</Arrow>
+        <Arrow>{loading ? loadingIcon : chevronDown}</Arrow>
     </Wrap>
 }
