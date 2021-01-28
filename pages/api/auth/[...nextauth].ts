@@ -21,7 +21,7 @@ const googleConfig = {
   clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
   scope:
-    "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/drive",
+    "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.install",
 }
 
 const adapter = (Adapter(process.env.DATABASE_URL!) as unknown) as IAdapter // сука кривые типы
@@ -52,33 +52,6 @@ const options = {
           sessionObj.google.accessToken = google.accessToken
         }
       }
-      // if (discord) {
-      //   const discordUser: DiscordProfile & { message: string } = await fetch(
-      //     "https://discord.com/api/users/@me",
-      //     {
-      //       headers: { Authorization: `Bearer ${discord.accessToken}` },
-      //     },
-      //   ).then(d => d.json())
-
-      //   const discordGuilds: DiscordPartialGuild[] = await fetch(
-      //     "https://discord.com/api/users/@me/guilds",
-      //     {
-      //       headers: { Authorization: `Bearer ${discord.accessToken}` },
-      //     },
-      //   ).then(d => d.json())
-
-      //   if (discordUser.message) {
-      //     await discord.remove()
-      //   } else {
-      //     sessionObj.discord = discordUser
-      //     sessionObj.discord.guilds = Array.isArray(discordGuilds)
-      //       ? discordGuilds.map(g => ({
-      //           ...g,
-      //           isBotPresent: BotClient.guilds.cache.has(g.id),
-      //         }))
-      //       : []
-      //   }
-      // }
 
       return sessionObj
     },
