@@ -17,6 +17,7 @@ export type SheetOrmConfig = {
 
 export class SheetORM {
     constructor(config: SheetOrmConfig) {
+        global.models = []
         this.config = { validate: true, ...config };
     }
 
@@ -54,7 +55,7 @@ export class SheetORM {
         throw new Error("No document fetched")
     }
 
-    getChannels = async () => this.ChannelClass ? this.connection.getInfos(this.ChannelClass) : []
+    getChannels = async () => this.ChannelClass ? this.connection.getInfos(this.ChannelClass, { id: Boolean }) : []
 
     selectChannel = async (id: string) => {
         if (!this.ChannelClass) return
@@ -72,7 +73,7 @@ export class SheetORM {
         }
     }
 
-    getPosts = async () => this.PostClass ? this.connection.getInfos(this.PostClass) : []
+    getPosts = async () => this.PostClass ? this.connection.getInfos(this.PostClass, { id: Boolean }) : []
 
     config: SheetOrmConfig
     connection!: SheetConnection
