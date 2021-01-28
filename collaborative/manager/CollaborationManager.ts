@@ -1,22 +1,18 @@
 import { action, observable } from "mobx"
 import { signIn, signOut } from "next-auth/client"
-import type {
-  GoogleDriveItem
-} from "../account/GooglePicker"
 import { getCustomSession } from "../AuthAdapter"
 import { ShareDBClient } from "../sharedb/client"
 import type { ChannelInstance } from "../sheet/channels"
 import type { PostInstance } from "../sheet/posts"
-import type { CustomSession } from "../types"
+import type { CustomSession, SpreadsheetItem } from "../types"
 
 export class CollaborationManager {
   shareClient = new ShareDBClient(this)
   @observable session?: CustomSession | null
   
-  // TODO: use real data
-  @observable spreadsheet: GoogleDriveItem | null = null
-  @observable post: PostInstance | null = null
-  @observable channel: ChannelInstance | null = null
+  @observable spreadsheet?: SpreadsheetItem
+  @observable post?: PostInstance
+  @observable channel?: ChannelInstance
 
   getChannels = () => {
     console.log("getChannels")
