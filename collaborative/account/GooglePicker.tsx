@@ -40,16 +40,16 @@ export default class GooglePicker extends Component<GooglePickerProps> {
   }
 
   createPicker = () => {
-    const view = new google.picker.DocsView(google.picker.ViewId.SPREADSHEETS)
-    view.setMimeTypes("application/vnd.google-apps.spreadsheet")
+    // const view = new google.picker.DocsView(google.picker.ViewId.SPREADSHEETS)
+    // view.setMimeTypes("application/vnd.google-apps.spreadsheet")
 
-    const picker = new google.picker.PickerBuilder()
-      .setAppId(CLIENT_ID)
-      .setOAuthToken(this.props.accessToken)
-      .addView(view)
-      .setCallback(this.props.onEvent)
-      .build()
-    picker.setVisible(true)
+    // const picker = new google.picker.PickerBuilder()
+    //   .setAppId(CLIENT_ID)
+    //   .setOAuthToken(this.props.accessToken)
+    //   .addView(view)
+    //   .setCallback(this.props.onEvent)
+    //   .build()
+    // picker.setVisible(true)
   }
 
   render() {

@@ -7,7 +7,7 @@ import { Account } from "./models/Account"
 import { Session } from "./models/Session"
 import { User } from "./models/User"
 import type { ConnectionOptions } from "typeorm"
-import { getSession } from "next-auth/client"
+import { getSession, useSession } from "next-auth/client"
 import type { CustomSession } from "./types"
 
 export let connection: Connection | null = null
@@ -215,3 +215,5 @@ export const Adapter = (typeOrmConfig: string) => {
 export const getCustomSession = (getSession as unknown) as (
   ...args: Parameters<typeof getSession>
 ) => Promise<CustomSession | null | undefined>
+
+export const useCustomSession = useSession as unknown as () => [CustomSession | null | undefined, boolean]
