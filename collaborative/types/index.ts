@@ -40,6 +40,12 @@ export type GoogleProfile = {
   error?: string
 }
 
+export type SpreadsheetItem = {
+  id: string
+  name: string
+  starred: boolean
+}
+
 export type SocialTypeProps = { type: /* "Discord" |  */"Google" }
 
 export type PostMeta = {

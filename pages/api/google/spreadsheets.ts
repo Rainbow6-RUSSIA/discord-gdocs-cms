@@ -2,6 +2,7 @@ import { google } from "googleapis"
 import type { NextApiRequest, NextApiResponse } from "next"
 import { getCustomSession } from "../../../collaborative/AuthAdapter"
 import { getAuthClient } from "../../../collaborative/helpers/google";
+import type { SpreadsheetItem } from "../../../collaborative/types";
 
 const drive = google.drive("v3");
 
@@ -25,5 +26,7 @@ export default async function handler(
       fields: "files(id, name, starred)"
     })
   
-    return res.send(list.data.files ?? [])
+    return res.send({ data: list.data.files ?? [] } as SpreadsheetsAPIResponce)
   }
+
+export type SpreadsheetsAPIResponce = { data: SpreadsheetItem[] }
