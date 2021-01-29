@@ -5,41 +5,40 @@ import JSONDiff from "json0-ot-diff"
 import debounce from "lodash.debounce";
 import isEqual from "lodash.isequal";
 import { observe } from "mobx";
-import { onSnapshot, onPatch, IDisposer, applySnapshot, IJsonPatch, getSnapshot, applyPatch } from "mobx-state-tree";
+import { onSnapshot, /* onPatch*/ IDisposer, applySnapshot, IJsonPatch, getSnapshot, /* applyPatch*/ } from "mobx-state-tree";
 import { type as json1Type } from "ot-json1"
 import ReconnectingWebSocket from "reconnecting-websocket";
-import type { Op } from "sharedb";
+// import type { Op } from "sharedb";
 import ShareDB from "sharedb/lib/client";
 import type { EditorManagerLike } from "../../modules/editor/EditorManager";
-import { parseNumbers } from "../helpers/parseNumbers";
+// import { parseNumbers } from "../helpers/parseNumbers";
 import type { CollaborationManager } from "../manager/CollaborationManager";
 import { ShareDBCursor } from "./cursor";
 
 ShareDB.types.register(json1Type);
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function patchToOp(patch: IJsonPatch, reversePatch: IJsonPatch): Op {
-  const p = patch.path.slice(1).split("/").map(parseNumbers)
-  // const value =   // p.reduce((acc, curr) => acc[curr], current)
-  switch (patch.op) {
-    case "add": {
-      return { p, li: patch.value }
-    }
-    case "remove": {
-      return { p, ld: reversePatch.value }
-    }
-    case "replace": {
-      switch (typeof patch.value) {
-        case "string": {
-          return { p, od: reversePatch.value, oi: patch.value }
-        }
-        case "number": return { p, od: reversePatch.value, oi: patch.value }
-        default: throw "Unexpected type"
-      }
-    }
-  }
-
-}
+// function patchToOp(patch: IJsonPatch, reversePatch: IJsonPatch): Op {
+//   const p = patch.path.slice(1).split("/").map(parseNumbers)
+//   // const value =   // p.reduce((acc, curr) => acc[curr], current)
+//   switch (patch.op) {
+//     case "add": {
+//       return { p, li: patch.value }
+//     }
+//     case "remove": {
+//       return { p, ld: reversePatch.value }
+//     }
+//     case "replace": {
+//       switch (typeof patch.value) {
+//         case "string": {
+//           return { p, od: reversePatch.value, oi: patch.value }
+//         }
+//         case "number": return { p, od: reversePatch.value, oi: patch.value }
+//         default: throw "Unexpected type"
+//       }
+//     }
+//   }
+// }
 
 export class ShareDBClient extends EventEmitter {
   constructor(collaborationManager: CollaborationManager){
@@ -63,7 +62,7 @@ export class ShareDBClient extends EventEmitter {
       observe(this.collaborationManager, "session", this.connect)
     )
     this.disposers.push(
-      observe(this.collaborationManager, "spreadsheet", this.connect)
+      observe(this.collaborationManager, "post", this.connect)
     )
   }
 
@@ -105,22 +104,22 @@ export class ShareDBClient extends EventEmitter {
     this.disposers.pop()?.()
   }
 
-  handlePatch = (patch: IJsonPatch, reversePatch: IJsonPatch) => {
-    if (!this.isChanged()) return
+  // handlePatch = (patch: IJsonPatch, reversePatch: IJsonPatch) => {
+  //   if (!this.isChanged()) return
     
-    const op = patchToOp(patch, reversePatch)
+  //   const op = patchToOp(patch, reversePatch)
 
-    // DEBUG
-    const diff = JSONDiff(
-      this.doc.data,
-      getSnapshot(this.editorStore),
-      diffMatchPatch
-    )
-    console.log("COMPARE", op, diff, JSON.stringify(op) === JSON.stringify(diff[0]))
-    // DEBUG
+  //   // DEBUG
+  //   const diff = JSONDiff(
+  //     this.doc.data,
+  //     getSnapshot(this.editorStore),
+  //     diffMatchPatch
+  //   )
+  //   console.log("COMPARE", op, diff, JSON.stringify(op) === JSON.stringify(diff[0]))
+  //   // DEBUG
 
-    this.doc.submitOp([op])
-  }
+  //   this.doc.submitOp([op])
+  // }
 
   handleSnapshot = (newData: EditorManagerLike) => {
     if (!this.isChanged()) return
