@@ -1,3 +1,4 @@
+import { toJS } from "mobx"
 import { useObserver } from "mobx-react-lite"
 import React from "react"
 import { useQuery } from "react-query"
@@ -20,7 +21,7 @@ export const SpreadsheetSelector = () => {
 
     const selectSpreadsheet = (e: React.ChangeEvent<HTMLSelectElement>) => {
         collaborationManager.spreadsheet = res?.data.find(r => r.id === e.currentTarget.selectedOptions[0].value)
-        console.log(collaborationManager.spreadsheet)
+        console.log(toJS(collaborationManager.spreadsheet))
     }
 
     const optionsSpreadsheets: DropdownOptions = res ? [

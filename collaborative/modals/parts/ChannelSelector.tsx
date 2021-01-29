@@ -1,3 +1,4 @@
+import { toJS } from "mobx"
 import { useObserver } from "mobx-react-lite"
 import React from "react"
 import { useQuery } from "react-query"
@@ -24,7 +25,7 @@ export const ChannelSelector = () => {
 
     const selectChannel = (e: React.ChangeEvent<HTMLSelectElement>) => {
         collaborationManager.channel = res?.data.find(r => r.id === e.currentTarget.selectedOptions[0].value)
-        console.log(collaborationManager.channel)
+        console.log(toJS(collaborationManager.channel))
     }
 
     return useObserver(() => <>
