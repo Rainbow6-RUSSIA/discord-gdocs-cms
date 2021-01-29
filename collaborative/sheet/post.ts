@@ -4,11 +4,11 @@ export const initPostModel = (sheetId: number) => {
     @worksheet(sheetId)
     class Post extends AbstractModel {
         @column
-        id!: number;
+        id!: string;
         @column
-        collectionId!: number;
+        collectionId!: string;
         @column
-        part!: number;
+        part!: string;
         @column
         name!: string;
         @column
