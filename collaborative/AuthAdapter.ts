@@ -10,9 +10,11 @@ import type { ConnectionOptions } from "typeorm"
 import { getSession, useSession } from "next-auth/client"
 import type { CustomSession } from "./types"
 
+import type { Adapter as IAdapter } from "next-auth/adapters"
+
 export let connection: Connection | null = null
 
-export const Adapter = (typeOrmConfig: string) => {
+export const Adapter = (typeOrmConfig: string): IAdapter => {
   async function getAdapter(appOptions: AppOptions) {
     const url = new URL(typeOrmConfig)
     const config: ConnectionOptions = {
@@ -79,9 +81,8 @@ export const Adapter = (typeOrmConfig: string) => {
       return new User(user).save()
     }
 
-    async function deleteUser(userId: string) {
-      // @TODO Delete user from DB
-      return false
+    async function deleteUser(id: string) {
+      return User.delete(id)
     }
 
     async function linkAccount(
@@ -93,7 +94,7 @@ export const Adapter = (typeOrmConfig: string) => {
       accessToken: any,
       accessTokenExpires: any,
     ) {
-      return new Account({
+      await new Account({
         userId,
         providerId,
         providerType,
@@ -186,7 +187,7 @@ export const Adapter = (typeOrmConfig: string) => {
 
     async function deleteSession(sessionToken: string) {
       if (sessionToken) {
-        return Session.delete<Session>({ sessionToken })
+        await Session.delete<Session>({ sessionToken })
       }
     }
 
@@ -203,7 +204,7 @@ export const Adapter = (typeOrmConfig: string) => {
       updateSession,
       deleteSession,
 
-      getUserByEmail: () => {},
+      getUserByEmail: async () => {},
     })
   }
 

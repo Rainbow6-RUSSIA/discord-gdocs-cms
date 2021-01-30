@@ -2,29 +2,22 @@ import type { NextApiRequest, NextApiResponse } from "next"
 import nextAuth from "next-auth"
 import type { InitOptions } from "next-auth"
 import type { SessionBase } from "next-auth/_utils"
-import type { Adapter as IAdapter } from "next-auth/adapters"
 import Providers from "next-auth/providers"
 import { Adapter } from "../../../collaborative/AuthAdapter"
-import { BotClient } from "../../../collaborative/bot"
 import { getGoogleProfile } from "../../../collaborative/helpers/google"
 import { Account } from "../../../collaborative/models/Account"
 import type { User } from "../../../collaborative/models/User"
-import type { CustomSession, /* DiscordPartialGuild, DiscordProfile, */ GoogleProfile } from "../../../collaborative/types"
-
-const discordConfig = {
-  clientId: process.env.DISCORD_CLIENT_ID!,
-  clientSecret: process.env.DISCORD_CLIENT_SECRET!,
-  scope: "identify guilds",
-}
+import type { CustomSession, GoogleProfile } from "../../../collaborative/types"
 
 const googleConfig = {
   clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+  authorizationUrl: "https://accounts.google.com/o/oauth2/v2/auth?response_type=code&access_type=offline",
   scope:
-    "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.install",
+    "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/drive",
 }
 
-const adapter = (Adapter(process.env.DATABASE_URL!) as unknown) as IAdapter // сука кривые типы
+const adapter = Adapter(process.env.DATABASE_URL!)
 
 const options = {
   callbacks: {
@@ -57,7 +50,7 @@ const options = {
     },
   },
 
-  providers: [Providers.Discord(discordConfig), Providers.Google(googleConfig)],
+  providers: [Providers.Google(googleConfig)],
   adapter,
 }
 
