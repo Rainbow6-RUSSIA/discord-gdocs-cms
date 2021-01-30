@@ -54,7 +54,10 @@ export class SheetORM {
         throw new Error("No document fetched")
     }
 
-    getChannels = async () => this.ChannelClass ? this.connection.getInfos(this.ChannelClass, { id: Boolean }) : []
+    getChannels = async () => {
+        if (this.ChannelClass) return this.connection.getInfos(this.ChannelClass, { id: Boolean })
+        throw new Error("No Channel Model initialized")
+    }
 
     selectChannel = async (id: string) => {
         if (!this.ChannelClass) return
@@ -72,7 +75,10 @@ export class SheetORM {
         }
     }
 
-    getPosts = async () => this.PostClass ? this.connection.getInfos(this.PostClass, { id: Boolean }) : []
+    getPosts = async () => {
+        if (this.PostClass) return this.connection.getInfos(this.PostClass, { id: Boolean })
+        throw new Error("No Post Model initialized")
+    } 
 
     config: SheetOrmConfig
     connection!: SheetConnection
