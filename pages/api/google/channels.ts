@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import { getCustomSession } from "../../../collaborative/AuthAdapter"
-import { SheetORM } from "../../../collaborative/sheet"
-import type { ChannelInstance } from "../../../collaborative/sheet/channels"
+import type { ChannelInstance } from "../../../collaborative/sheet/channel"
+import { SheetORM } from "../../../collaborative/sheet/orm"
 
 export default async function handler(
     req: NextApiRequest,

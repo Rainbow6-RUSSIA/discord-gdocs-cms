@@ -2,8 +2,8 @@ import type { GoogleSpreadsheet } from "google-spreadsheet";
 import SheetConnection, { Config } from "google-spreadsheet-orm";
 import { getAuthClient, getDocument } from "../helpers/google";
 import type { ConnectionParams } from "../types";
-import { ChannelModel, initChannelModel } from "./channels";
-import { initPostModel, PostModel } from "./posts";
+import { ChannelModel, initChannelModel } from "./channel";
+import { initPostModel, PostModel } from "./post";
 
 export type SheetOrmConfig = {
     token: string;
@@ -44,6 +44,10 @@ export class SheetORM {
             await this.connection.validateModel(this.ChannelClass)
             console.log("Model is ok, channels sheet id", this.config.channelSheetId)
         }
+
+        if (this.config.channelId) {
+            await this.selectChannel(this.config.channelId)
+        }
     }
 
     getSheetIdByTitle = (title: string) => {
@@ -60,10 +64,9 @@ export class SheetORM {
     }
 
     selectChannel = async (id: string) => {
-        if (!this.ChannelClass) return
-        const channels = await this.connection.getInfos(this.ChannelClass, { id })
-
         if (!this.config.postSheetId) {
+            if (!this.ChannelClass) throw new Error("No Channel Model initialized")
+            const channels = await this.connection.getInfos(this.ChannelClass, { id })
             this.config.postSheetId = this.getSheetIdByTitle(`#${channels[0].name}`)
         }
 
