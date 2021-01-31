@@ -13,9 +13,9 @@ import { ModalTitle } from "../../common/modal/layout/ModalTitle"
 import { ModalContext } from "../../common/modal/ModalContext"
 import { useRequiredContext } from "../../common/state/useRequiredContext"
 import { remove } from "../../icons/remove"
-import { GoogleAuthButton } from "../account/ServiceAuthButton"
 import { loading } from "../icons/loading"
 import { CollaborationManagerContext } from "../manager/CollaborationManagerContext"
+import { AuthStatus } from "./parts/AuthStatus"
 import { SpreadsheetSelector } from "./parts/SpreadsheetSelector"
 
 export function CollaborationModal() {
@@ -46,7 +46,7 @@ export function CollaborationModal() {
             </ModalHeader>
             <ModalBody>
                 <Stack gap={8}>
-                    <GoogleAuthButton />
+                    <AuthStatus />
                     { user && <SpreadsheetSelector /> }
                 </Stack>
             <div style={{display: "inline"}}><ReactQueryDevtools initialIsOpen/></div>
