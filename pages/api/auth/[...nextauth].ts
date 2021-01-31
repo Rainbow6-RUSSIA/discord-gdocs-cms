@@ -15,7 +15,7 @@ const googleConfig = {
   clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
   authorizationUrl: "https://accounts.google.com/o/oauth2/v2/auth?response_type=code&access_type=offline",
   scope:
-    "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/drive",
+    "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/drive.metadata.readonly https://www.googleapis.com/auth/spreadsheets",
 }
 
 const adapter = Adapter(process.env.DATABASE_URL!)
@@ -44,7 +44,9 @@ const rotateToken = async (account: Account) => {
         account.accessTokenExpires = new Date(Date.now() + raw.expires_in * 1000)
         await account.save()
       }
-  } catch {/* */}
+  } catch (error) {
+    console.log("SESSION", error)
+  }
 
   return account
 }

@@ -1,10 +1,10 @@
 import { useObserver } from "mobx-react-lite"
+import { darken } from "polished"
 import React from "react"
 import styled from "styled-components"
 import { PrimaryButton } from "../../../common/input/button/PrimaryButton"
 import { ButtonRow } from "../../../common/layout/ButtonRow"
 import { FlexContainer } from "../../../common/layout/FlexContainer"
-import { RowContainer } from "../../../common/layout/RowContainer"
 import { useRequiredContext } from "../../../common/state/useRequiredContext"
 import { CollaborationManagerContext } from "../../manager/CollaborationManagerContext"
 
@@ -24,13 +24,32 @@ const Card = styled(FlexContainer)`
   background: ${({ theme }) => `${theme.background.secondaryAlt}`};
 `
 
+const GoogleLoginButton = styled(PrimaryButton)`
+  display: flex;
+  align-items: center;
+  padding: 0;
+  margin: 0 auto;
+  background-color: #4285F4;
+  border-color: #4285F4;
+  & > * {
+    margin-right: 3px;
+  }
+  &:hover {
+    background-color: #4285F4;
+    border-color: ${darken(0.1, "#4285F4")};
+  }
+`
+
 export const AuthStatus = () => {
   const collaborationManager = useRequiredContext(CollaborationManagerContext)
 
   const Fallback = (
     <>
       To use collaboration features you must login into a Google account and select spreadsheet for milestone saves.
-      <PrimaryButton onClick={async () => collaborationManager.link()}>Login via Google</PrimaryButton>
+      <GoogleLoginButton onClick={async () => collaborationManager.link()}>
+        <img height="32" src="/static/google-button.svg" />
+        <span>Sign in with Google</span>
+      </GoogleLoginButton>
     </>
   )
 
@@ -45,7 +64,6 @@ export const AuthStatus = () => {
             <Name>{name}</Name>
             <Avatar alt="Your Google Avatar" src={picture} />
           </Card>
-          {/* <PrimaryButton>Test</PrimaryButton> */}
         </ButtonRow>
       </>
     )
