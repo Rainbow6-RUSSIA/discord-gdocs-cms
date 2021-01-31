@@ -51,7 +51,7 @@ export class Account extends BaseEntity {
   @Column({ type: "character varying", nullable: true })
   accessToken?: string
 
-  @Column({ type: "timestamp without time zone", nullable: true })
+  @Column({ type: "timestamp without time zone", nullable: true, default: () => "NOW() + interval '1 hour'" })
   accessTokenExpires?: Date
 
   @CreateDateColumn()

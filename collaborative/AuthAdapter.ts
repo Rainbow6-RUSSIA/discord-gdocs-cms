@@ -101,7 +101,7 @@ export const Adapter = (typeOrmConfig: string): IAdapter => {
         providerAccountId,
         refreshToken,
         accessToken,
-        accessTokenExpires,
+        // accessTokenExpires,
       }).save()
     }
 
