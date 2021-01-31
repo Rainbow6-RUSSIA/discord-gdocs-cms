@@ -1,3 +1,4 @@
+/* eslint-disable require-atomic-updates */
 import type { NextApiRequest, NextApiResponse } from "next"
 import nextAuth from "next-auth"
 import type { InitOptions } from "next-auth"
@@ -19,6 +20,43 @@ const googleConfig = {
 
 const adapter = Adapter(process.env.DATABASE_URL!)
 
+const providers = [Providers.Google(googleConfig)]
+
+const rotateToken = async (account: Account) => {
+  const provider = providers.find(p => p.id === account.providerId)
+  
+  try {
+    if (provider
+      && account.refreshToken
+      && account.accessTokenExpires
+      && account.accessTokenExpires < new Date()) {
+        const res = await fetch(provider.accessTokenUrl, {
+          method: "POST",
+          body: new URLSearchParams({
+            client_id: provider.clientId,
+            client_secret: provider.clientSecret,
+            refresh_token: account.refreshToken,
+            grant_type: "refresh_token"
+          })
+        })
+        const raw = await res.json();
+        account.accessToken = raw.access_token;
+        account.accessTokenExpires = new Date(Date.now() + raw.expires_in * 1000)
+        await account.save()
+      }
+  } catch {/* */}
+
+  return account
+}
+
+const getRefreshedAccount = async (userId: string) => {
+  const accounts: Account[] = await Account.find({
+    where: { userId },
+  })
+
+  return Promise.all(accounts.map(rotateToken));
+}
+
 const options = {
   callbacks: {
     session: async (session: SessionBase, user: User) => {
@@ -30,9 +68,7 @@ const options = {
         google: null,
       }
 
-      const accounts: Account[] = await Account.find({
-        where: { userId: user.id },
-      })
+      const accounts = await getRefreshedAccount(user.id)
       const google = accounts.find(a => a.providerId === "google")
       // const discord = accounts.find(a => a.providerId === "discord")
 
@@ -50,7 +86,7 @@ const options = {
     },
   },
 
-  providers: [Providers.Google(googleConfig)],
+  providers,
   adapter,
 }
 
