@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-handler-names */
 /* eslint-disable unicorn/filename-case */
 import Head from "next/head"
 import Link from "next/link"
@@ -135,7 +136,7 @@ export default function PrivacyPolicy() {
         </p>
       </Message>
       <Link href="/">
-        <SecondaryButton>Back to Home</SecondaryButton>
+        <SecondaryButton onClick={window.close}>Back to Home</SecondaryButton>
       </Link>
     </Container>
   )

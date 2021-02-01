@@ -83,8 +83,10 @@ export function Footer() {
       <Tagline>
         The easiest way to write, send and edit Discord messages in a team.
       </Tagline>
-      {/* <Info>Email: &quot;hello&quot; at discohook.app</Info> */}
       <NavigationList>
+        <NavigationItem href="mailto:admin@rainbow6.ru" target="_blank">
+          Contact
+        </NavigationItem>
         <NavigationItem href="/discord" target="_blank">
           Discord Support Server
         </NavigationItem>
@@ -94,12 +96,15 @@ export function Footer() {
         <NavigationItem href="https://github.com/Rainbow6-RUSSIA/discord-gdocs-cms" target="_blank">
           Source Code
         </NavigationItem>
-        {/* <NavigationItem href="https://patreon.com/discohook" target="_blank">
-          Support QuarrelPost
-        </NavigationItem> */}
+        <NavigationItem href="/terms-and-conditions" target="_blank">
+          Terms and Conditions
+        </NavigationItem>
+        <NavigationItem href="/privacy-policy" target="_blank">
+          Privacy Policy
+        </NavigationItem>
       </NavigationList>
       <LegalInfo>
-        &copy; 2020 Rainbow6-RUSSIA. QuarrelPost is not affiliated with
+        &copy; 2021 Rainbow6-RUSSIA. QuarrelPost is not affiliated with
         Discord. QuarrelPost is a fork of Discohook (discohook.org).
       </LegalInfo>
       <LegalInfo>
