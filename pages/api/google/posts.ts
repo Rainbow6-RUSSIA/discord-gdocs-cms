@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import { getCustomSession } from "../../../collaborative/AuthAdapter"
+import { getCustomSession } from "../../../collaborative/helpers/AuthAdapter"
 import { SheetORM } from "../../../collaborative/sheet/orm"
 import type { PostInstance } from "../../../collaborative/sheet/post"
 

@@ -1,7 +1,6 @@
 import type { Guild, GuildMember } from "discord.js"
 import type { NextApiRequest, NextApiResponse } from "next"
-import { getCustomSession } from "../../../collaborative/AuthAdapter"
-import { BotClient } from "../../../collaborative/bot"
+import { getCustomSession } from "../../../collaborative/helpers/AuthAdapter"
 
 export type Responce = {
   guild: Guild

@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import { getCustomSession } from "../../../../../collaborative/AuthAdapter"
+import { getCustomSession } from "../../../../../collaborative/helpers/AuthAdapter"
 import { Account } from "../../../../../collaborative/models/Account"
 import { Session } from "../../../../../collaborative/models/Session"
 import { User } from "../../../../../collaborative/models/User"

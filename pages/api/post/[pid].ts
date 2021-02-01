@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import { getCustomSession } from "../../../collaborative/AuthAdapter"
+import { getCustomSession } from "../../../collaborative/helpers/AuthAdapter"
 import type { CustomSession } from "../../../collaborative/types"
 
 const handlerGet = async (

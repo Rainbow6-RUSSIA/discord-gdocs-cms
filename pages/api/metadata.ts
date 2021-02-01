@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import { getCustomSession } from "../../collaborative/AuthAdapter"
+import { getCustomSession } from "../../collaborative/helpers/AuthAdapter"
 import { parseMetadata } from "../../collaborative/helpers/pageMetadata"
 
 export default async function handler(
