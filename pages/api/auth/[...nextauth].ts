@@ -41,7 +41,7 @@ const rotateToken = async (account: Account) => {
         })
         const raw = await res.json();
         account.accessToken = raw.access_token;
-        account.accessTokenExpires = new Date(Date.now() + raw.expires_in * 1000)
+        account.accessTokenExpires = new Date(Date.now() + (raw.expires_in ?? 3600 ) * 1000)
         await account.save()
       }
   } catch (error) {
