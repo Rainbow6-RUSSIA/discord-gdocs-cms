@@ -103,7 +103,7 @@ export default function TermsAndConditions() {
         </p>
       </Message>
       <Link href="/">
-        <SecondaryButton onClick={window.close}>Back to Home</SecondaryButton>
+        <SecondaryButton onClick={() => process.browser && window.close()}>Back to Home</SecondaryButton>
       </Link>
     </Container>
   )
