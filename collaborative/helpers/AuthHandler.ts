@@ -29,7 +29,7 @@ const rotateToken = async (account: Account) => {
       provider &&
       account.refreshToken &&
       account.accessTokenExpires &&
-      account.accessTokenExpires < new Date()
+      account.accessTokenExpires.valueOf() < Date.now() + 5000
     ) {
       const res = await fetch(provider.accessTokenUrl, {
         method: "POST",
@@ -80,12 +80,14 @@ export const options = {
       if (google?.accessToken) {
         const googleUser = await getGoogleProfile(google.accessToken)
         if (googleUser.error) {
-          console.log(googleUser)
-          await google.remove()
+          console.log("Profile error", googleUser, google, session)
+          // await google.remove()
         } else {
           sessionObj.google = googleUser
           sessionObj.google.accessToken = google.accessToken
         }
+      } else {
+        console.log("Account not linked")
       }
 
       return sessionObj
