@@ -26,13 +26,13 @@ export function CollaborationModal() {
 
     const { isLoading: isUnlinking, mutate: handleUnlink } = useMutation(collaborationManager.unlink)
 
-    useEffect(() => {
-        // TODO: form init
-        collaborationManager.spreadsheet = undefined
-        collaborationManager.channel = undefined
-        collaborationManager.post = undefined
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    // useEffect(() => {
+    //     // TODO: form init
+    //     collaborationManager.spreadsheet = undefined
+    //     collaborationManager.channel = undefined
+    //     collaborationManager.post = undefined
+    // // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [])
     
     return useObserver(() => (
         <ModalContainer>
@@ -49,7 +49,7 @@ export function CollaborationModal() {
                     <AuthStatus />
                     { user && <SpreadsheetSelector /> }
                 </Stack>
-            <div style={{display: "inline"}}><ReactQueryDevtools initialIsOpen/></div>
+            <div style={{display: "inline"}}><ReactQueryDevtools/></div>
             </ModalBody>
             <ModalFooter>
                 { user &&

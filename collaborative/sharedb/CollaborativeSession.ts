@@ -17,13 +17,26 @@ export class CollaborativeSession {
         return this.collaborators[0]
     }
 
-    init = async () => {
-        this.collaborators[0] = await getGoogleProfile(this.config.token);
+    start = async () => {
+        // this.collaborators[0] = await getGoogleProfile(this.config.token);
         await this.orm.init()
         await this.orm.selectChannel(this.config.channelId)
     }
 
-    getData = async (): Promise<DeepPartial<EditorManagerLike>> => {
+    stop = async () => {
+
+    }
+
+    addMember = (profile: GoogleProfile) => {
+        this.collaborators.push(profile)
+    }
+
+    removeMember = (profile: GoogleProfile) => {
+        this.collaborators = this.collaborators.filter(c => c.sub !== profile.sub)
+    }
+
+    getInitialData = async (): Promise<DeepPartial<EditorManagerLike> | null> => {
+        return null
         // TODO: use real data
         const { webhook, username: defaultUsername, avatar: defaultAvatar } = (await this.orm.getChannels())[0]
         const { content, username, avatar, embeds, message } = (await this.orm.getPosts())[0]
@@ -38,4 +51,6 @@ export class CollaborativeSession {
             target: { message, url: webhook }
         }
     }
+
+
 }
