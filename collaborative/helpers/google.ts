@@ -4,11 +4,6 @@ import { Auth } from "googleapis";
 import fetch from "isomorphic-unfetch";
 import type { GoogleProfile } from "../types";
 
-export type CollaborativeServerContext = {
-    document: GoogleSpreadsheet
-    profile: GoogleProfile
-}
-
 export async function getDocument (token: string, docId: string) {
     const doc = new GoogleSpreadsheet(docId)
     doc.useRawAccessToken(token)
@@ -18,15 +13,16 @@ export async function getDocument (token: string, docId: string) {
   }
 
 export const getGoogleProfile = 
-    async (token: string): Promise<GoogleProfile> => 
-        fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+    async (token: string): Promise<GoogleProfile> => {
+        const res = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
             headers: { Authorization: `Bearer ${token}` },
         })
-        .then(async (d) => d.json())
-
-export const getCollaborativePost = async (doc: GoogleSpreadsheet) => {
-
-}
+        const json = await res.json()
+        if ("error" in json) {
+            throw new Error(json.error_description)
+        }
+        return json
+    }
 
 export const getAuthClient = (access_token: string) => {
     const authClient = new Auth.OAuth2Client()

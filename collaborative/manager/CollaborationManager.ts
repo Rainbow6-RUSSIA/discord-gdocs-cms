@@ -1,7 +1,6 @@
 import { action, observable } from "mobx"
 import { signIn, signOut } from "next-auth/client"
 import { getCustomSession } from "../helpers/AuthAdapter"
-import { ShareDBClient } from "../sharedb/client"
 import type { ChannelInstance } from "../sheet/channel"
 import type { PostInstance } from "../sheet/post"
 import type { CustomSession, SpreadsheetItem } from "../types"

@@ -78,13 +78,12 @@ export const options = {
       // const discord = accounts.find(a => a.providerId === "discord")
 
       if (google?.accessToken) {
-        const googleUser = await getGoogleProfile(google.accessToken)
-        if (googleUser.error) {
-          console.log("Profile error", googleUser, google, session)
-          // await google.remove()
-        } else {
+        try {
+          const googleUser = await getGoogleProfile(google.accessToken)
           sessionObj.google = googleUser
           sessionObj.google.accessToken = google.accessToken
+        } catch (error) {
+          console.log("Profile error", error)
         }
       } else {
         console.log("Account not linked")

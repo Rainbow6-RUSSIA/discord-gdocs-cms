@@ -1,14 +1,13 @@
 import WebSocketJSONStream from "@teamwork/websocket-json-stream";
 import express from "express";
-import SheetConnection,  { Config } from "google-spreadsheet-orm";
-import { Auth } from "googleapis"
 import http from "http";
 import ShareDB from "sharedb";
+import type Agent from "sharedb/lib/agent";
 import WebSocket from "ws";
 import { DEFAULT_EDITOR_MANAGER_STATE } from "../../modules/editor/defaultEditorManagerState";
 import { EditorManager } from "../../modules/editor/EditorManager";
-import { CollaborativeServerContext, getDocument, getGoogleProfile } from "../helpers/google";
-import type { GoogleProfile } from "../types";
+import { getGoogleProfile } from "../helpers/google";
+import type { CollaborativeServerContext } from "../types";
 import { CollaborativeSession } from "./CollaborativeSession";
 import { TempMemoryDB } from "./TempMemoryDb";
 

@@ -1,11 +1,7 @@
 import type { DeepPartial } from "typeorm";
 import type { EditorManagerLike } from "../../modules/editor/EditorManager";
-import { getGoogleProfile } from "../helpers/google";
-import { ChannelModel } from "../sheet/channel";
 import { SheetORM } from "../sheet/orm";
-import { PostModel } from "../sheet/post";
 import type { ConnectionParams, GoogleProfile } from "../types";
-
 
 export class CollaborativeSession {
     constructor(config: ConnectionParams) {

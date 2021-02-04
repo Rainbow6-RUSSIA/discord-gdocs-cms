@@ -1,3 +1,5 @@
+import type { CollaborativeSession } from "../sharedb/CollaborativeSession"
+
 export type CustomSession = {
   id: string
   accessToken: string
@@ -37,7 +39,6 @@ export type GoogleProfile = {
   picture: string
   sub: string
   accessToken: string
-  error?: string
 }
 
 export type SpreadsheetItem = {
@@ -65,4 +66,9 @@ export type ConnectionParams = {
   spreadsheetId: string,
   channelId: string,
   postId: string
+}
+
+export type CollaborativeServerContext = {
+  member: GoogleProfile,
+  session: CollaborativeSession
 }
