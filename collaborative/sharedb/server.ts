@@ -20,15 +20,15 @@ class ShareDBServer {
     this.connection = this.backend.connect();
     void this.startServer();
 
-    this.backend.use("connect", (request, next) => {
-      request.agent.custom = request.req
-      next();
-    });
-    this.backend.use("submit", (context, next) => {
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      console.log("SUBMIT FROM", (context.agent.custom as CollaborativeServerContext | undefined)?.member?.email)
-      next();
-    })
+    // this.backend.use("connect", (request, next) => {
+    //   request.agent.custom = request.req
+    //   next();
+    // });
+    // this.backend.use("submit", (context, next) => {
+    //   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    //   console.log("SUBMIT FROM", (context.agent.custom as CollaborativeServerContext | undefined)?.member?.email)
+    //   next();
+    // })
   }
 
   db: TempMemoryDB
@@ -37,22 +37,16 @@ class ShareDBServer {
   sessions: Map<string, CollaborativeSession> = new Map()
 
   initDoc = async (collection: string, name: string, session: CollaborativeSession) => {
-    console.log("🚀 ~ file: server.ts ~ line 38 ~ ShareDBServer ~ initDoc= ~ initDoc", collection, name, session)
-    const path = `${collection}/${name}`
-
-    await this.startSession(path, session)
-    const data = await this.sessions.get(path)?.getInitialData() ?? ShareDBServer.initialData
-    const doc = this.connection.get(collection, name);
     
+    const doc = this.connection.get(collection, name);
     await new Promise((res, rej) => {
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       doc.fetch((err) => err ? rej(err) : res(""))
     })
   
     if (doc.type === null) {
+      const data = await session.getInitialData()
       await new Promise(res => { doc.create(data, res) } );
-    } else {
-      throw new Error("Doc already initiated")
     }
   }
 
@@ -75,30 +69,24 @@ class ShareDBServer {
     const [token, spreadsheetId, channelId, postId] = dataHeader.split(", ");
 
     try {
-      console.log("NEW CONNECTION", token, spreadsheetId, channelId, postId)
-      const profile = await getGoogleProfile(token)
-      console.log("CONNECT FROM", profile.email)
       const docName = `${channelId}/${postId}`
-      const sessionPath = `${spreadsheetId}/${docName}`
-      let session = this.sessions.get(sessionPath)
+      const profile = await getGoogleProfile(token)
+      console.log("CONNECT", profile.email)
+      
+      const session = new CollaborativeSession({ token, spreadsheetId, channelId, postId });
+      await session.start()
 
-      if (session) {
-        session.addMember(profile)
-      } else {
-        session = new CollaborativeSession({ token, spreadsheetId, channelId, postId });
-        await this.initDoc(spreadsheetId, docName, session)
-        this.sessions.set(sessionPath, session)
-      }
+      await this.initDoc(spreadsheetId, docName, session)
 
       const stream = new WebSocketJSONStream(ws);
       
       ws.on("close", () => console.log("Close"));
 
       // https://github.com/dmapper/sharedb-access/issues/8
-      const agent = (this.backend.listen as unknown as (stream: WebSocketJSONStream, data: CollaborativeServerContext) => Agent)(stream, { member: profile, session });
-      agent.custom = { member: profile, session }
+      // (this.backend.listen as (stream: WebSocketJSONStream, data: CollaborativeServerContext) => void)(stream, {profile, document});
+      this.backend.listen(stream)
     } catch (error) {
-      console.log("Connection error", error)
+      console.log("CONNECTION ERROR", error)
       ws.terminate();
     }
   }

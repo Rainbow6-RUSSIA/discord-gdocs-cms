@@ -57,6 +57,7 @@ export class ShareDBClient extends EventEmitter {
   cursor: ShareDBCursor | null = null;
 
   bind = (editorStore: EditorManagerLike) => {
+    Object.assign(window, { reconnect: this.connect })
     this.editorStore = editorStore
     this.disposers.push(
       observe(this.collaborationManager, "session", this.connect)

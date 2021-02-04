@@ -1,5 +1,5 @@
 import type { DeepPartial } from "typeorm";
-import type { EditorManagerLike } from "../../modules/editor/EditorManager";
+import { EditorManager, EditorManagerLike } from "../../modules/editor/EditorManager";
 import { SheetORM } from "../sheet/orm";
 import type { ConnectionParams, GoogleProfile } from "../types";
 
@@ -36,20 +36,20 @@ export class CollaborativeSession {
     }
 
     getInitialData = async (): Promise<DeepPartial<EditorManagerLike> | null> => {
-        return null
+        // return null
         // TODO: use real data
-        const { webhook, username: defaultUsername, avatar: defaultAvatar } = (await this.orm.getChannels())[0]
+        const { webhook: url, username: defaultUsername, avatar: defaultAvatar } = (await this.orm.getChannels())[0]
         const { content, username, avatar, embeds, message } = (await this.orm.getPosts())[0]
 
-        return {
+        return EditorManager.create({
             messages: [{
                 content,
                 username: username ?? defaultUsername,
                 avatar: avatar ?? defaultAvatar,
                 embeds: JSON.parse(embeds),
             }],
-            target: { message, url: webhook }
-        }
+            target: { message, url }
+        })
     }
 
 
