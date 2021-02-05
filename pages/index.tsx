@@ -3,6 +3,7 @@ import { destroy, getSnapshot, SnapshotOut } from "mobx-state-tree"
 import type { GetServerSidePropsContext } from "next"
 import React, { useEffect, useRef, useState } from "react"
 import styled from "styled-components"
+import { ConvergenceClient } from "../collaborative/convergence/client"
 import { CollaborationManagerContext } from "../collaborative/manager/CollaborationManagerContext"
 import { CollaborationModal } from "../collaborative/modals/CollaborationModal"
 import { ShareDBClient } from "../collaborative/sharedb/client"
@@ -56,9 +57,9 @@ export default function Main(props: MainProps) {
   const editorManager = useLazyValue(() => EditorManager.create(state))
 
   useEffect(() => {
-    const shareClient = new ShareDBClient(collaborationManager)
-    shareClient.bind(editorManager)
-    return () => shareClient.dispose()
+    const collaborativeClient = new ConvergenceClient(collaborationManager, editorManager)
+    void collaborativeClient.init()
+    return () => collaborativeClient.dispose()
   }, [editorManager, collaborationManager]) // ВСТРОЕННЫЙ shareClient ЛОМАЕТ КНОПКИ
 
   useEffect(() => () => destroy(editorManager), [editorManager])
