@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-
+require("dotenv-load")()
+ 
 const config = {
   target: "server",
   poweredByHeader: false,
@@ -25,5 +26,6 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
 })
 const withSourceMaps = require("@zeit/next-source-maps")
+const withNextEnv = require("next-env")()
 
-module.exports = withSourceMaps(withBundleAnalyzer(config))
+module.exports = withNextEnv(withSourceMaps(withBundleAnalyzer(config)))
