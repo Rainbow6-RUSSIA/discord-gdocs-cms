@@ -34,7 +34,7 @@ ENV SERVER_SHA1 6ae601b469ab7466b11e5eced32068e37c4e7250
 ENV SERVER_TMP_DIR=$TMPDIR/server
 RUN mkdir $SERVER_TMP_DIR
 
-COPY download-convergence-server.sh $SERVER_TMP_DIR
+COPY ./download-convergence-server.sh $SERVER_TMP_DIR
 RUN chmod 755 $SERVER_TMP_DIR/download-convergence-server.sh && $SERVER_TMP_DIR/download-convergence-server.sh
 RUN mkdir $SERVER_TMP_DIR/convergence-server
 RUN tar -zxvf $SERVER_TMP_DIR/convergence-server.tgz -C $SERVER_TMP_DIR/convergence-server --strip-components=1
@@ -74,7 +74,7 @@ RUN apk add --update supervisor bash && \
 ## Orient DB
 ##
 COPY --from=builder /tmp/convergence/orientdb /orientdb
-COPY orientdb-server-config.xml /orientdb/config/
+COPY ./orientdb-server-config.xml /orientdb/config/
 RUN chown root:root /orientdb
 
 VOLUME /orientdb/databases
@@ -91,8 +91,8 @@ VOLUME /orientdb/databases
 ## Convergence Server
 ##
 COPY --from=builder /tmp/convergence/server/convergence-server /convergence-server
-COPY log4j2.xml /convergence-server/conf/log4j2.xml
-COPY convergence-server.conf /convergence-server/conf/convergence-server.conf
+COPY ./log4j2.xml /convergence-server/conf/log4j2.xml
+COPY ./convergence-server.conf /convergence-server/conf/convergence-server.conf
 
 
 # ##
@@ -108,7 +108,7 @@ COPY convergence-server.conf /convergence-server/conf/convergence-server.conf
 ##
 ## Supervisor
 ##
-COPY supservisord.conf /etc/supervisord.conf
+COPY ./supservisord.conf /etc/supervisord.conf
 
 # EXPOSE 80
 # EXPOSE 25520
