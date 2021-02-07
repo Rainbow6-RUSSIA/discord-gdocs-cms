@@ -3,12 +3,10 @@
 import { URL } from "url"
 import { Connection, createConnection, getConnection } from "typeorm"
 import type { AppOptions } from "next-auth"
-import { Account } from "../models/Account"
-import { Session } from "../models/Session"
-import { User } from "../models/User"
+import { Account } from "./models/Account"
+import { Session } from "./models/Session"
+import { User } from "./models/User"
 import type { ConnectionOptions } from "typeorm"
-import { getSession, useSession } from "next-auth/client"
-import type { CustomSession } from "../types"
 
 import type { Adapter as IAdapter } from "next-auth/adapters"
 
@@ -212,9 +210,3 @@ export const Adapter = (typeOrmConfig: string): IAdapter => {
     getAdapter,
   }
 }
-
-export const getCustomSession = (getSession as unknown) as (
-  ...args: Parameters<typeof getSession>
-) => Promise<CustomSession | null | undefined>
-
-export const useCustomSession = useSession as unknown as () => [CustomSession | null | undefined, boolean]

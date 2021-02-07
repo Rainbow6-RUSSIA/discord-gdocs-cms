@@ -57,7 +57,7 @@ export default function Main(props: MainProps) {
 
   useEffect(() => {
     const collaborativeClient = new ConvergenceClient(collaborationManager, editorManager)
-    void collaborativeClient.init()
+    // void collaborativeClient.init()
     return () => collaborativeClient.dispose()
   }, [editorManager, collaborationManager]) // ВСТРОЕННЫЙ shareClient ЛОМАЕТ КНОПКИ
 

@@ -1,4 +1,4 @@
-import { connectAnonymously, ConvergenceDomain, PresenceService, RealTimeModel, RealTimeObject } from "@convergence/convergence";
+import { connectAnonymously, RealTimeModel, ConvergenceDomain, PresenceService } from "@convergence/convergence";
 import { createHash } from "crypto";
 import debounce from "lodash.debounce";
 import isEqual from "lodash.isequal";
@@ -11,6 +11,7 @@ export class ConvergenceClient {
     constructor(collaborationManager: CollaborationManager, editorStore: EditorManagerLike){
       this.collaborationManager = collaborationManager;
       this.editorStore = editorStore;
+      Object.assign(process.browser ? window : {}, { connect: this.init })
     }
   
     editorStore: EditorManagerLike

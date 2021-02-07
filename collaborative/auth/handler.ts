@@ -2,11 +2,11 @@
 import type { InitOptions } from "next-auth"
 import type { SessionBase } from "next-auth/_utils"
 import Providers from "next-auth/providers"
-import { Account } from "../models/Account"
-import type { User } from "../models/User"
+import { getGoogleProfile } from "../helpers/google"
 import type { CustomSession, GoogleProfile } from "../types"
-import { Adapter } from "./AuthAdapter"
-import { getGoogleProfile } from "./google"
+import { Adapter } from "./adapter"
+import { Account } from "./models/Account"
+import type { User } from "./models/User"
 
 const googleConfig = {
   clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,

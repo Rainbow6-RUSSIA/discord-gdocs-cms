@@ -1,6 +1,6 @@
 import { google } from "googleapis"
 import type { NextApiRequest, NextApiResponse } from "next"
-import { getCustomSession } from "../../../collaborative/helpers/AuthAdapter"
+import { getCustomSession } from "../../../collaborative/auth/session"
 import { getAuthClient } from "../../../collaborative/helpers/google";
 import type { SpreadsheetItem } from "../../../collaborative/types";
 

@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import { getCustomSession } from "../../../../../collaborative/helpers/AuthAdapter"
-import { Account } from "../../../../../collaborative/models/Account"
-import { Session } from "../../../../../collaborative/models/Session"
-import { User } from "../../../../../collaborative/models/User"
+import { Account } from "../../../../../collaborative/auth/models/Account"
+import { Session } from "../../../../../collaborative/auth/models/Session"
+import { User } from "../../../../../collaborative/auth/models/User"
+import { getCustomSession } from "../../../../../collaborative/auth/session"
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getCustomSession({ req })
