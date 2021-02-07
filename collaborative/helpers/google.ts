@@ -1,7 +1,6 @@
 
 import { GoogleSpreadsheet } from "google-spreadsheet";
 import { Auth } from "googleapis";
-import fetch from "isomorphic-unfetch";
 import type { GoogleProfile } from "../types";
 
 export async function getDocument (token: string, docId: string) {
