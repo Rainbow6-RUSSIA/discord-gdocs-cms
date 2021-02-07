@@ -1669,7 +1669,6 @@ __metadata:
     "@testing-library/jest-dom": ^5.11.5
     "@testing-library/react": ^11.1.1
     "@testing-library/user-event": ^12.2.0
-    "@types/diff-match-patch": ^1.0.32
     "@types/express": ^4.17.9
     "@types/gapi": ^0.0.39
     "@types/google-spreadsheet": ^3.0.2
@@ -1681,7 +1680,6 @@ __metadata:
     "@types/node": ^14.14.7
     "@types/react": ^16.9.56
     "@types/react-dom": ^16.9.9
-    "@types/sharedb": ^1.0.10
     "@types/styled-components": ^5.1.4
     "@types/testing-library__jest-dom": ^5.9.5
     "@types/ws": ^7.4.0
@@ -2515,13 +2513,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/diff-match-patch@npm:^1.0.32":
-  version: 1.0.32
-  resolution: "@types/diff-match-patch@npm:1.0.32"
-  checksum: de37ea5a38677d8739f719e68d82303c09cc0eee773dd45ca92bc9cccfb6465110f9b01d99fce8c532ecc38a8aa772c161412e2fd3d14f050733ff2eaf126e80
-  languageName: node
-  linkType: hard
-
 "@types/express-serve-static-core@npm:*":
   version: 4.17.17
   resolution: "@types/express-serve-static-core@npm:4.17.17"
@@ -2791,15 +2782,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/sharedb@npm:^1.0.10":
-  version: 1.0.10
-  resolution: "@types/sharedb@npm:1.0.10"
-  dependencies:
-    "@types/ws": "*"
-  checksum: 32f0c3350c39a728b2ebe5f9a46940125e1eabdeb6c2e8c74c45c11ecbf2a10e39339e8697db985d5b69d1663b214a76c14fba904f08b433263326f9cff1a7a7
-  languageName: node
-  linkType: hard
-
 "@types/stack-utils@npm:^2.0.0":
   version: 2.0.0
   resolution: "@types/stack-utils@npm:2.0.0"
@@ -2835,7 +2817,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/ws@npm:*, @types/ws@npm:^7.4.0":
+"@types/ws@npm:^7.4.0":
   version: 7.4.0
   resolution: "@types/ws@npm:7.4.0"
   dependencies:

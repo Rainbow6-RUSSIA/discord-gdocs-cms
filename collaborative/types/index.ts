@@ -1,4 +1,4 @@
-import type { CollaborativeSession } from "../sharedb/CollaborativeSession"
+import type { CollaborativeSession } from "../convergence/CollaborativeSession"
 
 export type CustomSession = {
   id: string

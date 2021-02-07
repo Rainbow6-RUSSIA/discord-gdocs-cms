@@ -17,7 +17,7 @@ const isValidPath = (path: Path | null ) => Boolean(path?.length)
 
 const isGreedyElement = (path: Path | null) => path && path[0] === "webhook" // this element block first click
 
-export class ShareDBCursor {
+export class ConvergenceCursor {
     activeElement: TextElement | null = null
     path: Path | null = null
     selection: [number, number] | null = null
@@ -34,8 +34,8 @@ export class ShareDBCursor {
         const target = document.activeElement
         if (isAllowedElement(target)) {
             if (target.id !== this.activeElement?.id) {
-                if (this.activeElement) this.activeElement.style.backgroundColor = ""
-                target.style.backgroundColor = "rebeccapurple"
+                if (this.activeElement) this.activeElement.style.borderColor = ""
+                target.style.borderColor = "rebeccapurple"
             }
             this.activeElement = target;
             this.path = target.id.split("_").filter(Boolean).map(parseNumbers);

@@ -6,7 +6,7 @@ import type { PostInstance } from "../sheet/post"
 import type { CustomSession, SpreadsheetItem } from "../types"
 
 export class CollaborationManager {
-  // shareClient = new ShareDBClient(this)
+  // shareClient = new ConvergenceCursor(this)
   @observable session?: CustomSession | null
   
   @observable spreadsheet?: SpreadsheetItem

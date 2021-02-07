@@ -5,7 +5,7 @@ import isEqual from "lodash.isequal";
 import { applySnapshot, getSnapshot, IDisposer, onSnapshot } from "mobx-state-tree";
 import type { EditorManagerLike } from "../../modules/editor/EditorManager";
 import type { CollaborationManager } from "../manager/CollaborationManager";
-import { ShareDBCursor } from "../sharedb/cursor";
+import { ConvergenceCursor } from "./cursor";
 
 export class ConvergenceClient {    
     constructor(collaborationManager: CollaborationManager, editorStore: EditorManagerLike){
@@ -20,7 +20,7 @@ export class ConvergenceClient {
   
     disposers: IDisposer[] = [];
 
-    cursor?: ShareDBCursor;
+    cursor?: ConvergenceCursor;
 
     init = async () => {
         this.domain = await connectAnonymously(process.env.NEXT_PUBLIC_CONVERGENCE_URL!)
@@ -34,7 +34,7 @@ export class ConvergenceClient {
         // this.domain.presence().on(PresenceService.Events.AVAILABILITY_CHANGED)
         this.model.on(RealTimeModel.Events.VERSION_CHANGED, this.syncUpdate)
         this.disposers.push(onSnapshot(this.editorStore, debounce(this.handleSnapshot, 500, {maxWait: 1000} )))
-        this.cursor = new ShareDBCursor()
+        this.cursor = new ConvergenceCursor()
         this.cursor.initTracking()
     }
     
