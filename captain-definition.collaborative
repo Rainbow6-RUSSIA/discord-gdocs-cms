@@ -1,4 +1,4 @@
 {
   "schemaVersion": 2,
-  "dockerfilePath": "./collaborative/convergence/omnibus/Dockerfile"
+  "dockerfilePath": "./Dockerfile.collaborative"
 }
