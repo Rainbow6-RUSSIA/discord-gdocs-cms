@@ -13,8 +13,8 @@ case "$SERVER_VERSION" in
 esac
 
 SERVER_URL=$REPO_BASE_URL/$REALTIVE_URL
-echo "Downloading the Convergence Server Universal Distribution $SERVER_VERSION from: $DOWNLOAD_URL"
-curl --insecure $SERVER_URL --output $SERVER_TMP_DIR/convergence-server.tgz
+echo "Downloading the Convergence Server Universal Distribution $SERVER_VERSION from: $SERVER_URL"
+curl -s --insecure $SERVER_URL --output $SERVER_TMP_DIR/convergence-server.tgz
 
 echo "Verifying Convergence Server Universal Distribution download"
 echo "$SERVER_MD5 *$SERVER_TMP_DIR/convergence-server.tgz" | md5sum -c -

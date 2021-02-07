@@ -19,10 +19,10 @@ RUN mkdir $TMPDIR
 # ENV CONSOLE_TMP_DIR=$TMPDIR/console
 # RUN mkdir $CONSOLE_TMP_DIR
 
-# RUN wget -O - https://registry.npmjs.org/$CONSOLE_NPM_PACKAGE/ | jq ".versions[\"$CONSOLE_VERSION\"].dist" > $CONSOLE_TMP_DIR/version.json
+# RUN wget -q -O - https://registry.npmjs.org/$CONSOLE_NPM_PACKAGE/ | jq ".versions[\"$CONSOLE_VERSION\"].dist" > $CONSOLE_TMP_DIR/version.json
 
 # RUN TARBALL=`cat $CONSOLE_TMP_DIR/version.json | jq .tarball -r` && \
-#     wget $TARBALL --output $CONSOLE_TMP_DIR/admin-console.tgz && \
+#     wget -q $TARBALL --output $CONSOLE_TMP_DIR/admin-console.tgz && \
 #     echo "$CONSOLE_SHASUM *$CONSOLE_TMP_DIR/admin-console.tgz" | sha1sum -c - && \
 #     tar -zxvf $CONSOLE_TMP_DIR/admin-console.tgz -C $CONSOLE_TMP_DIR
 
@@ -55,7 +55,7 @@ ENV ORIENTDB_TMP_DIR=$TMPDIR/orientdb
 RUN mkdir $ORIENTDB_TMP_DIR
 
 # download distribution tar, untar and delete databases
-RUN wget $ORIENTDB_DOWNLOAD_URL \
+RUN wget -q $ORIENTDB_DOWNLOAD_URL \
   && echo "$ORIENTDB_DOWNLOAD_MD5 *orientdb-community-$ORIENTDB_VERSION.tar.gz" | md5sum -c - \
   && echo "$ORIENTDB_DOWNLOAD_SHA1 *orientdb-community-$ORIENTDB_VERSION.tar.gz" | sha1sum -c - \
   && tar -xvzf orientdb-community-$ORIENTDB_VERSION.tar.gz -C $ORIENTDB_TMP_DIR --strip-components=1 \
