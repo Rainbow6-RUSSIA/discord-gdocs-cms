@@ -71,7 +71,7 @@ LABEL maintainer="Convergence Labs, Inc."
 
 # RUN apk add --update supervisor nginx bash && \
 #     rm -rf /var/cache/apk/*
-RUN apk add --update supervisor bash && \
+RUN apk add --update supervisor bash curl jq && \
     rm -rf /var/cache/apk/*
 
 ##
@@ -113,6 +113,8 @@ COPY $CFG_PATH/convergence-server.conf /convergence-server/conf/convergence-serv
 ## Supervisor
 ##
 COPY $CFG_PATH/supservisord.conf /etc/supervisord.conf
+COPY $CFG_PATH/public.key /public.key
+COPY $CFG_PATH/add-key.sh /add-key.sh
 
 # EXPOSE 80
 # EXPOSE 25520
