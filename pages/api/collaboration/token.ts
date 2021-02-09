@@ -22,7 +22,7 @@ export default async function handler(
     process.env.PRIVATE_KEY!,
     {
       algorithm: "RS256",
-      keyid: "keyid",
+      keyid: "defaultkeyid",
       audience: "Convergence",
       subject: sub,
       expiresIn: "1h",

@@ -13,6 +13,6 @@ echo "$DATABASE_NAME"
 curl -X POST "http://$AUTH@localhost:2480/command/$DATABASE_NAME/sql" \
     -H "Content-Type: application/json" \
     --data "{
-        \"command\":\"insert into JwtAuthKey (description, id, updated, key, enabled) VALUES (\"Default Key\", \"jwtkey\", date(), ?, true)\",
+        \"command\":\"insert into JwtAuthKey (description, id, updated, key, enabled) VALUES (\"Default Key\", \"defaultkeyid\", date(), ?, true)\",
         \"parameters\": [\"$PUBLIC_KEY\"]
     }"
