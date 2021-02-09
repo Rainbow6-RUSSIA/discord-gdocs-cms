@@ -115,6 +115,7 @@ COPY $CFG_PATH/convergence-server.conf /convergence-server/conf/convergence-serv
 COPY $CFG_PATH/supservisord.conf /etc/supervisord.conf
 COPY $CFG_PATH/public.key /public.key
 COPY $CFG_PATH/add-key.sh /add-key.sh
+RUN chmod 755 /add-key.sh
 
 # EXPOSE 80
 # EXPOSE 25520
