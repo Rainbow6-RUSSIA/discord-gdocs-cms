@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-sleep 15s
+sleep 1m
 
 PUBLIC_KEY=$(cat public.key)
 echo "$PUBLIC_KEY"
