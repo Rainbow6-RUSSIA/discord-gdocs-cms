@@ -18,6 +18,10 @@ const isValidPath = (path: Path | null ) => Boolean(path?.length)
 const isGreedyElement = (path: Path | null) => path && path[0] === "webhook" // this element block first click
 
 export class ConvergenceCursor {
+    constructor(color: string) {
+        this.color = color
+    }
+    color: string
     activeElement: TextElement | null = null
     path: Path | null = null
     selection: [number, number] | null = null
@@ -35,7 +39,7 @@ export class ConvergenceCursor {
         if (isAllowedElement(target)) {
             if (target.id !== this.activeElement?.id) {
                 if (this.activeElement) this.activeElement.style.borderColor = ""
-                target.style.borderColor = "rebeccapurple"
+                target.style.borderColor = this.color
             }
             this.activeElement = target;
             this.path = target.id.split("_").filter(Boolean).map(parseNumbers);

@@ -1,102 +1,154 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { connectWithJwt, connectWithPassword, RealTimeModel, ConvergenceDomain, PresenceService } from "@convergence/convergence";
-import { createHash } from "crypto";
-import debounce from "lodash.debounce";
-import isEqual from "lodash.isequal";
-import { observe } from "mobx";
-import { applySnapshot, getSnapshot, IDisposer, onSnapshot } from "mobx-state-tree";
-import type { EditorManagerLike } from "../../modules/editor/EditorManager";
-import type { CollaborationManager } from "../manager/CollaborationManager";
-import { ConvergenceCursor } from "./cursor";
+import {
+  connectWithJwt,
+  RealTimeModel,
+  ConvergenceDomain,
+} from "@convergence/convergence"
+import ColorHash from "color-hash"
+import { createHash } from "crypto"
+import debounce from "lodash.debounce"
+import isEqual from "lodash.isequal"
+import { observe, toJS } from "mobx"
+import { applySnapshot, IDisposer, onSnapshot } from "mobx-state-tree"
+import type { DeepPartial } from "typeorm"
+import type { EditorManagerLike } from "../../modules/editor/EditorManager"
+import type { CollaborationManager } from "../manager/CollaborationManager"
+import type { ChannelInstance } from "../sheet/channel"
+import type { PostInstance } from "../sheet/post"
+import { ConvergenceCursor } from "./cursor"
 
-export class ConvergenceClient {    
-    constructor(collaborationManager: CollaborationManager, editorStore: EditorManagerLike){
-      this.collaborationManager = collaborationManager;
-      this.editorStore = editorStore;
-      Object.assign(process.browser ? window : {}, { connect: this.init })
+export class ConvergenceClient {
+  constructor(
+    collaborationManager: CollaborationManager,
+    editorStore: EditorManagerLike,
+  ) {
+    this.collaborationManager = collaborationManager
+    this.editorStore = editorStore
+    Object.assign(process.browser ? window : {}, { connect: this.connect })
+  }
+
+  static getInitialData = (
+    channel: ChannelInstance,
+    post: PostInstance,
+  ): DeepPartial<EditorManagerLike> => {
+    const {
+      webhook: url,
+      username: defaultUsername,
+      avatar: defaultAvatar,
+    } = channel
+    const { content, username, avatar, embeds, message } = post
+
+    return {
+      messages: [
+        {
+          content,
+          username: username ?? defaultUsername,
+          avatar: avatar ?? defaultAvatar,
+          embeds: JSON.parse(embeds),
+        },
+      ],
+      target: { message, url },
     }
-  
-    editorStore: EditorManagerLike
-    collaborationManager: CollaborationManager
-    domain?: ConvergenceDomain
-    model?: RealTimeModel
-  
-    disposers: IDisposer[] = [];
+  }
 
-    cursor?: ConvergenceCursor;
+  editorStore: EditorManagerLike
+  collaborationManager: CollaborationManager
+  domain?: ConvergenceDomain
+  model?: RealTimeModel
 
-    init = () => {
+  disposers: IDisposer[] = []
+
+  cursor?: ConvergenceCursor
+
+  init = () => {
+    this.disposers.push(
+      observe(this.collaborationManager, "session", this.connect),
+      observe(this.collaborationManager, "post", this.connect),
+    )
+  }
+
+  dispose = () => {
+    this.domain?.dispose()
+    this.cursor?.stopTracking()
+    for (const dispose of this.disposers) {
+      dispose()
+    }
+  }
+
+  connect = async () => {
+    const collaborationServerURL = process.env.NEXT_PUBLIC_CONVERGENCE_URL
+    const googleUser = this.collaborationManager.session?.google
+    const spreadsheetId = this.collaborationManager.spreadsheet?.id
+    const channel = this.collaborationManager.channel
+    const post = this.collaborationManager.post
+    if (
+      collaborationServerURL &&
+      googleUser &&
+      spreadsheetId &&
+      channel &&
+      post
+    ) {
+      const jwt = await fetch("/api/collaboration/token").then(async d =>
+        d.text(),
+      )
+      console.log("JWT", jwt)
+      this.domain = await connectWithJwt(collaborationServerURL, jwt)
+      const modelService = this.domain.models()
+      this.model = await modelService.openAutoCreate({
+        collection: spreadsheetId,
+        id: `${channel.id}/${post.id}`,
+        data: ConvergenceClient.getInitialData(channel, post),
+      })
+      this.syncUpdate()
+      // this.domain.presence().on(PresenceService.Events.AVAILABILITY_CHANGED)
+      this.model.on(RealTimeModel.Events.VERSION_CHANGED, this.syncUpdate)
       this.disposers.push(
-        observe(this.collaborationManager, "session", this.connect),
-        observe(this.collaborationManager, "post", this.connect)
+        onSnapshot(
+          this.editorStore,
+          debounce(this.handleSnapshot, 500, { maxWait: 1000 }),
+        ),
+      )
+      this.cursor = new ConvergenceCursor(new ColorHash().hex(googleUser.sub))
+      this.cursor.initTracking()
+    } else {
+      console.warn(
+        "Cannot connect to collaboration server",
+        collaborationServerURL,
+        toJS(googleUser),
+        spreadsheetId,
+        channel,
+        post,
       )
     }
-  
-    dispose = () => {
-        this.domain?.dispose()
-        this.cursor?.stopTracking()
-        for (const dispose of this.disposers) { dispose() }
-    }
-  
-    connect = async () => {
-        const jwt = await fetch("/api/collaboration/token").then(async d => d.text())
-        console.log("JWT", jwt)
-        this.domain = await connectWithJwt(process.env.NEXT_PUBLIC_CONVERGENCE_URL!, jwt)
-        const modelService = this.domain.models();
-        this.model = await modelService.openAutoCreate({
-          collection: "example",
-          id: "getting-started",
-          data: getSnapshot(this.editorStore)
-        })
-        this.syncUpdate()
-        // this.domain.presence().on(PresenceService.Events.AVAILABILITY_CHANGED)
-        this.model.on(RealTimeModel.Events.VERSION_CHANGED, this.syncUpdate)
-        this.disposers.push(onSnapshot(this.editorStore, debounce(this.handleSnapshot, 500, {maxWait: 1000} )))
-        this.cursor = new ConvergenceCursor()
-        this.cursor.initTracking()
-    //   const token = this.collaborationManager.session?.google?.accessToken; 
-    //   const spreadsheetId = this.collaborationManager.spreadsheet?.id;
-    //   const channelId = this.collaborationManager.channel?.id;
-    //   const postId = this.collaborationManager.post?.id.toString();
-    //   const wss = process.env.NEXT_PUBLIC_COLLABORATIVE_WSS
-    //   console.log("EMAIL", this.collaborationManager.session?.google?.email, "DOC", spreadsheetId)
-    //   if (token && spreadsheetId && channelId && postId && wss) {
-    //     this.disconnect()
-    //     console.log("Connecting to WSS:", wss)
-    //   } else {
-    //     console.warn("Cannot connect to WSS", token, spreadsheetId, channelId, postId, wss)
-    //     return
-    //   }
-    
-    //   this.disposers.push(onSnapshot(this.editorStore, debounce(this.handleSnapshot, 500, {maxWait: 1000} )))
-
-    }
-  
-    handleSnapshot = (newData: EditorManagerLike) => {
-        if (!this.model) return
-        const root = this.model.root();
-        if (isEqual(root.value(), newData)) return
-        console.log("NEW DATA", root.value(), newData)
-        root.value(newData)
-    }
-  
-    syncUpdate = () => {
-        if (!this.model) return
-        const root = this.model.root();
-        applySnapshot(this.editorStore, root.value())
-  
-    //   const isWebhookChanged = this.editorStore.target.url !== this.doc.data?.target?.url
-  
-    //   applySnapshot(this.editorStore, this.doc.data)
-    //   if (isWebhookChanged) {
-    //     void this.editorStore.process("/target/url");
-    //   }
-  
-        console.log("received change", createHash("md5").update(JSON.stringify(root.value())).digest("base64"), "version", this.model.version())
-
-        this.cursor?.revertCaretPosition()
-
-    }
-
-    // isChanged = () => !isEqual(getSnapshot(this.editorStore), this.model?.root().value())
   }
+
+  handleSnapshot = (newData: EditorManagerLike) => {
+    if (!this.model) return
+    const root = this.model.root()
+    if (isEqual(root.value(), newData)) return
+    console.log("NEW DATA", newData)
+    root.value(newData)
+  }
+
+  syncUpdate = () => {
+    if (!this.model) return
+    const value = this.model.root().value()
+
+    const isWebhookChanged = this.editorStore.target.url !== value.target?.url
+
+    applySnapshot(this.editorStore, value)
+
+    if (isWebhookChanged) {
+      void this.editorStore.process("/target/url")
+    }
+
+    console.log(
+      "received change",
+      createHash("md5").update(JSON.stringify(value)).digest("base64"),
+      "version",
+      this.model.version(),
+    )
+
+    this.cursor?.revertCaretPosition()
+  }
+}
