@@ -84,6 +84,10 @@ export const options = {
           sessionObj.google.accessToken = google.accessToken
         } catch (error) {
           console.log("Profile error", error)
+          if (error.message.includes("Invalid Credentials")) {
+            await google.remove()
+            return {}
+          }
         }
       } else {
         console.log("Account not linked")

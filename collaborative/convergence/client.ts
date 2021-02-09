@@ -1,7 +1,9 @@
-import { connectAnonymously, RealTimeModel, ConvergenceDomain, PresenceService } from "@convergence/convergence";
+/* eslint-disable @typescript-eslint/no-misused-promises */
+import { connectWithJwt, connectWithPassword, RealTimeModel, ConvergenceDomain, PresenceService } from "@convergence/convergence";
 import { createHash } from "crypto";
 import debounce from "lodash.debounce";
 import isEqual from "lodash.isequal";
+import { observe } from "mobx";
 import { applySnapshot, getSnapshot, IDisposer, onSnapshot } from "mobx-state-tree";
 import type { EditorManagerLike } from "../../modules/editor/EditorManager";
 import type { CollaborationManager } from "../manager/CollaborationManager";
@@ -23,8 +25,23 @@ export class ConvergenceClient {
 
     cursor?: ConvergenceCursor;
 
-    init = async () => {
-        this.domain = await connectAnonymously(process.env.NEXT_PUBLIC_CONVERGENCE_URL!)
+    init = () => {
+      this.disposers.push(
+        observe(this.collaborationManager, "session", this.connect),
+        observe(this.collaborationManager, "post", this.connect)
+      )
+    }
+  
+    dispose = () => {
+        this.domain?.dispose()
+        this.cursor?.stopTracking()
+        for (const dispose of this.disposers) { dispose() }
+    }
+  
+    connect = async () => {
+        const jwt = await fetch("/api/collaboration/token").then(async d => d.text())
+        console.log("JWT", jwt)
+        this.domain = await connectWithJwt(process.env.NEXT_PUBLIC_CONVERGENCE_URL!, jwt)
         const modelService = this.domain.models();
         this.model = await modelService.openAutoCreate({
           collection: "example",
@@ -37,24 +54,6 @@ export class ConvergenceClient {
         this.disposers.push(onSnapshot(this.editorStore, debounce(this.handleSnapshot, 500, {maxWait: 1000} )))
         this.cursor = new ConvergenceCursor()
         this.cursor.initTracking()
-    }
-    
-    bind = () => {
-    //   this.disposers.push(
-    //     observe(this.collaborationManager, "session", this.connect)
-    //   )
-    //   this.disposers.push(
-    //     observe(this.collaborationManager, "post", this.connect)
-    //   )
-    }
-  
-    dispose = () => {
-        this.domain?.dispose()
-        this.cursor?.stopTracking()
-        for (const dispose of this.disposers) { dispose() }
-    }
-  
-    connect = () => {
     //   const token = this.collaborationManager.session?.google?.accessToken; 
     //   const spreadsheetId = this.collaborationManager.spreadsheet?.id;
     //   const channelId = this.collaborationManager.channel?.id;
@@ -68,7 +67,6 @@ export class ConvergenceClient {
     //     console.warn("Cannot connect to WSS", token, spreadsheetId, channelId, postId, wss)
     //     return
     //   }
-    //   this.socket = new ReconnectingWebSocket(wss, [token, spreadsheetId, channelId, postId]) as WebSocket
     
     //   this.disposers.push(onSnapshot(this.editorStore, debounce(this.handleSnapshot, 500, {maxWait: 1000} )))
 
