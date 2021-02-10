@@ -46,13 +46,18 @@ function findPathById(obj: EditorManagerLike, id: number) {
     return path;
 }
 
+const ShortPathConvert: Record<string, string> = {
+    webhook: "url",
+    message: "message"
+}
+
 export class ConvergenceCursor {
     constructor(client: ConvergenceClient) {
         if (!client.model || !client.collaborationManager.session?.google?.sub) throw new Error("Incomplete client")
         this.client = client
         this.color = new ColorHash().hex(client.collaborationManager.session.google.sub)
         this.elementReference = client.model.elementReference("selected")
-        this.elementReference.on(LocalElementReference.Events.SET, e => console.log("ELEMENT REFERENCE SET", e))
+        // this.elementReference.on(LocalElementReference.Events.SET, e => console.log("ELEMENT REFERENCE SET", e))
     }
     /**
      *  a.k.a selected element
@@ -125,7 +130,7 @@ export class ConvergenceCursor {
                 .map(parseNumbers)
                 .concat(localPath[1])
         } else {
-            this.path = localPath;
+            this.path = ["target", ShortPathConvert[localPath[0]]];
         }
     }
 
