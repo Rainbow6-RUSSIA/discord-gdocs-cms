@@ -4,7 +4,6 @@ import {
   RealTimeModel,
   ConvergenceDomain,
 } from "@convergence/convergence"
-import ColorHash from "color-hash"
 import { createHash } from "crypto"
 import debounce from "lodash.debounce"
 import isEqual from "lodash.isequal"
@@ -98,6 +97,7 @@ export class ConvergenceClient {
         collection: spreadsheetId,
         id: `${channel.id}/${post.id}`,
         data: ConvergenceClient.getInitialData(channel, post),
+        ephemeral: true
       })
       this.syncUpdate()
       // this.domain.presence().on(PresenceService.Events.AVAILABILITY_CHANGED)
@@ -108,7 +108,7 @@ export class ConvergenceClient {
           debounce(this.handleSnapshot, 500, { maxWait: 1000 }),
         ),
       )
-      this.cursor = new ConvergenceCursor(new ColorHash().hex(googleUser.sub))
+      this.cursor = new ConvergenceCursor(this)
       this.cursor.initTracking()
     } else {
       console.warn(
