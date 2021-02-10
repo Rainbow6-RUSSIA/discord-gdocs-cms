@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import { getCustomSession } from "../../../collaborative/auth/session"
 import { SheetORM } from "../../../collaborative/sheet/orm"
-import type { PostsAPIResponce } from "../google/posts"
+import type { EditorManagerLike } from "../../../modules/editor/EditorManager"
 
 export default async function handler(
     req: NextApiRequest,
@@ -18,11 +18,16 @@ export default async function handler(
 
     const { accessToken } = session.google
 
-    const orm = new SheetORM({ spreadsheetId: req.query.spreadsheetId, channelId: req.query.channelId, token: accessToken, validate: false })
+    const orm = new SheetORM({
+        spreadsheetId: req.query.spreadsheetId,
+        channelId: req.query.channelId,
+        postId: req.query.postId,
+        token: accessToken,
+        validate: true,
+    })
     await orm.init()
 
-    const data = await orm.getPosts()
-    console.log(data)
+    await orm.saveContent(req.body as EditorManagerLike)
 
-    return res.send({ data, meta: { channelSheetId: orm.config.channelSheetId, postSheetId: orm.config.postSheetId }} as PostsAPIResponce)
-  }
+    return res.status(200).end()
+}

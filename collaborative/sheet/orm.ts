@@ -1,9 +1,12 @@
 import type { GoogleSpreadsheet } from "google-spreadsheet";
 import SheetConnection, { Config } from "google-spreadsheet-orm";
+import type { DeepPartial } from "typeorm";
+import type { EditorManagerLike } from "../../modules/editor/EditorManager";
+import { convertContentToSheet, convertSheetToContent } from "../helpers/convert";
 import { getAuthClient, getDocument } from "../helpers/google";
 import type { ConnectionParams } from "../types";
 import { ChannelModel, initChannelModel } from "./channel";
-import { initPostModel, PostModel } from "./post";
+import { initPostModel, PostInstance, PostModel } from "./post";
 
 export type SheetOrmConfig = {
     token: string;
@@ -63,6 +66,11 @@ export class SheetORM {
         throw new Error("No Channel Model initialized")
     }
 
+    getPosts = async () => {
+        if (this.PostClass) return this.connection.getInfos(this.PostClass, { id: Boolean })
+        throw new Error("No Post Model initialized")
+    } 
+
     selectChannel = async (id: string) => {
         if (!this.config.postSheetId) {
             if (!this.ChannelClass) throw new Error("No Channel Model initialized")
@@ -78,14 +86,18 @@ export class SheetORM {
         }
     }
 
-    getPosts = async () => {
-        if (this.PostClass) return this.connection.getInfos(this.PostClass, { id: Boolean })
-        throw new Error("No Post Model initialized")
-    } 
+    saveContent = async (content: EditorManagerLike) => {
+        if (!this.PostClass) throw new Error("No Post Model initialized")
+        const instance = new this.PostClass()
+        const [channelData, postData] = convertContentToSheet(content)
+        Object.assign(instance, postData)
+        console.log(instance)
+        await this.connection.setInfo(instance)
+    }
 
     config: SheetOrmConfig
-    connection!: SheetConnection
-    document?: GoogleSpreadsheet
+    private connection!: SheetConnection
+    private document?: GoogleSpreadsheet
     ChannelClass?: ChannelModel
     PostClass?: PostModel
     

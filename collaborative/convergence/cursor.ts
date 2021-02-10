@@ -134,16 +134,19 @@ export class ConvergenceCursor {
         }
     }
 
-    cursorReport = debounce(() => {
+    cursorReport = () => { // debounce(() => {
         if (this.activeElement && Boolean(this.path.length)) {
-            if (this.indexReference) {
-                this.indexReference.set(this.selection)
-                console.log("REFERENCE", this.indexReference.values())
-            } else {
-                console.log("REFERENCE", null)
-            }
+            // TODO: реф элемента отваливается при получении изменений
+            // console.log("ELEMENT REF IS ATTACHED", this.elementReference.value().isAttached())
+            // if (this.indexReference) {
+                // this.indexReference.set(this.selection)
+                
+                // console.log("REFERENCE", this.indexReference.values())
+            // } else {
+            //     console.log("REFERENCE", null)
+            // }
         }
-    }, 150, {maxWait: 500})
+    } // , 150, {maxWait: 500})
 
     revertCaretPosition = () => {
         if (this.activeElement) {
