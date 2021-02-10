@@ -9,7 +9,7 @@ export default async function handler(
   ) {
     const session = await getCustomSession({ req })
     if (!session?.google) return res.status(401).end()
-    if (Array.isArray(req.query.spreadsheetId) || Array.isArray(req.query.channelId)) return res.status(400).end()
+    if (typeof req.query.spreadsheetId !== "string" || typeof req.query.channelId !== "string") return res.status(400).end()
 
     const { accessToken } = session.google
 

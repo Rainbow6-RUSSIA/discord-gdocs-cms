@@ -12,7 +12,7 @@ export default async function handler(
 
   if (/* !session?.discord ||  */!session?.google) return res.status(401).end()
 
-  if (Array.isArray(req.query.url) || !req.query.url)
+  if (typeof req.query.url !== "string")
     return res.status(400).end()
 
   const url = req.query.url
