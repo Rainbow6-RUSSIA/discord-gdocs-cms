@@ -1,3 +1,4 @@
+import ORM from "google-sheets-orm";
 import type { GoogleSpreadsheet } from "google-spreadsheet";
 import SheetConnection, { Config } from "google-spreadsheet-orm";
 import type { DeepPartial } from "typeorm";
@@ -18,8 +19,9 @@ export type SheetOrmConfig = {
     postSheetId?: number
 }
 
-export class SheetORM {
+export class SheetORM extends ORM {
     constructor(config: SheetOrmConfig) {
+        super({})
         this.config = { validate: true, ...config };
     }
 
@@ -96,7 +98,6 @@ export class SheetORM {
     }
 
     config: SheetOrmConfig
-    private connection!: SheetConnection
     private document?: GoogleSpreadsheet
     ChannelClass?: ChannelModel
     PostClass?: PostModel
