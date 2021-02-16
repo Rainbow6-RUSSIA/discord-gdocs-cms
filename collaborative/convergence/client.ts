@@ -6,7 +6,7 @@ import {
     RealTimeArray,
     RealTimeObject,
 } from "@convergence/convergence"
-import isEqual from "lodash.isequal"
+import isEqual from "lodash/isEqual"
 import { observe, toJS } from "mobx"
 import {
     applySnapshot,
@@ -38,7 +38,7 @@ export class ConvergenceClient {
     collaborationManager: CollaborationManager
     domain?: ConvergenceDomain
     model?: RealTimeModel
-    lock = false
+    lock = true
 
     disposers: IDisposer[] = []
 
@@ -84,7 +84,8 @@ export class ConvergenceClient {
                 data: convertSheetToContent(channel, post),
                 ephemeral: true,
             })
-            this.syncUpdate()
+            this.syncUpdate() // get content
+            this.model.root().value(getSnapshot(this.editorStore)) // force set content with ids to fix incomplete model
             // this.domain.presence().on(PresenceService.Events.AVAILABILITY_CHANGED)
             this.model.on(RealTimeModel.Events.VERSION_CHANGED, this.syncUpdate)
             this.disposers.push(onPatch(this.editorStore, this.handlePatch))
@@ -101,14 +102,6 @@ export class ConvergenceClient {
             )
         }
     }
-
-    // handleSnapshot = (newData: EditorManagerLike) => {
-    //     if (!this.model) return
-    //     const root = this.model.root()
-    //     if (isEqual(root.value(), newData)) return
-    //     console.log("NEW DATA", newData)
-    //     root.value(newData)
-    // }
 
     handlePatch = (patch: IJsonPatch) => {
         if (!this.model || this.lock) return
@@ -159,12 +152,9 @@ export class ConvergenceClient {
         }
 
         console.log("received change version", model.version())
-        
-        // setTimeout(() => {
-            // this.editorStore.set("syncronizing", false)
-            this.lock = false
-            this.cursor?.revertCaretPosition()
-        // }, 0)
+
+        this.cursor?.revertCaretPosition()
+        this.lock = false
     }
 
     save = async () => {

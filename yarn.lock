@@ -1675,8 +1675,7 @@ __metadata:
     "@types/google-spreadsheet": ^3.0.2
     "@types/jest": ^26.0.15
     "@types/jsonwebtoken": ^8
-    "@types/lodash.debounce": ^4
-    "@types/lodash.isequal": ^4
+    "@types/lodash": ^4.14.168
     "@types/next-auth": ^3.1.18
     "@types/node": ^14.14.7
     "@types/react": ^16.9.56
@@ -1710,8 +1709,7 @@ __metadata:
     idb: ^5.0.7
     jest: ^26.6.3
     jsonwebtoken: ^8.5.1
-    lodash.debounce: ^4.0.8
-    lodash.isequal: ^4.5.0
+    lodash: ^4.17.20
     mobx: ^5.15.7
     mobx-react-lite: ^2.2.2
     mobx-state-tree: ^3.17.2
@@ -2636,28 +2634,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash.debounce@npm:^4":
-  version: 4.0.6
-  resolution: "@types/lodash.debounce@npm:4.0.6"
-  dependencies:
-    "@types/lodash": "*"
-  checksum: 64952797f594f4068d2edd1e178a553647ca4ed5716c9b7673f9187d012fe5b5a0141c15ffc82c8f4d29bf13040c53001634a5b43b51a9efdfb6d4fa77ae24aa
-  languageName: node
-  linkType: hard
-
-"@types/lodash.isequal@npm:^4":
-  version: 4.5.5
-  resolution: "@types/lodash.isequal@npm:4.5.5"
-  dependencies:
-    "@types/lodash": "*"
-  checksum: 141df617686010657bb3e46b21facce2dd15b771fdfebd9df2f3d6fd3603d6336b64da4027257402c640f71b65d91eca9305b53d282cf604bcbb88e662034aad
-  languageName: node
-  linkType: hard
-
-"@types/lodash@npm:*":
-  version: 4.14.167
-  resolution: "@types/lodash@npm:4.14.167"
-  checksum: 40778f83a86392625b3d52c15f59171a0f6a35436128b8fb1e37f89162f7950dc98570f27bc99ce1e2e04084e64da41cb45146d091d5181e12c6733bcf16fac6
+"@types/lodash@npm:^4.14.168":
+  version: 4.14.168
+  resolution: "@types/lodash@npm:4.14.168"
+  checksum: 9a4e25f89fc035b9f0388f1f7be85e5eff49f9e6db0d93432c9a89fce0916f8a89db4e8290415f7ea02de6b00d3573826378dcb655b7b2d20530a6e8d6dd6fd0
   languageName: node
   linkType: hard
 
@@ -8912,13 +8892,6 @@ fsevents@^1.2.7:
   version: 3.0.3
   resolution: "lodash.isboolean@npm:3.0.3"
   checksum: e5b7a921f47759773266e66664e4a54f2438cc213fe336c5b96321d4328ebb2785e939bbcd07b29d5a20cdc6140d471abae1e94cdfb25937dc91ddc5150f41a0
-  languageName: node
-  linkType: hard
-
-"lodash.isequal@npm:^4.5.0":
-  version: 4.5.0
-  resolution: "lodash.isequal@npm:4.5.0"
-  checksum: 5b47e094641c18a915497343894c66f7da6aebb9aaa2a3fcc5643455aaf29d19df60ebbed664c8374fb959c8b4ce96810ee6becd8a71ac58c6c2ca8d29762947
   languageName: node
   linkType: hard
 

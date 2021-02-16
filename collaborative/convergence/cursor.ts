@@ -1,7 +1,6 @@
 import { LocalElementReference, RealTimeString } from "@convergence/convergence";
 import type { LocalIndexReference } from "@convergence/convergence/typings/model/reference/LocalIndexReference"
 import ColorHash from "color-hash"
-import debounce from "lodash.debounce"
 import type { EditorManagerLike } from "../../modules/editor/EditorManager"
 import { parseNumbers } from "../helpers/parseNumbers"
 import type { ConvergenceClient } from "./client"
@@ -83,10 +82,10 @@ export class ConvergenceCursor {
         const element = this.elementReference.value()
         if (element instanceof RealTimeString) {
             this.indexReference = element.indexReference("cursor")
-            console.log("UPDATE INDEX REFERENCE", element.path())
+            // console.log("UPDATE INDEX REFERENCE", element.path())
         } else {
             delete this.indexReference
-            console.log("INDEX REFERENCE DELETED")
+            // console.log("INDEX REFERENCE DELETED")
         }
     }
 
