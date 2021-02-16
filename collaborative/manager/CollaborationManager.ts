@@ -6,12 +6,13 @@ import type { PostInstance } from "../sheet/post"
 import type { CustomSession, SpreadsheetItem } from "../types"
 
 export class CollaborationManager {
+  static LSSettingsKey = "collaborationSettings"
   // shareClient = new ConvergenceCursor(this)
   @observable session?: CustomSession | null
   
   @observable spreadsheet?: SpreadsheetItem
-  @observable post?: PostInstance
   @observable channel?: ChannelInstance
+  @observable post?: PostInstance
 
   getChannels = () => {
     console.log("getChannels")
@@ -31,11 +32,30 @@ export class CollaborationManager {
     return this.load()
   }
 
+  saveSettings = () => {
+    localStorage.setItem(CollaborationManager.LSSettingsKey, JSON.stringify({ 
+      spreadsheet: this.spreadsheet,
+      channel: this.channel,
+      post: this.post
+    }))
+  }
+
+  @action loadSettings = () => {
+    const settings = JSON.parse(localStorage.getItem(CollaborationManager.LSSettingsKey) ?? "{}")
+    this.spreadsheet = settings.spreadsheet
+    this.channel = settings.channel
+    this.post = settings.post
+  }
+
+  @action resetSettings = () => {
+    localStorage.removeItem(CollaborationManager.LSSettingsKey)
+  }
+
   // @action handleSheetSelection = (event: GooglePickerCallback) => {
   //   console.log(event)
   //   if (event.action === "picked") {
   //     this.sheet = event.docs[0]
-  //     localStorage.setItem("pickedSheet", JSON.stringify(this.sheet))
+  //     
   //   }
   // }
 
@@ -61,10 +81,7 @@ export class CollaborationManager {
     const session = await getCustomSession()
     console.log(session)
     this.session = session
-    if (session?.google) {
-      this.spreadsheet = JSON.parse(localStorage.getItem("pickedSheet") ?? "null")
-    } else {
-      localStorage.removeItem("pickedSheet")
-    }
+    if (session?.google) this.loadSettings()
+    else this.resetSettings()
   }
 }

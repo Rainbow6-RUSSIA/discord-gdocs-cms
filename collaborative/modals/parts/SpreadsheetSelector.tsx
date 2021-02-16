@@ -11,6 +11,9 @@ import { DropdownRow } from "../../layout/DropdownRow"
 import { CollaborationManagerContext } from "../../manager/CollaborationManagerContext"
 import { ChannelSelector } from "./ChannelSelector"
 
+// TODO: option processor
+// mark saved selection stale if doesn't received
+
 export const SpreadsheetSelector = () => {
     const collaborationManager = useRequiredContext(CollaborationManagerContext)
 
@@ -21,6 +24,7 @@ export const SpreadsheetSelector = () => {
 
     const selectSpreadsheet = (e: React.ChangeEvent<HTMLSelectElement>) => {
         collaborationManager.spreadsheet = res?.data.find(r => r.id === e.currentTarget.selectedOptions[0].value)
+        collaborationManager.saveSettings()
         console.log(toJS(collaborationManager.spreadsheet))
     }
 

@@ -25,6 +25,7 @@ export const ChannelSelector = () => {
 
     const selectChannel = (e: React.ChangeEvent<HTMLSelectElement>) => {
         collaborationManager.channel = res?.data.find(r => r.id === e.currentTarget.selectedOptions[0].value)
+        collaborationManager.saveSettings()
         console.log(toJS(collaborationManager.channel))
     }
 
