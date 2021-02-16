@@ -97,7 +97,7 @@ export class ConvergenceCursor {
 
     stopTracking = () => {
         document.removeEventListener("selectionchange", this.selectionChange);
-        this.elementReference.unshare()
+        if (this.elementReference.isShared()) this.elementReference.unshare()
     }
 
     selectionChange = () => {

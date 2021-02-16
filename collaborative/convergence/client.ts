@@ -3,23 +3,22 @@ import {
     connectWithJwt,
     RealTimeModel,
     ConvergenceDomain,
+    RealTimeArray,
+    RealTimeObject,
 } from "@convergence/convergence"
-import { createHash } from "crypto"
-import debounce from "lodash.debounce"
 import isEqual from "lodash.isequal"
 import { observe, toJS } from "mobx"
 import {
     applySnapshot,
     getSnapshot,
     IDisposer,
-    onSnapshot,
+    IJsonPatch,
+    onPatch,
 } from "mobx-state-tree"
-import type { DeepPartial } from "typeorm"
 import type { EditorManagerLike } from "../../modules/editor/EditorManager"
 import { convertSheetToContent } from "../helpers/convert"
+import { parseNumbers } from "../helpers/parseNumbers"
 import type { CollaborationManager } from "../manager/CollaborationManager"
-import type { ChannelInstance } from "../sheet/channel"
-import type { PostInstance } from "../sheet/post"
 import { ConvergenceCursor } from "./cursor"
 
 export class ConvergenceClient {
@@ -87,12 +86,7 @@ export class ConvergenceClient {
             this.syncUpdate()
             // this.domain.presence().on(PresenceService.Events.AVAILABILITY_CHANGED)
             this.model.on(RealTimeModel.Events.VERSION_CHANGED, this.syncUpdate)
-            this.disposers.push(
-                onSnapshot(
-                    this.editorStore,
-                    this.handleSnapshot
-                ),
-            )
+            this.disposers.push(onPatch(this.editorStore, this.handlePatch))
             this.cursor = new ConvergenceCursor(this)
             this.cursor.initTracking()
         } else {
@@ -107,12 +101,43 @@ export class ConvergenceClient {
         }
     }
 
-    handleSnapshot = (newData: EditorManagerLike) => {
+    // handleSnapshot = (newData: EditorManagerLike) => {
+    //     if (!this.model) return
+    //     const root = this.model.root()
+    //     if (isEqual(root.value(), newData)) return
+    //     console.log("NEW DATA", newData)
+    //     root.value(newData)
+    // }
+
+    handlePatch = (patch: IJsonPatch) => {
         if (!this.model) return
         const root = this.model.root()
-        if (isEqual(root.value(), newData)) return
-        console.log("NEW DATA", newData)
-        root.value(newData)
+        const path = patch.path.split("/").filter(Boolean).map(parseNumbers)
+        const element = root.elementAt(...path)
+        console.log("PATCH", patch)
+        switch (patch.op) {
+            case "add": {
+                const newKey = path.pop()
+                const parent = root.elementAt(...path)
+                if (
+                    typeof newKey === "number" &&
+                    parent instanceof RealTimeArray
+                )
+                    parent.insert(newKey, patch.value)
+                if (
+                    typeof newKey === "string" &&
+                    parent instanceof RealTimeObject
+                )
+                    parent.set(newKey, patch.value)
+                break
+            }
+            case "remove":
+                element.removeFromParent()
+                break
+            case "replace":
+                element.value(patch.value)
+                break
+        }
     }
 
     syncUpdate = () => {
@@ -132,13 +157,7 @@ export class ConvergenceClient {
             void this.editorStore.process("/target/url")
         }
 
-        // eslint-disable-next-line @typescript-eslint/require-array-sort-compare
-        const v = JSON.stringify(value, Object.keys(value).sort())
-
-        console.log(
-            "received change version",
-            this.model.version(),
-        )
+        console.log("received change version", this.model.version())
 
         this.cursor?.revertCaretPosition()
     }
