@@ -5,6 +5,7 @@ import React, { useEffect } from "react"
 import styled from "styled-components"
 import { useWindowEvent } from "../../common/dom/useWindowEvent"
 import { SecondaryButton } from "../../common/input/button/SecondaryButton"
+import { InputLabel } from "../../common/input/layout/InputLabel"
 import { Separator } from "../../common/layout/Separator"
 import { Stack } from "../../common/layout/Stack"
 import { ModalManagerContext } from "../../common/modal/ModalManagerContext"
@@ -111,6 +112,9 @@ export function Editor() {
         <SecondaryButton onClick={() => spawnShareModal()}>
           Share Message
         </SecondaryButton>
+        <InputLabel>
+          Version: {editorManager.version}
+        </InputLabel>
       </Actions>
       <WebhookControls form={form} />
       <Separator />

@@ -38,6 +38,7 @@ export class ConvergenceClient {
     collaborationManager: CollaborationManager
     domain?: ConvergenceDomain
     model?: RealTimeModel
+    lock = false
 
     disposers: IDisposer[] = []
 
@@ -110,7 +111,7 @@ export class ConvergenceClient {
     // }
 
     handlePatch = (patch: IJsonPatch) => {
-        if (!this.model) return
+        if (!this.model || this.lock) return
         const root = this.model.root()
         const path = patch.path.split("/").filter(Boolean).map(parseNumbers)
         const element = root.elementAt(...path)
@@ -141,12 +142,12 @@ export class ConvergenceClient {
     }
 
     syncUpdate = () => {
-        if (
-            !this.model ||
-            isEqual(this.model.root().value(), getSnapshot(this.editorStore))
-        )
-            return
-        const value = this.model.root().value()
+        const model = this.model
+        if (!model) return
+        this.editorStore.set("version", model.version())
+        if (isEqual(model.root().value(), getSnapshot(this.editorStore))) return
+        this.lock = true
+        const value = model.root().value()
 
         const isWebhookChanged =
             this.editorStore.target.url !== value.target?.url
@@ -157,9 +158,13 @@ export class ConvergenceClient {
             void this.editorStore.process("/target/url")
         }
 
-        console.log("received change version", this.model.version())
-
-        this.cursor?.revertCaretPosition()
+        console.log("received change version", model.version())
+        
+        // setTimeout(() => {
+            // this.editorStore.set("syncronizing", false)
+            this.lock = false
+            this.cursor?.revertCaretPosition()
+        // }, 0)
     }
 
     save = async () => {

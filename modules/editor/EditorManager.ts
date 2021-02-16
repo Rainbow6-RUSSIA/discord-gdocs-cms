@@ -10,8 +10,11 @@ export const EditorManager = types
     target: types.optional(
       types.late(() => WebhookModel),
       {},
-    ),
+    )
   })
+  .volatile(() => ({
+    version: 0
+  }))
   .actions(self => ({
     set<K extends keyof typeof self>(
       key: K,
