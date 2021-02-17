@@ -14,6 +14,7 @@ import { PrimaryContentEditor } from "../../modules/editor/message/PrimaryConten
 import type { MessageItemFormState } from "../../modules/message/state/editorForm"
 import type { EmbedLike } from "../../modules/message/state/models/EmbedModel"
 import type { MessageLike } from "../../modules/message/state/models/MessageModel"
+import { CollaborativePrimaryContentEditor } from "./CollaborativePrimaryContentEditor"
 
 
 const DataEditorModal = dynamic<DataEditorModalProps>(async () =>
@@ -42,7 +43,7 @@ export function CollaborativeMessageEditor(props: MessageEditorProps) {
   return useObserver(() => (
     <Stack gap={16}>
       <div>
-        <PrimaryContentEditor message={message} form={form} />
+        <CollaborativePrimaryContentEditor message={message} form={form} />
         <ErrorWrapper>
           <InputError
             error={
