@@ -7,6 +7,7 @@ import { ConvergenceClient } from "../collaborative/convergence/client"
 import { CollaborationManagerContext } from "../collaborative/manager/CollaborationManagerContext"
 import { CollaborationModal } from "../collaborative/modals/CollaborationModal"
 import { base64UrlEncode } from "../common/base64/base64UrlEncode"
+import { useWindowEvent } from "../common/dom/useWindowEvent"
 import { ModalManagerContext } from "../common/modal/ModalManagerContext"
 import { Header } from "../common/page/Header"
 import { PageHead } from "../common/page/PageHead"
@@ -57,10 +58,9 @@ export default function Main(props: MainProps) {
 
   useEffect(() => {
     void collaborationManager.load(editorManager)
-    // const collaborativeClient = new ConvergenceClient(collaborationManager, editorManager)
-    // void collaborativeClient.init()
-    // return () => collaborativeClient.dispose()
+    return () => collaborationManager.convergence?.dispose()
   }, [editorManager, collaborationManager]) // ВСТРОЕННЫЙ shareClient ЛОМАЕТ КНОПКИ
+  useWindowEvent("unload", () => collaborationManager.convergence?.dispose())
 
   useEffect(() => () => destroy(editorManager), [editorManager])
 

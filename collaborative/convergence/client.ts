@@ -22,9 +22,7 @@ import type { CollaborationManager } from "../manager/CollaborationManager"
 import { ConvergenceCursor } from "./cursor"
 
 export class ConvergenceClient {
-    constructor(
-        collaboration: CollaborationManager
-    ) {
+    constructor(collaboration: CollaborationManager) {
         if (!collaboration.editor) throw new Error("No Editor")
         this.collaboration = collaboration
         this.editor = collaboration.editor
@@ -33,9 +31,7 @@ export class ConvergenceClient {
             save: this.collaboration.handleSave,
         })
         void this.connect()
-        this.disposers.push(
-            observe(this.collaboration, "post", this.connect),
-        )
+        this.disposers.push(observe(this.collaboration, "post", this.connect))
     }
 
     editor: EditorManagerLike
@@ -49,11 +45,10 @@ export class ConvergenceClient {
     cursor?: ConvergenceCursor
 
     dispose = () => {
+        void this.model?.close()
         this.domain?.dispose()
         this.cursor?.stopTracking()
-        for (const dispose of this.disposers) {
-            dispose()
-        }
+        for (const dispose of this.disposers) dispose()
     }
 
     connect = async () => {
@@ -139,8 +134,7 @@ export class ConvergenceClient {
         this.lock = true
         const value = model.root().value()
 
-        const isWebhookChanged =
-            this.editor.target.url !== value.target?.url
+        const isWebhookChanged = this.editor.target.url !== value.target?.url
 
         applySnapshot(this.editor, value)
 
