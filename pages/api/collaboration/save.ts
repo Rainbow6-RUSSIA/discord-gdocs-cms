@@ -1,7 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import { getCustomSession } from "../../../collaborative/auth/session"
+import { validateQuery } from "../../../collaborative/helpers/validateQuery"
 import { SheetORM } from "../../../collaborative/sheet/orm"
-import type { EditorManagerLike } from "../../../modules/editor/EditorManager"
+import type { PostInstance } from "../../../collaborative/sheet/post"
+
+const query = ["spreadsheetId", "channelId", "postId"] as const
 
 export default async function handler(
     req: NextApiRequest,
@@ -9,11 +12,7 @@ export default async function handler(
 ) {
     const session = await getCustomSession({ req })
     if (!session?.google) return res.status(401).end()
-    if (
-        typeof req.query.spreadsheetId !== "string" ||
-        typeof req.query.channelId !== "string" ||
-        typeof req.query.postId !== "string"
-    )
+    if (!validateQuery(req.query, query))
         return res.status(400).end()
 
     const { accessToken } = session.google
@@ -23,11 +22,13 @@ export default async function handler(
         channelId: req.query.channelId,
         postId: req.query.postId,
         token: accessToken,
-        validate: true,
+        validate: false,
     })
     await orm.init()
 
-    await orm.saveContent(req.body as EditorManagerLike)
+    await orm.savePost(req.body as PostInstance)
 
     return res.status(200).end()
 }
+
+export type SaveAPIQuery = typeof query[number]

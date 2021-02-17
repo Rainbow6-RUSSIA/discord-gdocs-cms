@@ -1,10 +1,6 @@
 import type { GoogleSpreadsheet } from "google-spreadsheet";
 import SheetConnection, { Config } from "google-spreadsheet-orm";
-import type { DeepPartial } from "typeorm";
-import type { EditorManagerLike } from "../../modules/editor/EditorManager";
-import { convertContentToSheet, convertSheetToContent } from "../helpers/convert";
 import { getAuthClient, getDocument } from "../helpers/google";
-import type { ConnectionParams } from "../types";
 import { ChannelModel, initChannelModel } from "./channel";
 import { initPostModel, PostInstance, PostModel } from "./post";
 
@@ -86,12 +82,10 @@ export class SheetORM {
         }
     }
 
-    saveContent = async (content: EditorManagerLike) => {
+    savePost = async (post: PostInstance) => {
         if (!this.PostClass) throw new Error("No Post Model initialized")
         const instance = new this.PostClass()
-        const [channelData, postData] = convertContentToSheet(content)
-        Object.assign(instance, postData)
-        console.log(instance)
+        Object.assign(instance, post)
         await this.connection.setInfo(instance)
     }
 

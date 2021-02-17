@@ -5,7 +5,7 @@ export const parseMetadata = async (url: string) => {
   const res = await fetch(url)
   const text = await res.text()
 
-  if (typeof window === "undefined") {
+  if (!process.browser) {
     const { document } = createWindow(text)
     return getMetadata(document, url)
   }
