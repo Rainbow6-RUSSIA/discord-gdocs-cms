@@ -49,12 +49,16 @@ export class ConvergenceClient {
             )
             console.log("JWT", jwt)
             this.domain = await connectWithJwt(collaborationServerURL, jwt)
-            this.disposers.push(observe(this.collaboration, "post", this.reconnect))
+            this.disposers.push(
+                observe(this.collaboration, "post", this.reconnect),
+            )
 
             await this.connect()
         } else {
             this.collaboration.resetMode(CollaborationManagerMode.CONNECTING)
-            this.collaboration.showError(new Error("No Collaboration server URL set"))
+            this.collaboration.showError(
+                new Error("No Collaboration server URL set"),
+            )
             console.warn("No Collaboration server URL set")
         }
     }
@@ -75,13 +79,7 @@ export class ConvergenceClient {
         const spreadsheetId = this.collaboration.spreadsheet?.id
         const channel = this.collaboration.channel
         const post = this.collaboration.post
-        if (
-            this.domain &&
-            googleUser &&
-            spreadsheetId &&
-            channel &&
-            post
-        ) {
+        if (this.domain && googleUser && spreadsheetId && channel && post) {
             this.model = await this.domain.models().openAutoCreate({
                 collection: spreadsheetId,
                 id: `${channel.id}/${post.id}`,
@@ -98,7 +96,9 @@ export class ConvergenceClient {
 
             this.collaboration.setMode(CollaborationManagerMode.ONLINE)
         } else {
-            this.collaboration.showError(new Error("Cannot connect to collaboration server"))
+            this.collaboration.showError(
+                new Error("Cannot connect to collaboration server"),
+            )
             console.warn(
                 "Cannot connect to collaboration server",
                 toJS(googleUser),
@@ -107,14 +107,14 @@ export class ConvergenceClient {
                 post?.id,
             )
         }
-        
+
         this.collaboration.resetMode(CollaborationManagerMode.CONNECTING)
     }
 
     disconnect = async () => {
         this.collaboration.resetMode(CollaborationManagerMode.ONLINE)
         this.cursor?.stopTracking()
-        await this.model?.close()
+        if (this.model?.isOpen()) await this.model.close()
     }
 
     get isConnected(): boolean {
@@ -154,13 +154,13 @@ export class ConvergenceClient {
 
     syncUpdate = () => {
         const model = this.model
-        
+
         if (!model) return
 
         if (isEqual(model.root().value(), getSnapshot(this.editor))) return
-        
+
         this.lock = true
-        
+
         const value = model.root().value()
         const isWebhookChanged = this.editor.target.url !== value.target?.url
         applySnapshot(this.editor, value)
