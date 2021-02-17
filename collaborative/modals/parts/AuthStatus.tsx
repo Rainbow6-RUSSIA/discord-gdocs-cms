@@ -1,4 +1,5 @@
 import { useObserver } from "mobx-react-lite"
+import Image from "next/image";
 import { darken } from "polished"
 import React from "react"
 import styled from "styled-components"
@@ -32,7 +33,7 @@ const GoogleLoginButton = styled(PrimaryButton)`
   background-color: #4285F4;
   border-color: #4285F4;
   & > * {
-    margin-right: 3px;
+    margin: 0 3px;
   }
   &:hover {
     background-color: #4285F4;
@@ -47,7 +48,7 @@ export const AuthStatus = () => {
     <>
       To use collaboration features you must login into a Google account and select spreadsheet for milestone saves.
       <GoogleLoginButton onClick={async () => collaborationManager.link()}>
-        <img height="32" src="/static/google-button.svg" />
+        <Image src="/static/google-button.svg" height={32} width={32}  />
         <span>Sign in with Google</span>
       </GoogleLoginButton>
     </>
