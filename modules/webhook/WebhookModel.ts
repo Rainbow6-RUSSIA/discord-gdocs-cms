@@ -137,7 +137,7 @@ export const WebhookModel = types
         console.log("Target executed", data)
 
         // Any parameter except message id doesn't matter
-        self.message = `https://discord.com/channels/1/2/${data.id}`
+        self.message = `https://discord.com/channels/${self.guildId}/${self.channelId}/${data.id}`
       }
 
       return null
