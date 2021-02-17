@@ -19,6 +19,7 @@ import type { EditorManagerLike } from "../../modules/editor/EditorManager"
 import { convertSheetToContent } from "../helpers/convert"
 import { parseNumbers } from "../helpers/parseNumbers"
 import type { CollaborationManager } from "../manager/CollaborationManager"
+import { CollaborationManagerMode } from "../types"
 import { ConvergenceCursor } from "./cursor"
 
 export class ConvergenceClient {
@@ -27,6 +28,7 @@ export class ConvergenceClient {
         this.collaboration = collaboration
         this.editor = collaboration.editor
         void this.init()
+        this.collaboration.setMode(CollaborationManagerMode.CONNECTING)
     }
 
     editor: EditorManagerLike
@@ -51,6 +53,8 @@ export class ConvergenceClient {
 
             await this.connect()
         } else {
+            this.collaboration.resetMode(CollaborationManagerMode.CONNECTING)
+            this.collaboration.showError(new Error("No Collaboration server URL set"))
             console.warn("No Collaboration server URL set")
         }
     }
@@ -91,7 +95,10 @@ export class ConvergenceClient {
             this.disposers.push(onPatch(this.editor, this.handlePatch))
             this.cursor = new ConvergenceCursor(this)
             this.cursor.initTracking()
+
+            this.collaboration.setMode(CollaborationManagerMode.ONLINE)
         } else {
+            this.collaboration.showError(new Error("Cannot connect to collaboration server"))
             console.warn(
                 "Cannot connect to collaboration server",
                 toJS(googleUser),
@@ -100,9 +107,12 @@ export class ConvergenceClient {
                 post?.id,
             )
         }
+        
+        this.collaboration.resetMode(CollaborationManagerMode.CONNECTING)
     }
 
     disconnect = async () => {
+        this.collaboration.resetMode(CollaborationManagerMode.ONLINE)
         this.cursor?.stopTracking()
         await this.model?.close()
     }

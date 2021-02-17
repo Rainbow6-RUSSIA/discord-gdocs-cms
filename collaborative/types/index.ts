@@ -1,5 +1,15 @@
 import type { CollaborativeSession } from "../convergence/CollaborativeSession"
 
+export enum CollaborationManagerMode {
+  OFFLINE,
+  CONNECTING = 1 << 1,
+  SAVING = 1 << 2,
+  ONLINE = 1 << 3,
+  SOLO = 1 << 4,
+  TEAM = 1 << 5,
+  ERROR = 1 << 6
+}
+
 export type CustomSession = {
   id: string
   accessToken: string

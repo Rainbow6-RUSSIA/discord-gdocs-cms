@@ -6,6 +6,8 @@ import styled from "styled-components"
 import { ConvergenceClient } from "../collaborative/convergence/client"
 import { CollaborationManagerContext } from "../collaborative/manager/CollaborationManagerContext"
 import { CollaborationModal } from "../collaborative/modals/CollaborationModal"
+import { CollaborativeEditor } from "../collaborative/overrides/CollaborativeEditor"
+import { CollaborationManagerMode } from "../collaborative/types"
 import { base64UrlEncode } from "../common/base64/base64UrlEncode"
 import { useWindowEvent } from "../common/dom/useWindowEvent"
 import { ModalManagerContext } from "../common/modal/ModalManagerContext"
@@ -123,7 +125,7 @@ export default function Main(props: MainProps) {
           )}
           {(!mobile || activeTab === "Editor") && (
             <div>
-              <Editor />
+              { collaborationManager.hasMode(CollaborationManagerMode.ONLINE) ? <CollaborativeEditor /> : <Editor /> }
             </div>
           )}
         </View>

@@ -1,4 +1,4 @@
-import { action, observable } from "mobx"
+import { action, computed, observable } from "mobx"
 import { signIn, signOut } from "next-auth/client"
 import type { EditorManagerLike } from "../../modules/editor/EditorManager"
 import type { SaveAPIQuery } from "../../pages/api/collaboration/save"
@@ -7,7 +7,7 @@ import { ConvergenceClient } from "../convergence/client"
 import { convertContentToSheet } from "../helpers/convert"
 import type { ChannelInstance } from "../sheet/channel"
 import type { PostInstance } from "../sheet/post"
-import type { CustomSession, SpreadsheetItem } from "../types"
+import { CollaborationManagerMode, CustomSession, SpreadsheetItem } from "../types"
 
 export class CollaborationManager {
   static LSSettingsKey = "collaborationSettings"
@@ -17,6 +17,23 @@ export class CollaborationManager {
   @observable spreadsheet?: SpreadsheetItem
   @observable channel?: ChannelInstance
   @observable post?: PostInstance
+
+  @observable mode = CollaborationManagerMode.OFFLINE
+  @observable error?: Error
+
+  @action showError(err: Error) {
+    this.error = err;
+    this.setMode(CollaborationManagerMode.ERROR)
+    // eslint-disable-next-line no-alert
+    alert(err.message)
+    setTimeout(() => {
+      this.resetMode(CollaborationManagerMode.ERROR)
+      delete this.error
+    }, 10000)
+  }
+  @action setMode(f: CollaborationManagerMode) { this.mode |= f }
+  @action resetMode(f: CollaborationManagerMode) { this.mode &= ~f }
+  hasMode(f: CollaborationManagerMode) { return Boolean(this.mode & f) }
 
   @action link = async () => signIn("google")
 

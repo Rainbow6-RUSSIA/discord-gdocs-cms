@@ -108,7 +108,7 @@ module.exports = {
     "new-cap": "off",
     "no-alert": "error",
     "no-await-in-loop": "warn",
-    "no-bitwise": "warn",
+    "no-bitwise": "off",
     "no-caller": "warn",
     "no-case-declarations": "error",
     "no-compare-neg-zero": "error",
