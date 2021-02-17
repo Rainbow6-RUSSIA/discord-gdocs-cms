@@ -3,6 +3,7 @@ import dynamic from "next/dynamic"
 import { transparentize } from "polished"
 import React, { useEffect } from "react"
 import styled from "styled-components"
+import { CollaborationManagerContext } from "../../collaborative/manager/CollaborationManagerContext"
 import { useWindowEvent } from "../../common/dom/useWindowEvent"
 import { SecondaryButton } from "../../common/input/button/SecondaryButton"
 import { InputLabel } from "../../common/input/layout/InputLabel"
@@ -61,25 +62,16 @@ const JavaScriptWarning = styled.noscript`
 
 export function Editor() {
   const editorManager = useRequiredContext(EditorManagerContext)
+  const collaborationManager = useRequiredContext(CollaborationManagerContext)
 
   const form = useLazyValue(() => createEditorForm(editorManager))
   useEffect(() => () => form.dispose(), [form])
 
   const modalManager = useRequiredContext(ModalManagerContext)
 
-  const spawnBackupsModal = () =>
-    modalManager.spawn({
-      render: () => <BackupsModal editorManager={editorManager} />,
-    })
-
   const spawnClearAllModal = () =>
     modalManager.spawn({
       render: () => <ClearAllConfirmationModal editorManager={editorManager} />,
-    })
-
-  const spawnShareModal = () =>
-    modalManager.spawn({
-      render: () => <ShareModal editorManager={editorManager} />,
     })
 
   const confirmExit = usePreference("confirmExit")
@@ -103,18 +95,12 @@ export function Editor() {
         />
       </JavaScriptWarning>
       <Actions>
-        <SecondaryButton onClick={() => spawnBackupsModal()}>
-          Backups
+        <SecondaryButton onClick={collaborationManager.handleSave}>
+          Save
         </SecondaryButton>
         <SecondaryButton onClick={() => spawnClearAllModal()}>
           Clear All
         </SecondaryButton>
-        <SecondaryButton onClick={() => spawnShareModal()}>
-          Share Message
-        </SecondaryButton>
-        <InputLabel>
-          Version: {editorManager.version}
-        </InputLabel>
       </Actions>
       <WebhookControls form={form} />
       <Separator />
