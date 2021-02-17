@@ -19,7 +19,7 @@ export class CollaborationManager {
   @observable post?: PostInstance
 
   @observable mode = CollaborationManagerMode.OFFLINE
-  @observable error?: Error
+  error?: Error
 
   @action showError(err: Error) {
     this.error = err;
@@ -31,8 +31,8 @@ export class CollaborationManager {
       delete this.error
     }, 10000)
   }
-  @action setMode(f: CollaborationManagerMode) { this.mode |= f }
-  @action resetMode(f: CollaborationManagerMode) { this.mode &= ~f }
+  setMode(f: CollaborationManagerMode) { this.mode |= f } // don't add @action or you'll get infinite loop
+  resetMode(f: CollaborationManagerMode) { this.mode &= ~f } // don't add @action or you'll get infinite loop
   hasMode(f: CollaborationManagerMode) { return Boolean(this.mode & f) }
 
   @action link = async () => signIn("google")

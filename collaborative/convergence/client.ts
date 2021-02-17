@@ -7,7 +7,7 @@ import {
     RealTimeObject,
 } from "@convergence/convergence"
 import isEqual from "lodash/isEqual"
-import { observe, toJS } from "mobx"
+import { autorun, observe, reaction, toJS } from "mobx"
 import {
     applySnapshot,
     getSnapshot,
@@ -50,10 +50,13 @@ export class ConvergenceClient {
             console.log("JWT", jwt)
             this.domain = await connectWithJwt(collaborationServerURL, jwt)
             this.disposers.push(
-                observe(this.collaboration, "post", this.reconnect),
+                reaction(() =>  this.collaboration.post, async () => this.reconnect())
             )
+            // this.disposers.push(
+            //     observe(this.collaboration, "post", this.reconnect),
+            // )
 
-            await this.connect()
+            // await this.connect()
         } else {
             this.collaboration.resetMode(CollaborationManagerMode.CONNECTING)
             this.collaboration.showError(
@@ -114,7 +117,7 @@ export class ConvergenceClient {
     disconnect = async () => {
         this.collaboration.resetMode(CollaborationManagerMode.ONLINE)
         this.cursor?.stopTracking()
-        if (this.model?.isOpen()) await this.model.close()
+        if (this.isConnected) await this.model!.close()
     }
 
     get isConnected(): boolean {
@@ -122,8 +125,8 @@ export class ConvergenceClient {
     }
 
     handlePatch = (patch: IJsonPatch) => {
-        if (!this.model || this.lock) return
-        const root = this.model.root()
+        if (!this.isConnected || this.lock) return
+        const root = this.model!.root()
         const path = patch.path.split("/").filter(Boolean).map(parseNumbers)
         const element = root.elementAt(...path)
         console.log("PATCH", patch)
@@ -153,9 +156,9 @@ export class ConvergenceClient {
     }
 
     syncUpdate = () => {
-        const model = this.model
+        if (!this.isConnected) return
 
-        if (!model) return
+        const model = this.model!
 
         if (isEqual(model.root().value(), getSnapshot(this.editor))) return
 
