@@ -43,7 +43,7 @@ export default class Application extends App {
 
   componentDidMount() {
     this.preferenceManager.load()
-    this.collaborationManager.load()
+    // this.collaborationManager.load()
 
     this.disposers.push(
       autorun(() => this.preferenceManager.dump(), {

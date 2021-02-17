@@ -56,9 +56,10 @@ export default function Main(props: MainProps) {
   const editorManager = useLazyValue(() => EditorManager.create(state))
 
   useEffect(() => {
-    const collaborativeClient = new ConvergenceClient(collaborationManager, editorManager)
-    void collaborativeClient.init()
-    return () => collaborativeClient.dispose()
+    void collaborationManager.load(editorManager)
+    // const collaborativeClient = new ConvergenceClient(collaborationManager, editorManager)
+    // void collaborativeClient.init()
+    // return () => collaborativeClient.dispose()
   }, [editorManager, collaborationManager]) // ВСТРОЕННЫЙ shareClient ЛОМАЕТ КНОПКИ
 
   useEffect(() => () => destroy(editorManager), [editorManager])

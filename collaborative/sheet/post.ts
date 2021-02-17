@@ -21,8 +21,6 @@ export const initPostModel = (sheetId: number) => {
         embeds!: string;
         @column
         message?: string;
-        @column
-        version?: string;
     }
 
     return Post

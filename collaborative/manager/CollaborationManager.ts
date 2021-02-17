@@ -1,6 +1,10 @@
 import { action, observable } from "mobx"
 import { signIn, signOut } from "next-auth/client"
+import type { EditorManagerLike } from "../../modules/editor/EditorManager"
+import type { SaveAPIQuery } from "../../pages/api/collaboration/save"
 import { getCustomSession } from "../auth/session"
+import { ConvergenceClient } from "../convergence/client"
+import { convertContentToSheet } from "../helpers/convert"
 import type { ChannelInstance } from "../sheet/channel"
 import type { PostInstance } from "../sheet/post"
 import type { CustomSession, SpreadsheetItem } from "../types"
@@ -13,14 +17,6 @@ export class CollaborationManager {
   @observable spreadsheet?: SpreadsheetItem
   @observable channel?: ChannelInstance
   @observable post?: PostInstance
-
-  getChannels = () => {
-    console.log("getChannels")
-  }
-
-  getPosts = () => {
-    console.log("getPosts")
-  }
 
   @action link = async () => signIn("google")
 
@@ -51,37 +47,48 @@ export class CollaborationManager {
     localStorage.removeItem(CollaborationManager.LSSettingsKey)
   }
 
-  // @action handleSheetSelection = (event: GooglePickerCallback) => {
-  //   console.log(event)
-  //   if (event.action === "picked") {
-  //     this.sheet = event.docs[0]
-  //     
-  //   }
-  // }
-
-  // @action handleCreateNew = () => {
-  //   console.log("CREATE NEW")
-  // }
-
-  // @action handlePost = async () => {
-  //   if (!this.sheet) return
-  //   console.log("HANDLE POST")
-  //   await fetch("/api/post/", {
-  //     method: "POST",
-  //     body: JSON.stringify({
-  //       spreadsheetId: this.sheet.id,
-  //     }),
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //   })
-  // }
-
-  @action load = async () => {
+  @action load = async (editor?: EditorManagerLike) => {
+    this.editor = editor
     const session = await getCustomSession()
     console.log(session)
     this.session = session
-    if (session?.google) this.loadSettings()
+    if (session?.google) {
+      this.loadSettings()
+      this.convergence = new ConvergenceClient(this)
+    }
     else this.resetSettings()
   }
+
+  handleSave = async () => {
+    const spreadsheet = this.spreadsheet
+    const channel = this.channel
+    const post = this.post
+    if (spreadsheet && channel && post && this.convergence?.model) {
+        const query: Record<SaveAPIQuery, string> = {
+            spreadsheetId: spreadsheet.id,
+            channelId: channel.id,
+            postId: post.id
+        }
+        const res = await fetch(
+            `/api/collaboration/save?${new URLSearchParams(query)}`,
+            {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(
+                  Object.assign(
+                    this.post, convertContentToSheet(this.convergence.model.root().value() as EditorManagerLike)[1]
+                  )
+                ),
+            },
+        )
+        if (res.status !== 200) throw new Error("Failed to save")
+    } else {
+        throw new Error(
+            `Cannon save ${spreadsheet?.id}, ${channel?.id}, ${post?.id}`,
+        )
+    }
+}
+
+  editor?: EditorManagerLike
+  convergence?: ConvergenceClient
 }

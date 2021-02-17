@@ -23,19 +23,23 @@ import { ConvergenceCursor } from "./cursor"
 
 export class ConvergenceClient {
     constructor(
-        collaborationManager: CollaborationManager,
-        editorStore: EditorManagerLike,
+        collaboration: CollaborationManager
     ) {
-        this.collaborationManager = collaborationManager
-        this.editorStore = editorStore
+        if (!collaboration.editor) throw new Error("No Editor")
+        this.collaboration = collaboration
+        this.editor = collaboration.editor
         Object.assign(process.browser ? window : {}, {
             connect: this.connect,
-            save: this.save,
+            save: this.collaboration.handleSave,
         })
+        void this.connect()
+        this.disposers.push(
+            observe(this.collaboration, "post", this.connect),
+        )
     }
 
-    editorStore: EditorManagerLike
-    collaborationManager: CollaborationManager
+    editor: EditorManagerLike
+    collaboration: CollaborationManager
     domain?: ConvergenceDomain
     model?: RealTimeModel
     lock = true
@@ -43,13 +47,6 @@ export class ConvergenceClient {
     disposers: IDisposer[] = []
 
     cursor?: ConvergenceCursor
-
-    init = () => {
-        this.disposers.push(
-            observe(this.collaborationManager, "session", this.connect),
-            observe(this.collaborationManager, "post", this.connect),
-        )
-    }
 
     dispose = () => {
         this.domain?.dispose()
@@ -61,10 +58,10 @@ export class ConvergenceClient {
 
     connect = async () => {
         const collaborationServerURL = process.env.NEXT_PUBLIC_CONVERGENCE_URL
-        const googleUser = this.collaborationManager.session?.google
-        const spreadsheetId = this.collaborationManager.spreadsheet?.id
-        const channel = this.collaborationManager.channel
-        const post = this.collaborationManager.post
+        const googleUser = this.collaboration.session?.google
+        const spreadsheetId = this.collaboration.spreadsheet?.id
+        const channel = this.collaboration.channel
+        const post = this.collaboration.post
         if (
             collaborationServerURL &&
             googleUser &&
@@ -85,10 +82,10 @@ export class ConvergenceClient {
                 ephemeral: true,
             })
             this.syncUpdate() // get content
-            this.model.root().value(getSnapshot(this.editorStore)) // force set content with ids to fix incomplete model
+            this.model.root().value(getSnapshot(this.editor)) // force set content with ids to fix incomplete model
             // this.domain.presence().on(PresenceService.Events.AVAILABILITY_CHANGED)
             this.model.on(RealTimeModel.Events.VERSION_CHANGED, this.syncUpdate)
-            this.disposers.push(onPatch(this.editorStore, this.handlePatch))
+            this.disposers.push(onPatch(this.editor, this.handlePatch))
             this.cursor = new ConvergenceCursor(this)
             this.cursor.initTracking()
         } else {
@@ -137,45 +134,23 @@ export class ConvergenceClient {
     syncUpdate = () => {
         const model = this.model
         if (!model) return
-        this.editorStore.set("version", model.version())
-        if (isEqual(model.root().value(), getSnapshot(this.editorStore))) return
+        this.editor.set("version", model.version())
+        if (isEqual(model.root().value(), getSnapshot(this.editor))) return
         this.lock = true
         const value = model.root().value()
 
         const isWebhookChanged =
-            this.editorStore.target.url !== value.target?.url
+            this.editor.target.url !== value.target?.url
 
-        applySnapshot(this.editorStore, value)
+        applySnapshot(this.editor, value)
 
         if (isWebhookChanged) {
-            void this.editorStore.process("/target/url")
+            void this.editor.process("/target/url")
         }
 
         console.log("received change version", model.version())
 
         this.cursor?.revertCaretPosition()
         this.lock = false
-    }
-
-    save = async () => {
-        const spreadsheetId = this.collaborationManager.spreadsheet?.id
-        const channelId = this.collaborationManager.channel?.id
-        const postId = this.collaborationManager.post?.id
-        if (spreadsheetId && channelId && postId) {
-            const query = { spreadsheetId, channelId, postId }
-            const res = await fetch(
-                `/api/collaboration/save?${new URLSearchParams(query)}`,
-                {
-                    method: "PUT",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(this.model?.root().value()),
-                },
-            )
-            if (res.status !== 200) throw new Error("Failed to save")
-        } else {
-            throw new Error(
-                `Cannon save ${spreadsheetId}, ${channelId}, ${postId}`,
-            )
-        }
     }
 }

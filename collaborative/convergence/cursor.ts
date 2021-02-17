@@ -52,9 +52,9 @@ const ShortPathConvert: Record<string, string> = {
 
 export class ConvergenceCursor {
     constructor(client: ConvergenceClient) {
-        if (!client.model || !client.collaborationManager.session?.google?.sub) throw new Error("Incomplete client")
+        if (!client.model || !client.collaboration.session?.google?.sub) throw new Error("Incomplete client")
         this.client = client
-        this.color = new ColorHash().hex(client.collaborationManager.session.google.sub)
+        this.color = new ColorHash().hex(client.collaboration.session.google.sub)
         this.elementReference = client.model.elementReference("selected")
         // this.elementReference.on(LocalElementReference.Events.SET, e => console.log("ELEMENT REFERENCE SET", e))
     }
@@ -125,7 +125,7 @@ export class ConvergenceCursor {
     updatePath = (target: TextElement) => {
         const localPath = target.id.split("_").filter(Boolean).map(parseNumbers)
         if (typeof localPath[0] === "number") {
-            this.path = findPathById(this.client.editorStore, localPath[0])
+            this.path = findPathById(this.client.editor, localPath[0])
                 .map(parseNumbers)
                 .concat(localPath[1])
         } else {
