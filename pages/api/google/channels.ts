@@ -20,7 +20,7 @@ export default async function handler(
     const orm = new SheetORM({
         spreadsheetId: req.query.spreadsheetId,
         token: accessToken,
-        validate: false,
+        validate: true,
     })
     await orm.init()
 

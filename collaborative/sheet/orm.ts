@@ -28,7 +28,7 @@ export class SheetORM {
             spreadsheetId: this.config.spreadsheetId,
             authClient: getAuthClient(this.config.token),
             disableSingleton: true,
-            migrate: "safe",
+            migrate: "drop",
             logger: console
         } as unknown as Config
         this.connection = await SheetConnection.connect(config);

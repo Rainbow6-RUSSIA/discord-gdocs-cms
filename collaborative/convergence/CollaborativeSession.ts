@@ -35,22 +35,22 @@ export class CollaborativeSession {
         this.collaborators = this.collaborators.filter(c => c.sub !== profile.sub)
     }
 
-    getInitialData = async (): Promise<DeepPartial<EditorManagerLike> | null> => {
-        // return null
-        // TODO: use real data
-        const { webhook: url, username: defaultUsername, avatar: defaultAvatar } = (await this.orm.getChannels())[0]
-        const { content, username, avatar, embeds, message } = (await this.orm.getPosts())[0]
+    // getInitialData = async (): Promise<DeepPartial<EditorManagerLike> | null> => {
+    //     // return null
+    //     // TODO use real data
+    //     const { webhook: url, username: defaultUsername, avatar: defaultAvatar } = (await this.orm.getChannels())[0]
+    //     const { content, username, avatar, embeds, message } = (await this.orm.getPosts())[0]
 
-        return EditorManager.create({
-            messages: [{
-                content,
-                username: username ?? defaultUsername,
-                avatar: avatar ?? defaultAvatar,
-                embeds: JSON.parse(embeds),
-            }],
-            target: { message, url }
-        })
-    }
+    //     return EditorManager.create({
+    //         messages: [{
+    //             content,
+    //             username: username ?? defaultUsername,
+    //             avatar: avatar ?? defaultAvatar,
+    //             embeds: JSON.parse(embeds),
+    //         }],
+    //         target: { message, url }
+    //     })
+    // }
 
 
 }

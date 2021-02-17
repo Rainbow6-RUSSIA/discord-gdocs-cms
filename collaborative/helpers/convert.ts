@@ -18,8 +18,10 @@ export function convertSheetToContent(
         messages: [
             {
                 content,
-                username: username ?? defaultUsername,
-                avatar: avatar ?? defaultAvatar,
+                // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+                username: username || defaultUsername,
+                // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+                avatar: avatar || defaultAvatar,
                 embeds: JSON.parse(embeds),
             },
         ],

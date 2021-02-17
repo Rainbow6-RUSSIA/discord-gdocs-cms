@@ -21,7 +21,7 @@ export default async function handler(
         spreadsheetId: req.query.spreadsheetId,
         channelId: req.query.channelId,
         token: accessToken,
-        validate: false,
+        validate: true,
     })
     await orm.init()
 
