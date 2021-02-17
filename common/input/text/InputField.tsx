@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FocusEvent, forwardRef, ReactNode } from "react"
 import styled from "styled-components"
-// import { TextInput } from "../../../collaborative/layout/TextInputHighlight"
+import { TextInput } from "../../../collaborative/layout/TextInputHighlight"
 import { FlexContainer } from "../../layout/FlexContainer"
 import type { ReactRef } from "../../state/ReactRef"
 import { InputError } from "../error/InputError"
@@ -10,11 +10,11 @@ import { InputConstraint } from "../layout/InputConstraint"
 import { InputContainer } from "../layout/InputContainer"
 import { InputLabel } from "../layout/InputLabel"
 
-const TextInput = styled(Input)`
-  ${FlexContainer} > & {
-    flex: 1;
-  }
-`
+// const TextInput = styled(Input)`
+//   ${FlexContainer} > & {
+//     flex: 1;
+//   }
+// `
 
 type InputChangeEvent = ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
 type InputFocusEvent = FocusEvent<HTMLInputElement | HTMLTextAreaElement>

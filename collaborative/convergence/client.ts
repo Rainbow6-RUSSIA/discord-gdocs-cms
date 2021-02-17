@@ -26,12 +26,7 @@ export class ConvergenceClient {
         if (!collaboration.editor) throw new Error("No Editor")
         this.collaboration = collaboration
         this.editor = collaboration.editor
-        Object.assign(process.browser ? window : {}, {
-            connect: this.connect,
-            save: this.collaboration.handleSave,
-        })
-        void this.connect()
-        this.disposers.push(observe(this.collaboration, "post", this.connect))
+        void this.init()
     }
 
     editor: EditorManagerLike
@@ -44,33 +39,46 @@ export class ConvergenceClient {
 
     cursor?: ConvergenceCursor
 
-    dispose = () => {
-        void this.model?.close()
-        this.domain?.dispose()
-        this.cursor?.stopTracking()
-        for (const dispose of this.disposers) dispose()
-    }
-
-    connect = async () => {
+    init = async () => {
         const collaborationServerURL = process.env.NEXT_PUBLIC_CONVERGENCE_URL
-        const googleUser = this.collaboration.session?.google
-        const spreadsheetId = this.collaboration.spreadsheet?.id
-        const channel = this.collaboration.channel
-        const post = this.collaboration.post
-        if (
-            collaborationServerURL &&
-            googleUser &&
-            spreadsheetId &&
-            channel &&
-            post
-        ) {
+        if (collaborationServerURL) {
             const jwt = await fetch("/api/collaboration/token").then(async d =>
                 d.text(),
             )
             console.log("JWT", jwt)
             this.domain = await connectWithJwt(collaborationServerURL, jwt)
-            const modelService = this.domain.models()
-            this.model = await modelService.openAutoCreate({
+            this.disposers.push(observe(this.collaboration, "post", this.reconnect))
+
+            await this.connect()
+        } else {
+            console.warn("No Collaboration server URL set")
+        }
+    }
+
+    reconnect = async () => {
+        await this.disconnect()
+        await this.connect()
+    }
+
+    dispose = () => {
+        void this.disconnect()
+        this.domain?.dispose()
+        for (const dispose of this.disposers) dispose()
+    }
+
+    connect = async () => {
+        const googleUser = this.collaboration.session?.google
+        const spreadsheetId = this.collaboration.spreadsheet?.id
+        const channel = this.collaboration.channel
+        const post = this.collaboration.post
+        if (
+            this.domain &&
+            googleUser &&
+            spreadsheetId &&
+            channel &&
+            post
+        ) {
+            this.model = await this.domain.models().openAutoCreate({
                 collection: spreadsheetId,
                 id: `${channel.id}/${post.id}`,
                 data: convertSheetToContent(channel, post),
@@ -86,13 +94,21 @@ export class ConvergenceClient {
         } else {
             console.warn(
                 "Cannot connect to collaboration server",
-                collaborationServerURL,
                 toJS(googleUser),
                 spreadsheetId,
-                channel,
-                post,
+                channel?.id,
+                post?.id,
             )
         }
+    }
+
+    disconnect = async () => {
+        this.cursor?.stopTracking()
+        await this.model?.close()
+    }
+
+    get isConnected(): boolean {
+        return Boolean(this.model?.isOpen())
     }
 
     handlePatch = (patch: IJsonPatch) => {
@@ -128,16 +144,16 @@ export class ConvergenceClient {
 
     syncUpdate = () => {
         const model = this.model
+        
         if (!model) return
-        this.editor.set("version", model.version())
+
         if (isEqual(model.root().value(), getSnapshot(this.editor))) return
+        
         this.lock = true
+        
         const value = model.root().value()
-
         const isWebhookChanged = this.editor.target.url !== value.target?.url
-
         applySnapshot(this.editor, value)
-
         if (isWebhookChanged) {
             void this.editor.process("/target/url")
         }

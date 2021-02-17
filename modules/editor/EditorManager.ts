@@ -12,9 +12,6 @@ export const EditorManager = types
       {},
     )
   })
-  .volatile(() => ({
-    version: 0
-  }))
   .actions(self => ({
     set<K extends keyof typeof self>(
       key: K,
