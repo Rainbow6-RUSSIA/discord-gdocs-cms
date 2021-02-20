@@ -12,7 +12,9 @@ export type PrimaryContentEditorProps = {
   form: MessageItemFormState
 }
 
-export function CollaborativePrimaryContentEditor(props: PrimaryContentEditorProps) {
+export function CollaborativePrimaryContentEditor(
+  props: PrimaryContentEditorProps,
+) {
   const { message, form } = props
 
   return useObserver(() => (

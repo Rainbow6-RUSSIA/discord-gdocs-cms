@@ -19,46 +19,51 @@ import { AuthStatus } from "./parts/AuthStatus"
 import { SpreadsheetSelector } from "./parts/SpreadsheetSelector"
 
 export function CollaborationModal() {
-    const modal = useRequiredContext(ModalContext)
-    const collaborationManager = useRequiredContext(CollaborationManagerContext)
+  const modal = useRequiredContext(ModalContext)
+  const collaborationManager = useRequiredContext(CollaborationManagerContext)
 
-    const user = collaborationManager.session?.google
+  const user = collaborationManager.session?.google
 
-    const { isLoading: isUnlinking, mutate: handleUnlink } = useMutation(collaborationManager.unlink)
+  const { isLoading: isUnlinking, mutate: handleUnlink } = useMutation(
+    collaborationManager.unlink,
+  )
 
-    // useEffect(() => {
-    //     // TODO: form init
-    //     collaborationManager.spreadsheet = undefined
-    //     collaborationManager.channel = undefined
-    //     collaborationManager.post = undefined
-    // // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [])
-    
-    return useObserver(() => (
-        <ModalContainer>
-            <ModalHeader>
-                <ModalTitle>Collaboration Settings</ModalTitle>
-                <ModalAction
-                    icon={remove}
-                    label="Close"
-                    onClick={() => modal.dismiss()}
-                />
-            </ModalHeader>
-            <ModalBody>
-                <Stack gap={8}>
-                    <AuthStatus />
-                    { user && <SpreadsheetSelector /> }
-                </Stack>
-            <div style={{display: "inline"}}><ReactQueryDevtools/></div>
-            </ModalBody>
-            <ModalFooter>
-                { user &&
-                    <PrimaryButton onClick={() => handleUnlink()} accent="danger">
-                        {"Logout "}
-                        {isUnlinking ? loading : null}
-                    </PrimaryButton> }
-                <PrimaryButton onClick={() => modal.dismiss()}>Close</PrimaryButton>
-            </ModalFooter>
-        </ModalContainer>
-    ))
+  // useEffect(() => {
+  //     // TODO: form init
+  //     collaborationManager.spreadsheet = undefined
+  //     collaborationManager.channel = undefined
+  //     collaborationManager.post = undefined
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [])
+
+  return useObserver(() => (
+    <ModalContainer>
+      <ModalHeader>
+        <ModalTitle>Collaboration Settings</ModalTitle>
+        <ModalAction
+          icon={remove}
+          label="Close"
+          onClick={() => modal.dismiss()}
+        />
+      </ModalHeader>
+      <ModalBody>
+        <Stack gap={8}>
+          <AuthStatus />
+          {user && <SpreadsheetSelector />}
+        </Stack>
+        <div style={{ display: "inline" }}>
+          <ReactQueryDevtools />
+        </div>
+      </ModalBody>
+      <ModalFooter>
+        {user && (
+          <PrimaryButton onClick={() => handleUnlink()} accent="danger">
+            {"Logout "}
+            {isUnlinking ? loading : null}
+          </PrimaryButton>
+        )}
+        <PrimaryButton onClick={() => modal.dismiss()}>Close</PrimaryButton>
+      </ModalFooter>
+    </ModalContainer>
+  ))
 }

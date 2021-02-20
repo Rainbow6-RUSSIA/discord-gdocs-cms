@@ -13,10 +13,9 @@ export default async function handler(
 
   const session = await getCustomSession({ req })
 
-  if (/* !session?.discord ||  */!session?.google) return res.status(401).end()
+  if (/* !session?.discord ||  */ !session?.google) return res.status(401).end()
 
-  if (!validateQuery(req.query, query))
-    return res.status(400).end()
+  if (!validateQuery(req.query, query)) return res.status(400).end()
 
   const url = req.query.url
 

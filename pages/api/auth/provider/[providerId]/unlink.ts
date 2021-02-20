@@ -23,7 +23,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const accToDelete = accs.find(
         a =>
           a.providerId === providerId &&
-          a.providerAccountId === session.google!.sub
+          a.providerAccountId === session.google!.sub,
       )
 
       await accToDelete?.remove()

@@ -10,7 +10,7 @@ export const EditorManager = types
     target: types.optional(
       types.late(() => WebhookModel),
       {},
-    )
+    ),
   })
   .actions(self => ({
     set<K extends keyof typeof self>(
@@ -46,7 +46,10 @@ export const EditorManager = types
 
         console.log("Target executed", data)
 
-        message.set("reference", `https://discord.com/channels/${self.target.guildId}/${self.target.channelId}/${data.id}`)
+        message.set(
+          "reference",
+          `https://discord.com/channels/${self.target.guildId}/${self.target.channelId}/${data.id}`,
+        )
       }
 
       return null

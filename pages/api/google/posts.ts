@@ -7,39 +7,38 @@ import type { PostInstance } from "../../../collaborative/sheet/post"
 const query = ["spreadsheetId", "channelId"] as const
 
 export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse,
+  req: NextApiRequest,
+  res: NextApiResponse,
 ) {
-    const session = await getCustomSession({ req })
-    if (!session?.google) return res.status(401).end()
-    if (!validateQuery(req.query, query))
-        return res.status(400).end()
+  const session = await getCustomSession({ req })
+  if (!session?.google) return res.status(401).end()
+  if (!validateQuery(req.query, query)) return res.status(400).end()
 
-    const { accessToken } = session.google
+  const { accessToken } = session.google
 
-    const orm = new SheetORM({
-        spreadsheetId: req.query.spreadsheetId,
-        channelId: req.query.channelId,
-        token: accessToken,
-        validate: true,
-    })
-    await orm.init()
+  const orm = new SheetORM({
+    spreadsheetId: req.query.spreadsheetId,
+    channelId: req.query.channelId,
+    token: accessToken,
+    validate: true,
+  })
+  await orm.init()
 
-    const data = await orm.getPosts()
-    console.log(data)
+  const data = await orm.getPosts()
+  console.log(data)
 
-    return res.send({
-        data,
-        meta: {
-            channelSheetId: orm.config.channelSheetId,
-            postSheetId: orm.config.postSheetId,
-        },
-    } as PostsAPIResponce)
+  return res.send({
+    data,
+    meta: {
+      channelSheetId: orm.config.channelSheetId,
+      postSheetId: orm.config.postSheetId,
+    },
+  } as PostsAPIResponce)
 }
 
 export type PostsAPIQuery = typeof query[number]
 
 export type PostsAPIResponce = {
-    data: PostInstance[]
-    meta: { channelSheetId: number; postSheetId: number }
+  data: PostInstance[]
+  meta: { channelSheetId: number; postSheetId: number }
 }

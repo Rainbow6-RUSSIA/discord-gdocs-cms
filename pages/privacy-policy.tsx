@@ -18,8 +18,8 @@ export default function PrivacyPolicy() {
         <strong>Privacy Policy</strong>
         <p>
           Rainbow6-RUSSIA built the QuarrelPost app as an Open Source app. This
-          SERVICE is provided by Rainbow6-RUSSIA at no cost and is intended for use
-          as is.
+          SERVICE is provided by Rainbow6-RUSSIA at no cost and is intended for
+          use as is.
         </p>
         <p>
           This page is used to inform visitors regarding our policies with the
@@ -51,13 +51,13 @@ export default function PrivacyPolicy() {
           <strong>Log Data</strong>
         </p>
         <p>
-          I want to inform you that whenever you use our Service, in a case of an
-          error in the app I collect data and information (through third party
-          products) on your phone called Log Data. This Log Data may include
-          information such as your device Internet Protocol (“IP”) address,
-          device name, operating system version, the configuration of the app
-          when utilizing our Service, the time and date of your use of the
-          Service, and other statistics.
+          I want to inform you that whenever you use our Service, in a case of
+          an error in the app I collect data and information (through third
+          party products) on your phone called Log Data. This Log Data may
+          include information such as your device Internet Protocol (“IP”)
+          address, device name, operating system version, the configuration of
+          the app when utilizing our Service, the time and date of your use of
+          the Service, and other statistics.
         </p>
         <p>
           <strong>Cookies</strong>
@@ -131,11 +131,14 @@ export default function PrivacyPolicy() {
         </p>
         <p>
           If you have any questions or suggestions about our Privacy Policy, do
-          not hesitate to contact us at <a href="mailto:admin@rainbow6.ru">admin@rainbow6.ru</a>.
+          not hesitate to contact us at{" "}
+          <a href="mailto:admin@rainbow6.ru">admin@rainbow6.ru</a>.
         </p>
       </Message>
       <Link href="/">
-        <SecondaryButton onClick={() => process.browser && window.close()}>Back to Home</SecondaryButton>
+        <SecondaryButton onClick={() => process.browser && window.close()}>
+          Back to Home
+        </SecondaryButton>
       </Link>
     </Container>
   )

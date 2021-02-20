@@ -93,7 +93,10 @@ export function Footer() {
         <NavigationItem href="/bot" target="_blank">
           Discord Bot
         </NavigationItem>
-        <NavigationItem href="https://github.com/Rainbow6-RUSSIA/discord-gdocs-cms" target="_blank">
+        <NavigationItem
+          href="https://github.com/Rainbow6-RUSSIA/discord-gdocs-cms"
+          target="_blank"
+        >
           Source Code
         </NavigationItem>
         <NavigationItem href="/terms-and-conditions" target="_blank">
@@ -104,8 +107,8 @@ export function Footer() {
         </NavigationItem>
       </NavigationList>
       <LegalInfo>
-        &copy; 2021 Rainbow6-RUSSIA. QuarrelPost is not affiliated with
-        Discord. QuarrelPost is a fork of Discohook (discohook.org).
+        &copy; 2021 Rainbow6-RUSSIA. QuarrelPost is not affiliated with Discord.
+        QuarrelPost is a fork of Discohook (discohook.org).
       </LegalInfo>
       <LegalInfo>
         This website is made available under the terms of the GNU AGPL v3

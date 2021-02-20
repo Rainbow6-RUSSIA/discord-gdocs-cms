@@ -41,10 +41,10 @@ export default function TermsAndConditions() {
           You should be aware that there are certain things that Rainbow6-RUSSIA
           will not take responsibility for. Certain functions of the app will
           require the app to have an active internet connection. The connection
-          can be Wi-Fi, or provided by your mobile network provider, but Rainbow6-RUSSIA
-          cannot take responsibility for the app not working at full
-          functionality if you don’t have access to Wi-Fi, and you don’t have
-          any of your data allowance left.
+          can be Wi-Fi, or provided by your mobile network provider, but
+          Rainbow6-RUSSIA cannot take responsibility for the app not working at
+          full functionality if you don’t have access to Wi-Fi, and you don’t
+          have any of your data allowance left.
         </p>
         <p />
         <p>
@@ -61,28 +61,28 @@ export default function TermsAndConditions() {
           from the bill payer for using the app.
         </p>
         <p>
-          With respect to Rainbow6-RUSSIA’s responsibility for your use of the app,
-          when you’re using the app, it’s important to bear in mind that
+          With respect to Rainbow6-RUSSIA’s responsibility for your use of the
+          app, when you’re using the app, it’s important to bear in mind that
           although we endeavour to ensure that it is updated and correct at all
           times, we do rely on third parties to provide information to us so
-          that we can make it available to you. Rainbow6-RUSSIA accepts no liability
-          for any loss, direct or indirect, you experience as a result of
-          relying wholly on this functionality of the app.
+          that we can make it available to you. Rainbow6-RUSSIA accepts no
+          liability for any loss, direct or indirect, you experience as a result
+          of relying wholly on this functionality of the app.
         </p>
         <p>
           At some point, we may wish to update the app. The app is currently
           available on – the requirements for system(and for any additional
           systems we decide to extend the availability of the app to) may
           change, and you’ll need to download the updates if you want to keep
-          using the app. Rainbow6-RUSSIA does not promise that it will always update
-          the app so that it is relevant to you and/or works with the version
-          that you have installed on your device. However, you promise to always
-          accept updates to the application when offered to you, We may also
-          wish to stop providing the app, and may terminate use of it at any
-          time without giving notice of termination to you. Unless we tell you
-          otherwise, upon any termination, (a) the rights and licenses granted
-          to you in these terms will end; (b) you must stop using the app, and
-          (if needed) delete it from your device.
+          using the app. Rainbow6-RUSSIA does not promise that it will always
+          update the app so that it is relevant to you and/or works with the
+          version that you have installed on your device. However, you promise
+          to always accept updates to the application when offered to you, We
+          may also wish to stop providing the app, and may terminate use of it
+          at any time without giving notice of termination to you. Unless we
+          tell you otherwise, upon any termination, (a) the rights and licenses
+          granted to you in these terms will end; (b) you must stop using the
+          app, and (if needed) delete it from your device.
         </p>
         <p>
           <strong>Changes to This Terms and Conditions</strong>
@@ -99,11 +99,14 @@ export default function TermsAndConditions() {
         </p>
         <p>
           If you have any questions or suggestions about our Terms and
-          Conditions, do not hesitate to contact us at <a href="mailto:admin@rainbow6.ru">admin@rainbow6.ru</a>.
+          Conditions, do not hesitate to contact us at{" "}
+          <a href="mailto:admin@rainbow6.ru">admin@rainbow6.ru</a>.
         </p>
       </Message>
       <Link href="/">
-        <SecondaryButton onClick={() => process.browser && window.close()}>Back to Home</SecondaryButton>
+        <SecondaryButton onClick={() => process.browser && window.close()}>
+          Back to Home
+        </SecondaryButton>
       </Link>
     </Container>
   )

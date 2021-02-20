@@ -1689,6 +1689,7 @@ __metadata:
     "@zeit/next-source-maps": ^0.0.3
     babel-plugin-styled-components: ^1.11.1
     browserslist: ^4.16.3
+    color-hash: ^1.0.3
     core-js: ^3.7.0
     core-js-bundle: ^3.7.0
     date-fns: ^2.16.1
@@ -9852,6 +9853,13 @@ mstform@1.27.0:
   version: 1.1.70
   resolution: "node-releases@npm:1.1.70"
   checksum: 18e2b4b871614247633a7f246ec04f6eebcb0353c0514c38b5d814be6d067301c4b1b0e7cb53407b36034e79fbc589f77a1acafdaf292abc46a4f65b4b7af2e6
+  languageName: node
+  linkType: hard
+
+"nodemailer@npm:^6.4.6":
+  version: 6.4.18
+  resolution: "nodemailer@npm:6.4.18"
+  checksum: 56b5e39bc5d34988102bbc6c7eb8eaa7ac64a4daed55d2610c379ad04268d76399ab51b74965001fd2768763750b290785488b8fd1ccdf8274b91ff6ca3ec793
   languageName: node
   linkType: hard
 

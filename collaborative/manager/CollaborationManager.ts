@@ -7,13 +7,17 @@ import { ConvergenceClient } from "../convergence/client"
 import { convertContentToSheet } from "../helpers/convert"
 import type { ChannelInstance } from "../sheet/channel"
 import type { PostInstance } from "../sheet/post"
-import { CollaborationManagerMode, CustomSession, SpreadsheetItem } from "../types"
+import {
+  CollaborationManagerMode,
+  CustomSession,
+  SpreadsheetItem,
+} from "../types"
 
 export class CollaborationManager {
   static LSSettingsKey = "collaborationSettings"
   // shareClient = new ConvergenceCursor(this)
   @observable session?: CustomSession | null
-  
+
   @observable spreadsheet?: SpreadsheetItem
   @observable channel?: ChannelInstance
   @observable post?: PostInstance
@@ -22,7 +26,7 @@ export class CollaborationManager {
   error?: Error
 
   @action showError(err: Error) {
-    this.error = err;
+    this.error = err
     this.setMode(CollaborationManagerMode.ERROR)
     // eslint-disable-next-line no-alert
     alert(err.message)
@@ -31,14 +35,22 @@ export class CollaborationManager {
       delete this.error
     }, 10000)
   }
-  setMode(f: CollaborationManagerMode) { this.mode |= f } // don't add @action or you'll get infinite loop
-  resetMode(f: CollaborationManagerMode) { this.mode &= ~f } // don't add @action or you'll get infinite loop
-  hasMode(f: CollaborationManagerMode) { return Boolean(this.mode & f) }
+  setMode(f: CollaborationManagerMode) {
+    this.mode |= f
+  } // don't add @action or you'll get infinite loop
+  resetMode(f: CollaborationManagerMode) {
+    this.mode &= ~f
+  } // don't add @action or you'll get infinite loop
+  hasMode(f: CollaborationManagerMode) {
+    return Boolean(this.mode & f)
+  }
 
   @action link = async () => signIn("google")
 
   @action unlink = async () => {
-    const res = await fetch("/api/auth/provider/google/unlink", { method: "POST" })
+    const res = await fetch("/api/auth/provider/google/unlink", {
+      method: "POST",
+    })
     if (res.status === 204) {
       await signOut()
     }
@@ -46,15 +58,20 @@ export class CollaborationManager {
   }
 
   saveSettings = () => {
-    localStorage.setItem(CollaborationManager.LSSettingsKey, JSON.stringify({ 
-      spreadsheet: this.spreadsheet,
-      channel: this.channel,
-      post: this.post
-    }))
+    localStorage.setItem(
+      CollaborationManager.LSSettingsKey,
+      JSON.stringify({
+        spreadsheet: this.spreadsheet,
+        channel: this.channel,
+        post: this.post,
+      }),
+    )
   }
 
   @action loadSettings = () => {
-    const settings = JSON.parse(localStorage.getItem(CollaborationManager.LSSettingsKey) ?? "{}")
+    const settings = JSON.parse(
+      localStorage.getItem(CollaborationManager.LSSettingsKey) ?? "{}",
+    )
     this.spreadsheet = settings.spreadsheet
     this.channel = settings.channel
     this.post = settings.post
@@ -72,8 +89,7 @@ export class CollaborationManager {
     if (session?.google) {
       this.loadSettings()
       this.convergence = new ConvergenceClient(this)
-    }
-    else this.resetSettings()
+    } else this.resetSettings()
   }
 
   handleSave = async () => {
@@ -81,30 +97,33 @@ export class CollaborationManager {
     const channel = this.channel
     const post = this.post
     if (spreadsheet && channel && post && this.convergence?.model) {
-        const query: Record<SaveAPIQuery, string> = {
-            spreadsheetId: spreadsheet.id,
-            channelId: channel.id,
-            postId: post.id
-        }
-        const res = await fetch(
-            `/api/collaboration/save?${new URLSearchParams(query)}`,
-            {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(
-                  Object.assign(
-                    this.post, convertContentToSheet(this.convergence.model.root().value() as EditorManagerLike)[1]
-                  )
-                ),
-            },
-        )
-        if (res.status !== 200) throw new Error("Failed to save")
+      const query: Record<SaveAPIQuery, string> = {
+        spreadsheetId: spreadsheet.id,
+        channelId: channel.id,
+        postId: post.id,
+      }
+      const res = await fetch(
+        `/api/collaboration/save?${new URLSearchParams(query)}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(
+            Object.assign(
+              this.post,
+              convertContentToSheet(
+                this.convergence.model.root().value() as EditorManagerLike,
+              )[1],
+            ),
+          ),
+        },
+      )
+      if (res.status !== 200) throw new Error("Failed to save")
     } else {
-        throw new Error(
-            `Cannon save ${spreadsheet?.id}, ${channel?.id}, ${post?.id}`,
-        )
+      throw new Error(
+        `Cannon save ${spreadsheet?.id}, ${channel?.id}, ${post?.id}`,
+      )
     }
-}
+  }
 
   editor?: EditorManagerLike
   convergence?: ConvergenceClient

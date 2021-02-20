@@ -7,28 +7,27 @@ import type { PostInstance } from "../../../collaborative/sheet/post"
 const query = ["spreadsheetId", "channelId", "postId"] as const
 
 export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse,
+  req: NextApiRequest,
+  res: NextApiResponse,
 ) {
-    const session = await getCustomSession({ req })
-    if (!session?.google) return res.status(401).end()
-    if (!validateQuery(req.query, query))
-        return res.status(400).end()
+  const session = await getCustomSession({ req })
+  if (!session?.google) return res.status(401).end()
+  if (!validateQuery(req.query, query)) return res.status(400).end()
 
-    const { accessToken } = session.google
+  const { accessToken } = session.google
 
-    const orm = new SheetORM({
-        spreadsheetId: req.query.spreadsheetId,
-        channelId: req.query.channelId,
-        postId: req.query.postId,
-        token: accessToken,
-        validate: false,
-    })
-    await orm.init()
+  const orm = new SheetORM({
+    spreadsheetId: req.query.spreadsheetId,
+    channelId: req.query.channelId,
+    postId: req.query.postId,
+    token: accessToken,
+    validate: false,
+  })
+  await orm.init()
 
-    await orm.savePost(req.body as PostInstance)
+  await orm.savePost(req.body as PostInstance)
 
-    return res.status(200).end()
+  return res.status(200).end()
 }
 
 export type SaveAPIQuery = typeof query[number]

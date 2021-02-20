@@ -84,10 +84,10 @@ export default function Main(props: MainProps) {
   const [activeTab, setActiveTab] = useState<"Preview" | "Editor">("Preview")
 
   const modalManager = useRequiredContext(ModalManagerContext)
-  
+
   const spawnSettingsModal = () =>
     modalManager.spawn({ render: () => <PreferencesModal /> })
-  
+
   const spawnCollaborationModal = () =>
     modalManager.spawn({ render: () => <CollaborationModal /> })
 
@@ -100,23 +100,23 @@ export default function Main(props: MainProps) {
         <meta key="referrer" name="referrer" content="strict-origin" />
       </PageHead>
       <Container>
-          <Header
-            items={[
-              { name: "Support Server", to: "/discord", newWindow: true },
-              { name: "Discord Bot", to: "/bot", newWindow: true },
-              { name: "Collaboration", handler: spawnCollaborationModal },
-              { name: "Settings", handler: spawnSettingsModal },
-            ]}
-            tabs={
-              mobile
-                ? {
-                    items: ["Editor", "Preview"],
-                    current: activeTab,
-                    onChange: setActiveTab,
-                  }
-                : undefined
-            }
-          />
+        <Header
+          items={[
+            { name: "Support Server", to: "/discord", newWindow: true },
+            { name: "Discord Bot", to: "/bot", newWindow: true },
+            { name: "Collaboration", handler: spawnCollaborationModal },
+            { name: "Settings", handler: spawnSettingsModal },
+          ]}
+          tabs={
+            mobile
+              ? {
+                  items: ["Editor", "Preview"],
+                  current: activeTab,
+                  onChange: setActiveTab,
+                }
+              : undefined
+          }
+        />
         <View>
           {(!mobile || activeTab === "Preview") && (
             <div>
@@ -125,7 +125,11 @@ export default function Main(props: MainProps) {
           )}
           {(!mobile || activeTab === "Editor") && (
             <div>
-              { collaborationManager.hasMode(CollaborationManagerMode.ONLINE) ? <CollaborativeEditor /> : <Editor /> }
+              {collaborationManager.hasMode(CollaborationManagerMode.ONLINE) ? (
+                <CollaborativeEditor />
+              ) : (
+                <Editor />
+              )}
             </div>
           )}
         </View>

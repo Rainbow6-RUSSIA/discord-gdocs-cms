@@ -16,9 +16,10 @@ import type { EmbedLike } from "../../modules/message/state/models/EmbedModel"
 import type { MessageLike } from "../../modules/message/state/models/MessageModel"
 import { CollaborativePrimaryContentEditor } from "./CollaborativePrimaryContentEditor"
 
-
 const DataEditorModal = dynamic<DataEditorModalProps>(async () =>
-  import("../../modules/editor/data/DataEditorModal").then(module => module.DataEditorModal),
+  import("../../modules/editor/data/DataEditorModal").then(
+    module => module.DataEditorModal,
+  ),
 )
 
 const ErrorWrapper = styled.div`

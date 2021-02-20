@@ -19,7 +19,9 @@ export const showUpgradeBlockedMessage = () => {
   )
 
   const closeTabsMessage = document.createElement("p")
-  closeTabsMessage.append("Please close all QuarrelPost tabs before continuing.")
+  closeTabsMessage.append(
+    "Please close all QuarrelPost tabs before continuing.",
+  )
 
   container.append(header, blockedMessage, closeTabsMessage)
   document.body.append(container)

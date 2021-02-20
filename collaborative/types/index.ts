@@ -7,7 +7,7 @@ export enum CollaborationManagerMode {
   ONLINE = 1 << 3,
   SOLO = 1 << 4,
   TEAM = 1 << 5,
-  ERROR = 1 << 6
+  ERROR = 1 << 6,
 }
 
 export type CustomSession = {
@@ -57,28 +57,28 @@ export type SpreadsheetItem = {
   starred: boolean
 }
 
-export type SocialTypeProps = { type: /* "Discord" |  */"Google" }
+export type SocialTypeProps = { type: /* "Discord" |  */ "Google" }
 
 export type PostMeta = {
-  id: number;
-  name: string;
-  part: number;
-  collectionId: number;
+  id: number
+  name: string
+  part: number
+  collectionId: number
 }
 
 export type ChannelMeta = {
-  id: string;
-  name: string;
+  id: string
+  name: string
 }
 
 export type ConnectionParams = {
-  token: string, 
-  spreadsheetId: string,
-  channelId: string,
+  token: string
+  spreadsheetId: string
+  channelId: string
   postId: string
 }
 
 export type CollaborativeServerContext = {
-  member: GoogleProfile,
+  member: GoogleProfile
   session: CollaborativeSession
 }

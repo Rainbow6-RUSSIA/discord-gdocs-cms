@@ -6,5 +6,4 @@ export const CollaborationManagerContext = createContext<CollaborationManager | 
 )
 CollaborationManagerContext.displayName = "CollaborationManagerContext"
 
-export const CollaborationManagerProvider =
-  CollaborationManagerContext.Provider
+export const CollaborationManagerProvider = CollaborationManagerContext.Provider

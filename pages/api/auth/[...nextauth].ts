@@ -1,5 +1,5 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import nextAuth from "next-auth";
+import type { NextApiRequest, NextApiResponse } from "next"
+import nextAuth from "next-auth"
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (process.browser) return res.end()

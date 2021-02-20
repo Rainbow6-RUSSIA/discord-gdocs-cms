@@ -27,7 +27,10 @@ const EchoInput = styled(Input)`
   position: absolute;
   color: transparent;
   /* Hide scrollbar*/
-  ::-webkit-scrollbar-thumb, ::-webkit-scrollbar-track { background-color: transparent }
+  ::-webkit-scrollbar-thumb,
+  ::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
   scrollbar-color: transparent transparent;
 
   left: 9px;
@@ -78,7 +81,7 @@ const Cursor = styled(Highlight)`
     position: absolute;
     top: 0;
     z-index: 2;
-    content: '';
+    content: "";
 
     width: 0; // CSS Triangle
     height: 0;
@@ -91,43 +94,53 @@ const Cursor = styled(Highlight)`
 type CommonInputElement = HTMLInputElement | HTMLTextAreaElement | null
 
 type AnyProps = {
-  value: string;
-  id: string;
-  [s: string]: unknown;
+  value: string
+  id: string
+  [s: string]: unknown
 }
 
 const TextInputHighlight = (
   props: AnyProps,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ref?: any
+  ref?: any,
 ) => {
   const collaborationManager = useRequiredContext(CollaborationManagerContext)
   const echoRef = useRef<HTMLDivElement>(null)
-  const inputRef = useRef<CommonInputElement>(ref && "current" in ref ? ref.current : null) // use forwarded ref or create intermediate
+  const inputRef = useRef<CommonInputElement>(
+    ref && "current" in ref ? ref.current : null,
+  ) // use forwarded ref or create intermediate
   const [pos, setPos] = useState([0, 0])
 
-  const { value } = props;
-  
-  const content = <>
-    {value.slice(0, pos[0])}
-    {pos[0] === pos[1]
-      ? <Cursor color="#FF0000" />
-      : <Highlight color="#FF0000">{value.slice(pos[0], pos[1])}</Highlight>
-    }
-    {value.slice(pos[1])}
-  </>
-  
+  const { value } = props
+
+  const content = (
+    <>
+      {value.slice(0, pos[0])}
+      {pos[0] === pos[1] ? (
+        <Cursor color="#FF0000" />
+      ) : (
+        <Highlight color="#FF0000">{value.slice(pos[0], pos[1])}</Highlight>
+      )}
+      {value.slice(pos[1])}
+    </>
+  )
+
   useEffect(() => {
     const { current: echo } = echoRef
     const { current: input } = inputRef
     if (echo && input) {
       const setScroll = () => {
-        echo.scrollTop  = input.scrollTop // echo.scrollHeight * (input.scrollTop  / input.scrollHeight)
+        echo.scrollTop = input.scrollTop // echo.scrollHeight * (input.scrollTop  / input.scrollHeight)
         echo.scrollLeft = input.scrollLeft // echo.scrollWidth  * (input.scrollLeft / input.scrollWidth)
       }
 
-      setPos(new Array(2).fill(null).map(() => Math.round(Math.random() * value.length)).sort((a, b) => a - b))
-  
+      setPos(
+        new Array(2)
+          .fill(null)
+          .map(() => Math.round(Math.random() * value.length))
+          .sort((a, b) => a - b),
+      )
+
       input.addEventListener("scroll", setScroll)
       return () => {
         input.removeEventListener("scroll", setScroll)
@@ -135,10 +148,18 @@ const TextInputHighlight = (
     }
   }, [inputRef, value.length])
 
-  return <HighlightContainer>
-    <SimpleTextInput style={{backgroundColor: "red"}} ref={ref ?? inputRef} {...props} />
-    <EchoInput ref={echoRef} as="div">{Boolean(value.length && props.id !== "webhook") && content}</EchoInput>
-  </HighlightContainer>
+  return (
+    <HighlightContainer>
+      <SimpleTextInput
+        style={{ backgroundColor: "red" }}
+        ref={ref ?? inputRef}
+        {...props}
+      />
+      <EchoInput ref={echoRef} as="div">
+        {Boolean(value.length && props.id !== "webhook") && content}
+      </EchoInput>
+    </HighlightContainer>
+  )
 }
 
 export const TextInput = forwardRef(TextInputHighlight)
