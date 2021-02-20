@@ -45,6 +45,8 @@ export const EditorManager = types
         /* eslint-enable no-await-in-loop */
 
         console.log("Target executed", data)
+
+        message.set("reference", `https://discord.com/channels/${self.target.guildId}/${self.target.channelId}/${data.id}`)
       }
 
       return null
