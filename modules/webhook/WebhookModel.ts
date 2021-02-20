@@ -1,15 +1,6 @@
 /* eslint-disable import/no-cycle */
-/* eslint-disable no-await-in-loop */
 
-import {
-  flow,
-  getParentOfType,
-  Instance,
-  SnapshotOrInstance,
-  types,
-} from "mobx-state-tree"
-import { EditorManager, EditorManagerLike } from "../editor/EditorManager"
-import type { MessageLike } from "../message/state/models/MessageModel"
+import { flow, Instance, SnapshotOrInstance, types } from "mobx-state-tree"
 import {
   BRANDED_DEFAULT_AVATAR_URL,
   DEFAULT_AVATAR_URL,
@@ -23,10 +14,8 @@ import type { WebhookData } from "./WebhookData"
 export const WebhookModel = types
   .model("WebhookModel", {
     url: "",
-    message: "",
   })
   .volatile(() => ({
-    fetchedUrl: undefined as string | undefined,
     exists: undefined as boolean | undefined,
     id: undefined as string | undefined,
     name: undefined as string | undefined,
@@ -52,8 +41,8 @@ export const WebhookModel = types
       )
     },
 
-    get route() {
-      const match = MESSAGE_REF_RE.exec(self.message)
+    getRoute(reference?: string) {
+      const match = reference && MESSAGE_REF_RE.exec(reference)
       if (match) {
         const [, messageId] = match
 
@@ -78,7 +67,6 @@ export const WebhookModel = types
     },
 
     fetch: flow(function* () {
-      self.fetchedUrl = undefined
       self.exists = undefined
       self.id = undefined
       self.name = undefined
@@ -111,36 +99,6 @@ export const WebhookModel = types
       } catch {
         // do nothing
       }
-    }),
-
-    save: flow(function* () {
-      const editor: EditorManagerLike = getParentOfType(self, EditorManager)
-
-      const [method, url] = self.route
-
-      let message: MessageLike
-
-      for (message of editor.messages) {
-        const headers: Record<string, string> = {
-          "Accept": "application/json",
-          "Accept-Language": "en",
-        }
-
-        const body = message.body
-        if (typeof body === "string") {
-          headers["Content-Type"] = "application/json"
-        }
-
-        const response = yield fetch(url, { method, headers, body })
-        const data = yield response.json()
-
-        console.log("Target executed", data)
-
-        // Any parameter except message id doesn't matter
-        self.message = `https://discord.com/channels/${self.guildId}/${self.channelId}/${data.id}`
-      }
-
-      return null
     }),
   }))
 

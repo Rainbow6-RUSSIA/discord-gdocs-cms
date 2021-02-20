@@ -13,6 +13,8 @@ export const MessageModel = types
     username: "",
     avatar: "",
     embeds: types.array(types.late(() => EmbedModel)),
+    reference: "",
+    badge: types.optional(types.maybeNull(types.string), "Bot"),
   })
   .volatile(() => ({
     files: [] as readonly File[],
@@ -48,7 +50,7 @@ export const MessageModel = types
     get body() {
       const json = stringifyMessage(this.data, false)
 
-      if (self.files.length > 0) {
+      if (self.files.length > 0 && !self.reference) {
         const formData = new FormData()
 
         if (json !== "{}") formData.append("payload_json", json)
