@@ -20,7 +20,7 @@ export const initPostModel = (sheetId: number) => {
     @column
     embeds!: string
     @column
-    message?: string
+    reference?: string
   }
 
   return Post

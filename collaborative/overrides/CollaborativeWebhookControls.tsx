@@ -1,6 +1,5 @@
 import { useObserver } from "mobx-react-lite"
 import React, { useEffect, useRef, useState } from "react"
-import styled from "styled-components"
 import { PrimaryButton } from "../../common/input/button/PrimaryButton"
 import { InputField } from "../../common/input/text/InputField"
 import { Stack } from "../../common/layout/Stack"
@@ -8,13 +7,7 @@ import { ModalManagerContext } from "../../common/modal/ModalManagerContext"
 import { useRequiredContext } from "../../common/state/useRequiredContext"
 import { EditorManagerContext } from "../../modules/editor/EditorManagerContext"
 import { NetworkErrorModal } from "../../modules/editor/webhook/NetworkErrorModal"
-import { Markdown } from "../../modules/markdown/Markdown"
 import type { EditorFormState } from "../../modules/message/state/editorForm"
-
-const Message = styled(Markdown)`
-  margin-top: -8px;
-  font-size: 15px;
-`
 
 export type WebhookControlsProps = {
   form: EditorFormState
@@ -27,14 +20,14 @@ export function CollaborativeWebhookControls(props: WebhookControlsProps) {
 
   const modalManager = useRequiredContext(ModalManagerContext)
 
-  const [sending, setSending] = useState(false)
-  const handleSend = async () => {
-    if (sending) return
+  const [submitting, setSubmitting] = useState(false)
+  const handleSubmit = async () => {
+    if (submitting) return
 
     form.validate()
     if (!form.isValid) return
 
-    setSending(true)
+    setSubmitting(true)
 
     try {
       await form.save()
@@ -44,7 +37,7 @@ export function CollaborativeWebhookControls(props: WebhookControlsProps) {
       })
     }
 
-    setSending(false)
+    setSubmitting(false)
   }
 
   const inputRef = useRef<HTMLInputElement>(null)
@@ -68,37 +61,36 @@ export function CollaborativeWebhookControls(props: WebhookControlsProps) {
     }
   }, [])
 
-  return useObserver(() => (
-    <Stack gap={12}>
-      <InputField
-        ref={inputRef}
-        id="webhook"
-        type="password"
-        label="Webhook URL"
-        placeholder="https://discord.com/api/webhooks/..."
-        error={form.subForm("target").field("url").error}
-        {...form.subForm("target").field("url").inputProps}
-      >
-        <PrimaryButton
-          disabled={!editorManager.target.exists}
-          onClick={handleSend}
+  return useObserver(() => {
+    let submitLabel = "Submit"
+    if (editorManager.messages.every(m => !m.reference)) {
+      submitLabel = "Send"
+    } else if (editorManager.messages.every(m => m.reference)) {
+      submitLabel = "Edit"
+    }
+
+    return (
+      <Stack gap={12}>
+        <InputField
+          ref={inputRef}
+          id="webhook"
+          type="password"
+          label="Webhook URL"
+          placeholder="https://discord.com/api/webhooks/..."
+          error={form.subForm("target").field("url").error}
+          {...form.subForm("target").field("url").inputProps}
         >
-          {editorManager.target.message ? "Edit" : "Send"}
-        </PrimaryButton>
-      </InputField>
-      <InputField
-        id="message"
-        label="Message Link"
-        placeholder="https://discord.com/channels/..."
-        error={form.subForm("target").field("message").error}
-        {...form.subForm("target").field("message").inputProps}
-      />
-      <Message
-        content={
-          "*When a message link is set, it allows you to edit previously " +
-          "sent messages.*"
-        }
-      />
-    </Stack>
-  ))
+          <PrimaryButton
+            disabled={
+              !editorManager.target.exists ||
+              editorManager.messages.length === 0
+            }
+            onClick={handleSubmit}
+          >
+            {submitLabel}
+          </PrimaryButton>
+        </InputField>
+      </Stack>
+    )
+  })
 }

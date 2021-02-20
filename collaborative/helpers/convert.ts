@@ -12,7 +12,7 @@ export function convertSheetToContent(
     username: defaultUsername,
     avatar: defaultAvatar,
   } = channel
-  const { content, username, avatar, embeds, message } = post
+  const { content, username, avatar, embeds, reference } = post
 
   return {
     messages: [
@@ -23,9 +23,10 @@ export function convertSheetToContent(
         // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         avatar: avatar || defaultAvatar,
         embeds: JSON.parse(embeds),
+        reference
       },
     ],
-    target: { message, url },
+    target: { url },
   }
 }
 
@@ -33,10 +34,10 @@ export function convertContentToSheet({
   messages,
   target,
 }: EditorManagerLike): [Partial<ChannelInstance>, Partial<PostInstance>] {
-  const { url: webhook, message } = target
-  const { content, username, avatar, embeds } = messages[0]
+  const { url: webhook } = target
+  const { content, username, avatar, embeds, reference } = messages[0]
   return [
     { webhook },
-    { content, username, avatar, embeds: JSON.stringify(embeds), message },
+    { content, username, avatar, embeds: JSON.stringify(embeds), reference },
   ]
 }
