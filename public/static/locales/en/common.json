@@ -1,0 +1,5 @@
+{
+    "nested": {
+        "value": "Trying a nested value {{text}}"
+    }
+}

@@ -19,8 +19,9 @@ import { GlobalStyle } from "../common/theming/GlobalStyle"
 import { TooltipManager } from "../common/tooltip/TooltipManager"
 import { TooltipManagerProvider } from "../common/tooltip/TooltipManagerContext"
 import { TooltipOverlay } from "../common/tooltip/TooltipOverlay"
+import { appWithTranslation } from "../modules/i18n"
 
-export default class Application extends App {
+class Application extends App {
   private readonly preferenceManager = new PreferenceManager()
   private readonly modalManager = new ModalManager()
   private readonly popoverManager = new PopoverManager()
@@ -80,3 +81,5 @@ export default class Application extends App {
     )
   }
 }
+
+export default appWithTranslation(Application)

@@ -1,5 +1,9 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 
+const { nextI18NextRewrites } = require('next-i18next/rewrites')
+
+const localeSubpaths = {}
+
 const config = {
   target: "serverless",
   poweredByHeader: false,
@@ -19,6 +23,10 @@ const config = {
         permanent: false,
       },
     ]),
+  rewrites: () => nextI18NextRewrites(localeSubpaths),
+  publicRuntimeConfig: {
+    localeSubpaths
+  }
 }
 
 const withBundleAnalyzer = require("@next/bundle-analyzer")({

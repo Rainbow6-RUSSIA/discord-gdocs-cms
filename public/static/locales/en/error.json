@@ -1,0 +1,12 @@
+{
+  "400": "Bad request",
+  "403": "Forbidden",
+  "404": "Page not found",
+  "405": "Method not allowed",
+  "500": "Internal server error",
+  "error": "Error {{code}}: {{name}}",
+  "unexpected": "An unexpected error has occurred",
+  "technical-details": "Technical details are provided below (please forward this)",
+  "message": "If you didn't expect this, please report it on the <2>Discord support server</2>, or create an issue on the <5>GitHub repository</5>.",
+  "message1": "Welcum to our site, <strong>name</strong>"
+}

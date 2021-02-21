@@ -1,8 +1,11 @@
+/* eslint-disable react/jsx-curly-brace-presence */
+import { Trans } from "next-i18next"
 import Head from "next/head"
 import Link from "next/link"
 import Router from "next/router"
 import React, { ErrorInfo } from "react"
 import styled from "styled-components"
+import { useTranslation } from "../../modules/i18n"
 import { CodeBlockContainer } from "../../modules/markdown/styles/CodeBlockContainer"
 import { PrimaryButton } from "../input/button/PrimaryButton"
 import { SecondaryButton } from "../input/button/SecondaryButton"
@@ -41,14 +44,6 @@ const ErrorDetails = styled(CodeBlockContainer)`
   margin-bottom: 32px;
 `
 
-const STATUS_CODES: Map<number, string> = new Map([
-  [400, "Bad request"],
-  [403, "Forbidden"],
-  [404, "Page not found"],
-  [405, "Method not allowed"],
-  [500, "Internal server error"],
-])
-
 export type ErrorPageProps = {
   error?: Error
   info?: ErrorInfo
@@ -59,11 +54,13 @@ export type ErrorPageProps = {
 export function ErrorPage(props: ErrorPageProps) {
   const { error, info, title, statusCode } = props
 
+  const { t, i18n } = useTranslation("error")
+
   const message =
     title ??
-    (statusCode && STATUS_CODES.has(statusCode)
-      ? `Error ${statusCode}: ${STATUS_CODES.get(statusCode)}`
-      : "An unexpected error has occurred")
+    (statusCode && i18n.exists(`error:${statusCode}`)
+      ? t("error", { code: statusCode, name: t(statusCode.toString()) })
+      : t("unexpected"))
 
   return (
     <Container>
@@ -72,19 +69,26 @@ export function ErrorPage(props: ErrorPageProps) {
       </Head>
       <Header>{message}</Header>
       <Message>
-        If you didn&apos;t expect this, please report it on the{" "}
+        {t("unexpected1")}
+        <Trans i18nKey="unexpected1" t={t}>
+          <i>0</i>
+        </Trans>
+        {/* {" "}
+          If you didnt expect this, please report it on the{" "}
+          <i>Discord support server</i>, or create an issue on the{" "}
+          <strong>GitHub repository</strong>.
         <a href="/discord" target="blank" rel="noopener">
-          Discord support server
+          
         </a>
-        , or create an issue on the{" "}
+        {" "}
         <a
           href="https://github.com/discohook/site"
           target="blank"
           rel="noopener"
         >
-          GitHub repository
+          
         </a>
-        .
+        . */}
       </Message>
       {statusCode ? (
         <Link href="/">
@@ -95,9 +99,7 @@ export function ErrorPage(props: ErrorPageProps) {
       )}
       {error && info && (
         <>
-          <Message>
-            Technical details are provided below (please forward this)
-          </Message>
+          <Message>{t("technical-details")}</Message>
           <ErrorDetails>
             {String(error)}
             {"\n"}
