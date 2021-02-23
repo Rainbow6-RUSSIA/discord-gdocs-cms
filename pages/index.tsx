@@ -11,6 +11,7 @@ import { CollaborationManagerMode } from "../collaborative/types"
 import { base64UrlEncode } from "../common/base64/base64UrlEncode"
 import { useWindowEvent } from "../common/dom/useWindowEvent"
 import { ModalManagerContext } from "../common/modal/ModalManagerContext"
+import { Footer } from "../common/page/Footer"
 import { Header } from "../common/page/Header"
 import { PageHead } from "../common/page/PageHead"
 import { PreferencesModal } from "../common/settings/PreferencesModal"
@@ -130,6 +131,7 @@ export default function Main(props: MainProps) {
               ) : (
                 <Editor />
               )}
+              <Footer />
             </div>
           )}
         </View>

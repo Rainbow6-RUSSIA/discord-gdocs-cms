@@ -18,7 +18,7 @@ import { CollaborativeMessageEditor } from "./CollaborativeMessageEditor"
 import { CollaborativeWebhookControls } from "./CollaborativeWebhookControls"
 
 const EditorContainer = styled(Stack)`
-  padding: 16px;
+  padding: 16px 16px 0;
 `
 
 const Actions = styled.div`
@@ -75,7 +75,6 @@ export function CollaborativeEditor() {
           form={form.repeatingForm("messages").index(index)}
         />
       ))}
-      <Footer />
     </EditorContainer>
   ))
 }

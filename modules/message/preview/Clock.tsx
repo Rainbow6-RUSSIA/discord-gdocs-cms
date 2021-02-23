@@ -1,8 +1,10 @@
+import { isValid } from "date-fns"
 import { rem } from "polished"
-import React, { useEffect, useState } from "react"
-import styled, { css } from "styled-components"
+import React, { useCallback, useEffect, useState } from "react"
+import styled, { css, useTheme } from "styled-components"
+import { formatTimestamp } from "./formatTimestamp"
 
-const Timestamp = styled.span`
+const Display = styled.span`
   display: inline-block;
   height: ${rem(20)};
 
@@ -17,10 +19,6 @@ const Timestamp = styled.span`
       font-weight: 500;
       line-height: ${rem(22)};
       vertical-align: baseline;
-
-      &::before {
-        content: "Today at ";
-      }
     `};
 
   ${({ theme }) =>
@@ -33,26 +31,44 @@ const Timestamp = styled.span`
       line-height: ${rem(22)};
       text-align: right;
       text-indent: 0;
-
-      &::before {
-        content: "";
-      }
     `};
 `
 
-const getTime = () =>
-  new Date().toLocaleString("en-US", {
-    hour: "numeric",
-    minute: "numeric",
-    hour12: true,
-  })
+export type ClockProps = {
+  timestamp?: Date
+}
 
-export function Clock() {
-  const [time, setTime] = useState(getTime)
+export function Clock(props: ClockProps) {
+  let { timestamp } = props
+  if (timestamp && !isValid(timestamp)) timestamp = undefined
+
+  const theme = useTheme()
+
+  const format = useCallback(
+    (timestamp: Date = new Date()) => {
+      if (theme.appearance.display === "compact") {
+        return timestamp.toLocaleString("en-US", {
+          hour: "numeric",
+          minute: "numeric",
+          hour12: true,
+        })
+      }
+
+      return formatTimestamp(timestamp)
+    },
+    [theme.appearance.display],
+  )
+
+  const [displayedTime, setDisplayedTime] = useState(() => format(timestamp))
+
   useEffect(() => {
-    const interval = setInterval(() => setTime(getTime()), 1000)
-    return () => clearInterval(interval)
-  }, [])
+    if (!timestamp) {
+      const interval = setInterval(() => setDisplayedTime(format()), 1000)
+      return () => clearInterval(interval)
+    }
 
-  return <Timestamp>{time}</Timestamp>
+    setDisplayedTime(format(timestamp))
+  }, [format, timestamp])
+
+  return <Display>{displayedTime}</Display>
 }
