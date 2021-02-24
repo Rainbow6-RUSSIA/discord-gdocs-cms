@@ -31,7 +31,6 @@
     "@reach/slider": "^0.13.2",
     "@reach/tabs": "^0.13.2",
     "@react-spring/web": "^9.0.0-rc.3",
-    "@zeit/next-source-maps": "^0.0.3",
     "color-hash": "^1.0.3",
     "core-js": "^3.9.0",
     "date-fns": "^2.17.0",

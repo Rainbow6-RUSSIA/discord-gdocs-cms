@@ -792,7 +792,6 @@ __metadata:
     "@types/zeit__next-source-maps": ^0.0.2
     "@typescript-eslint/eslint-plugin": ^4.15.1
     "@typescript-eslint/parser": ^4.15.1
-    "@zeit/next-source-maps": ^0.0.3
     babel-plugin-styled-components: ^1.12.0
     browserslist: ^4.16.3
     caniuse-lite: ^1.0.30001191
@@ -2083,13 +2082,6 @@ __metadata:
     "@typescript-eslint/types": 4.15.1
     eslint-visitor-keys: ^2.0.0
   checksum: 779711aa95940738507eeb97e18efa0244d8513846284f497fb9b400d0d2e0791cc746829fd6870eb95a6256f4ab30b53b518d59a2e005d050f0cfcf8caa3ea2
-  languageName: node
-  linkType: hard
-
-"@zeit/next-source-maps@npm:^0.0.3":
-  version: 0.0.3
-  resolution: "@zeit/next-source-maps@npm:0.0.3"
-  checksum: 9b36aac3053868c47a25a575984693ca00fbc2c6aa5e953a43da18574ed528f06b8b0eed1da9380ff60879fd658d48721917d0ecdeb8ba8858ae233c95ac212f
   languageName: node
   linkType: hard
 
