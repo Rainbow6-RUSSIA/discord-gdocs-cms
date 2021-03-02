@@ -34,4 +34,4 @@ USER node
 
 EXPOSE 3000
 
-CMD [ "yarn", "run", "start" ]
+CMD [ "node_modules/.bin/next", "start" ]
