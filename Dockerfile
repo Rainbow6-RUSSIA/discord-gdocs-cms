@@ -1,21 +1,34 @@
-FROM node:12-alpine
+FROM node:14-alpine AS builder
 
-RUN apk add git
+RUN apk add --no-cache libc6-compat
 
 WORKDIR /app
-
-ARG NEXT_PUBLIC_SENTRY_DSN=$NEXT_PUBLIC_SENTRY_DSN
-ARG NEXT_PUBLIC_GOOGLE_API_KEY=$NEXT_PUBLIC_GOOGLE_API_KEY
-ARG NEXT_PUBLIC_GOOGLE_CLIENT_ID=$NEXT_PUBLIC_GOOGLE_CLIENT_ID
-ARG NEXT_PUBLIC_CONVERGENCE_URL=$NEXT_PUBLIC_CONVERGENCE_URL
-
 COPY package.json yarn.lock .yarnrc.yml ./
 COPY .yarn ./.yarn
 COPY patches ./patches
-RUN yarn install
+
+RUN yarn install --immutable
 
 COPY . .
-RUN yarn run build
+
+ARG NEXT_PUBLIC_SENTRY_DSN
+ARG NEXT_PUBLIC_GOOGLE_API_KEY
+ARG NEXT_PUBLIC_GOOGLE_CLIENT_ID
+ARG NEXT_PUBLIC_CONVERGENCE_URL
+
+ARG BUILD_ID
+RUN BUILD_ID=${BUILD_ID} yarn build
+
+FROM node:14-alpine
+
+WORKDIR /app
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/build ./build
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/next.config.js ./
+
+ENV NODE_ENV=production \
+    NODE_OPTIONS=--max-http-header-size=81920
 
 USER node
 
