@@ -1,8 +1,8 @@
 import { AbstractModel, worksheet, column } from "google-spreadsheet-orm"
 
-export const initPostModel = (sheetId: number) => {
+export const initMessageModel = (sheetId: number) => {
   @worksheet(sheetId)
-  class Post extends AbstractModel {
+  class Message extends AbstractModel {
     @column
     id!: string
     @column
@@ -23,8 +23,8 @@ export const initPostModel = (sheetId: number) => {
     reference?: string
   }
 
-  return Post
+  return Message
 }
 
-export type PostModel = ReturnType<typeof initPostModel>
-export type PostInstance = InstanceType<PostModel>
+export type MessageModel = ReturnType<typeof initMessageModel>
+export type MessageInstance = InstanceType<MessageModel>

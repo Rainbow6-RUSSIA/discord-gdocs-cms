@@ -2,7 +2,7 @@ import type { GoogleSpreadsheet } from "google-spreadsheet"
 import SheetConnection, { Config } from "google-spreadsheet-orm"
 import { getAuthClient, getDocument } from "../helpers/google"
 import { ChannelModel, initChannelModel } from "./channel"
-import { initPostModel, PostInstance, PostModel } from "./post"
+import { initMessageModel, MessageInstance, MessageModel } from "./post"
 
 export type SheetOrmConfig = {
   token: string
@@ -79,7 +79,7 @@ export class SheetORM {
       this.config.postSheetId = this.getSheetIdByTitle(`#${channels[0].name}`)
     }
 
-    this.PostClass = initPostModel(this.config.postSheetId)
+    this.PostClass = initMessageModel(this.config.postSheetId)
 
     if (this.config.validate) {
       await this.connection.validateModel(this.PostClass)
@@ -87,7 +87,7 @@ export class SheetORM {
     }
   }
 
-  savePost = async (post: PostInstance) => {
+  savePost = async (post: MessageInstance) => {
     if (!this.PostClass) throw new Error("No Post Model initialized")
     const instance = new this.PostClass()
     Object.assign(instance, post)
@@ -98,5 +98,5 @@ export class SheetORM {
   private connection!: SheetConnection
   private document?: GoogleSpreadsheet
   ChannelClass?: ChannelModel
-  PostClass?: PostModel
+  PostClass?: MessageModel
 }
