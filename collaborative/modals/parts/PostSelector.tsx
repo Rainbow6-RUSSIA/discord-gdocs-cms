@@ -27,11 +27,12 @@ export const PostSelector = () => {
   const optionsPosts: DropdownOptions = res ? res.data.map(optionMap) : []
 
   const selectPost = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    collaborationManager.post = res?.data.find(
-      r => r.id === e.currentTarget.selectedOptions[0].value,
-    )
-    collaborationManager.saveSettings()
-    console.log(toJS(collaborationManager.post))
+    // TODO:
+    // collaborationManager.post = res?.data.find(
+    //   r => r.id === e.currentTarget.selectedOptions[0].value,
+    // )
+    // collaborationManager.saveSettings()
+    // console.log(toJS(collaborationManager.post))
   }
 
   return useObserver(() => (

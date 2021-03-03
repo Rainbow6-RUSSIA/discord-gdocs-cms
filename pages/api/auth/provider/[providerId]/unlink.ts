@@ -9,21 +9,15 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { providerId } = req.query
 
   try {
-    if (
-      req.method === "POST" &&
-      providerId === "google" &&
-      session &&
-      session[providerId]
-    ) {
+    const account = session?.accounts.find(a => a.type === providerId)
+    if (req.method === "POST" && session && account) {
       const accs = await Account.find({
         where: {
           userId: session.id,
         },
       })
       const accToDelete = accs.find(
-        a =>
-          a.providerId === providerId &&
-          a.providerAccountId === session.google!.sub,
+        a => a.providerId === providerId && a.providerAccountId === account.id,
       )
 
       await accToDelete?.remove()
@@ -37,7 +31,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(200).end()
     }
     throw ""
-  } catch {
-    return res.status(404).end()
+  } catch (error) {
+    console.log(error)
+    return res.status(500).end()
   }
 }

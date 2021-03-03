@@ -10,26 +10,27 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const session = await getCustomSession({ req })
-  if (!session?.google) return res.status(401).end()
-  if (!validateQuery(req.query, query)) return res.status(400).end()
+  // TODO:
+  // const session = await getCustomSession({ req })
+  // if (!session?.google) return res.status(401).end()
+  // if (!validateQuery(req.query, query)) return res.status(400).end()
 
-  const { accessToken } = session.google
+  // const { accessToken } = session.google
 
-  const orm = new SheetORM({
-    spreadsheetId: req.query.spreadsheetId,
-    token: accessToken,
-    validate: true,
-  })
-  await orm.init()
+  // const orm = new SheetORM({
+  //   spreadsheetId: req.query.spreadsheetId,
+  //   token: accessToken,
+  //   validate: true,
+  // })
+  // await orm.init()
 
-  const data = await orm.getChannels()
-  console.log(data)
+  // const data = await orm.getChannels()
+  // console.log(data)
 
-  return res.send({
-    data,
-    meta: { channelSheetId: orm.config.channelSheetId },
-  } as ChannelsAPIResponce)
+  // return res.send({
+  //   data,
+  //   meta: { channelSheetId: orm.config.channelSheetId },
+  // } as ChannelsAPIResponce)
 }
 
 export type ChannelsAPIQuery = typeof query[number]

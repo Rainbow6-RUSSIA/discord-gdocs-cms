@@ -52,10 +52,10 @@ const ShortPathConvert: Record<string, string> = {
 
 export class ConvergenceCursor {
   constructor(client: ConvergenceClient) {
-    if (!client.model || !client.collaboration.session?.google?.sub)
+    if (!client.model || !client.collaboration.discord)
       throw new Error("Incomplete client")
     this.client = client
-    this.color = new ColorHash().hex(client.collaboration.session.google.sub)
+    this.color = new ColorHash().hex(client.collaboration.discord.id)
     this.elementReference = client.model.elementReference("selected")
     // this.elementReference.on(LocalElementReference.Events.SET, e => console.log("ELEMENT REFERENCE SET", e))
   }
@@ -136,7 +136,7 @@ export class ConvergenceCursor {
 
   cursorReport = () => {
     // debounce(() => {
-    if (this.activeElement && Boolean(this.path.length)) {
+    if (this.activeElement && this.path.length > 0) {
       // TODO: реф элемента отваливается при получении изменений
       // console.log("ELEMENT REF IS ATTACHED", this.elementReference.value().isAttached())
       // if (this.indexReference) {

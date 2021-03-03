@@ -3,13 +3,17 @@ import { signIn, signOut } from "next-auth/client"
 import type { EditorManagerLike } from "../../modules/editor/EditorManager"
 import type { SaveAPIQuery } from "../../pages/api/collaboration/save"
 import { getCustomSession } from "../auth/session"
-import { ConvergenceClient } from "../convergence/client"
+import type { ConvergenceClient } from "../convergence/client"
 import { convertContentToSheet } from "../helpers/convert"
 import type { ChannelInstance } from "../sheet/channel"
-import type { PostInstance } from "../sheet/post"
+import type { MessageInstance } from "../sheet/post"
 import {
   CollaborationManagerMode,
   CustomSession,
+  DiscordUser,
+  GoogleProfile,
+  GoogleUser,
+  SocialType,
   SpreadsheetItem,
 } from "../types"
 
@@ -20,7 +24,7 @@ export class CollaborationManager {
 
   @observable spreadsheet?: SpreadsheetItem
   @observable channel?: ChannelInstance
-  @observable post?: PostInstance
+  @observable collection?: MessageInstance[]
 
   @observable mode = CollaborationManagerMode.OFFLINE
   error?: Error
@@ -45,10 +49,10 @@ export class CollaborationManager {
     return Boolean(this.mode & f)
   }
 
-  @action link = async () => signIn("google")
+  link = async (type: SocialType) => signIn(type)
 
-  @action unlink = async () => {
-    const res = await fetch("/api/auth/provider/google/unlink", {
+  @action unlink = async (type: SocialType) => {
+    const res = await fetch(`/api/auth/provider/${type}/unlink`, {
       method: "POST",
     })
     if (res.status === 204) {
@@ -57,13 +61,26 @@ export class CollaborationManager {
     return this.load()
   }
 
+  get google() {
+    return this.session?.accounts.find(
+      (a): a is GoogleUser => a.type === "google",
+    )
+  }
+
+  get discord() {
+    return this.session?.accounts.find(
+      (a): a is DiscordUser => a.type === "discord",
+    )
+  }
+
   saveSettings = () => {
     localStorage.setItem(
       CollaborationManager.LSSettingsKey,
       JSON.stringify({
         spreadsheet: this.spreadsheet,
         channel: this.channel,
-        post: this.post,
+        // TODO:
+        // post: this.post,
       }),
     )
   }
@@ -74,7 +91,8 @@ export class CollaborationManager {
     )
     this.spreadsheet = settings.spreadsheet
     this.channel = settings.channel
-    this.post = settings.post
+    // TODO:
+    // this.post = settings.post
   }
 
   @action resetSettings = () => {
@@ -86,43 +104,45 @@ export class CollaborationManager {
     const session = await getCustomSession()
     console.log(session)
     this.session = session
-    if (session?.google) {
-      this.loadSettings()
-      this.convergence = new ConvergenceClient(this)
-    } else this.resetSettings()
+    // TODO:
+    // if (session?.google) {
+    //   this.loadSettings()
+    //   this.convergence = new ConvergenceClient(this)
+    // } else this.resetSettings()
   }
 
   handleSave = async () => {
-    const spreadsheet = this.spreadsheet
-    const channel = this.channel
-    const post = this.post
-    if (spreadsheet && channel && post && this.convergence?.model) {
-      const query: Record<SaveAPIQuery, string> = {
-        spreadsheetId: spreadsheet.id,
-        channelId: channel.id,
-        postId: post.id,
-      }
-      const res = await fetch(
-        `/api/collaboration/save?${new URLSearchParams(query)}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(
-            Object.assign(
-              this.post,
-              convertContentToSheet(
-                this.convergence.model.root().value() as EditorManagerLike,
-              )[1],
-            ),
-          ),
-        },
-      )
-      if (res.status !== 200) throw new Error("Failed to save")
-    } else {
-      throw new Error(
-        `Cannon save ${spreadsheet?.id}, ${channel?.id}, ${post?.id}`,
-      )
-    }
+    // TODO:
+    // const spreadsheet = this.spreadsheet
+    // const channel = this.channel
+    // const post = this.post
+    // if (spreadsheet && channel && post && this.convergence?.model) {
+    //   const query: Record<SaveAPIQuery, string> = {
+    //     spreadsheetId: spreadsheet.id,
+    //     channelId: channel.id,
+    //     postId: post.id,
+    //   }
+    //   const res = await fetch(
+    //     `/api/collaboration/save?${new URLSearchParams(query)}`,
+    //     {
+    //       method: "PUT",
+    //       headers: { "Content-Type": "application/json" },
+    //       body: JSON.stringify(
+    //         Object.assign(
+    //           this.post,
+    //           convertContentToSheet(
+    //             this.convergence.model.root().value() as EditorManagerLike,
+    //           )[1],
+    //         ),
+    //       ),
+    //     },
+    //   )
+    //   if (res.status !== 200) throw new Error("Failed to save")
+    // } else {
+    //   throw new Error(
+    //     `Cannon save ${spreadsheet?.id}, ${channel?.id}, ${post?.id}`,
+    //   )
+    // }
   }
 
   editor?: EditorManagerLike

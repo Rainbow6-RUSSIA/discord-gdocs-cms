@@ -10,34 +10,49 @@ export enum CollaborationManagerMode {
   ERROR = 1 << 6,
 }
 
+export type SocialType = "discord" | "google"
+
+export type CustomUser = GoogleUser | DiscordUser
+
+export type GoogleUser = { type: "google" } & GoogleProfile & BasicUser
+export type DiscordUser = { type: "discord" } & DiscordProfile & BasicUser
+
+export type BasicUser = {
+  id: string
+  name: string
+  locale: string
+  avatar: string
+}
+
 export type CustomSession = {
   id: string
   accessToken: string
   expires: string
-  // discord: null | DiscordProfile
-  google: null | GoogleProfile
+  accounts: CustomUser[]
 }
 
-// export type DiscordProfile = {
-//   avatar: string
-//   discriminator: string
-//   flags: number
-//   id: string
-//   locale: string
-//   mfa_enabled: boolean
-//   public_flags: number
-//   username: string
-//   guilds: (DiscordPartialGuild & { isBotPresent: boolean })[]
-// }
+export type DiscordProfile = {
+  avatar?: string
+  discriminator: string
+  flags: number
+  id: string
+  locale: string
+  mfa_enabled: boolean
+  public_flags: number
+  username: string
+  guilds: DiscordPartialGuild[]
+}
 
-// export type DiscordPartialGuild = {
-//   id: string
-//   name: string
-//   icon: string
-//   owner: boolean
-//   permissions_new: string
-//   features: string[]
-// }
+export type DiscordPartialGuild = {
+  id: string
+  name: string
+  icon: string
+  owner: boolean
+  permissions_new: string
+  features: string[]
+
+  hasBot: boolean
+}
 
 export type GoogleProfile = {
   email: string
@@ -48,7 +63,6 @@ export type GoogleProfile = {
   name: string
   picture: string
   sub: string
-  accessToken: string
 }
 
 export type SpreadsheetItem = {
@@ -56,8 +70,6 @@ export type SpreadsheetItem = {
   name: string
   starred: boolean
 }
-
-export type SocialTypeProps = { type: /* "Discord" |  */ "Google" }
 
 export type PostMeta = {
   id: number

@@ -2,8 +2,9 @@
 import type { InitOptions } from "next-auth"
 import type { SessionBase } from "next-auth/_utils"
 import Providers from "next-auth/providers"
+import { getDiscordProfile } from "../helpers/discord"
 import { getGoogleProfile } from "../helpers/google"
-import type { CustomSession, GoogleProfile } from "../types"
+import type { CustomSession } from "../types"
 import { Adapter } from "./adapter"
 import { Account } from "./models/Account"
 import type { User } from "./models/User"
@@ -17,9 +18,18 @@ const googleConfig = {
     "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/drive.metadata.readonly https://www.googleapis.com/auth/spreadsheets",
 }
 
+const discordConfig = {
+  clientId: process.env.DISCORD_CLIENT_ID!,
+  clientSecret: process.env.DISCORD_CLIENT_SECRET!,
+  scope: "identify guilds",
+}
+
 const adapter = Adapter(process.env.DATABASE_URL!)
 
-const providers = [Providers.Google(googleConfig)]
+const providers = [
+  Providers.Google(googleConfig),
+  Providers.Discord(discordConfig),
+]
 
 const rotateToken = async (account: Account) => {
   const provider = providers.find(p => p.id === account.providerId)
@@ -69,28 +79,53 @@ export const options = {
         id: user.id,
         accessToken: session.accessToken!,
         expires: session.expires,
-        // discord: null,
-        google: null,
+        accounts: [],
       }
 
       const accounts = await getRefreshedAccount(user.id)
       const google = accounts.find(a => a.providerId === "google")
-      // const discord = accounts.find(a => a.providerId === "discord")
+      const discord = accounts.find(a => a.providerId === "discord")
+
+      if (discord?.accessToken) {
+        try {
+          const discordUser = await getDiscordProfile(discord.accessToken)
+          const avatarPath = discordUser.avatar
+            ? `avatars/${discordUser.id}/${discordUser.avatar}.${
+                discordUser.avatar.startsWith("a_") ? "gif" : "png"
+              }`
+            : `embed/avatars/${
+                Number.parseInt(discordUser.discriminator, 10) % 5
+              }.png`
+
+          sessionObj.accounts.push({
+            ...discordUser,
+            type: "discord",
+            name: `${discordUser.username}#${discordUser.discriminator}`,
+            avatar: `https://cdn.discordapp.com/${avatarPath}`,
+          })
+        } catch (error) {
+          console.log("Profile error", error)
+          if (error.message.includes("Invalid Credentials")) {
+            await discord.remove()
+          }
+        }
+      }
 
       if (google?.accessToken) {
         try {
           const googleUser = await getGoogleProfile(google.accessToken)
-          sessionObj.google = googleUser
-          sessionObj.google.accessToken = google.accessToken
+          sessionObj.accounts.push({
+            ...googleUser,
+            type: "google",
+            id: googleUser.sub,
+            avatar: googleUser.picture,
+          })
         } catch (error) {
           console.log("Profile error", error)
           if (error.message.includes("Invalid Credentials")) {
             await google.remove()
-            return {}
           }
         }
-      } else {
-        console.log("Account not linked")
       }
 
       return sessionObj

@@ -1,17 +1,18 @@
 import { useObserver } from "mobx-react-lite"
-import Image from "next/image"
-import { darken } from "polished"
 import React from "react"
+import { useMutation } from "react-query"
 import styled from "styled-components"
-import { PrimaryButton } from "../../../common/input/button/PrimaryButton"
 import { ButtonRow } from "../../../common/layout/ButtonRow"
 import { FlexContainer } from "../../../common/layout/FlexContainer"
+import { IconButton } from "../../../common/layout/IconButton"
 import { useRequiredContext } from "../../../common/state/useRequiredContext"
+import { remove } from "../../../icons/remove"
+import { loading } from "../../icons/loading"
 import { CollaborationManagerContext } from "../../manager/CollaborationManagerContext"
 
 const Name = styled.div`
   line-height: 32px;
-  margin-right: 5px;
+  margin-left: 8px;
 `
 
 const Avatar = styled.img.attrs({ height: 32, width: 32 })`
@@ -25,49 +26,40 @@ const Card = styled(FlexContainer)`
   background: ${({ theme }) => `${theme.background.secondaryAlt}`};
 `
 
-const GoogleLoginButton = styled(PrimaryButton)`
-  display: flex;
-  align-items: center;
-  padding: 0;
-  margin: 0 auto;
-  background-color: #4285f4;
-  border-color: #4285f4;
-  & > * {
-    margin: 0 3px;
-  }
-  &:hover {
-    background-color: #4285f4;
-    border-color: ${darken(0.1, "#4285F4")};
-  }
-`
-
 export const AuthStatus = () => {
   const collaborationManager = useRequiredContext(CollaborationManagerContext)
-
-  const Fallback = (
-    <>
-      To use collaboration features you must login into a Google account and
-      select spreadsheet for milestone saves.
-      <GoogleLoginButton onClick={async () => collaborationManager.link()}>
-        <Image src="/static/google-button.svg" height={32} width={32} />
-        <span>Sign in with Google</span>
-      </GoogleLoginButton>
-    </>
-  )
+  const { isLoading, mutate: unlink } = useMutation(collaborationManager.unlink)
 
   return useObserver(() => {
-    if (!collaborationManager.session?.google) return Fallback
-    const { name, picture } = collaborationManager.session.google
+    const accounts = collaborationManager.session?.accounts ?? []
     return (
       <>
-        Logged as:
+        Linked Accounts:
         <ButtonRow>
-          <Card>
-            <Name>{name}</Name>
-            <Avatar alt="Your Google Avatar" src={picture} />
-          </Card>
+          {accounts.map(a => (
+            <Card key={a.id}>
+              <Avatar src={a.avatar} />
+              <Name>{a.name}</Name>
+              <IconButton
+                onClick={() => !isLoading && unlink(a.type)}
+                icon={isLoading ? loading : remove}
+                label="Unlink"
+              />
+            </Card>
+          ))}
         </ButtonRow>
       </>
     )
   })
 }
+/*
+  const { isLoading: isUnlinking, mutate: handleUnlink } = useMutation(
+    collaborationManager.unlink,
+  )
+        {user && (
+          <PrimaryButton onClick={() => handleUnlink()} accent="danger">
+            {"Logout "}
+            {isUnlinking ? loading : null}
+          </PrimaryButton>
+        )}
+        */

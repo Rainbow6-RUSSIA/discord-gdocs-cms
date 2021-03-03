@@ -20,7 +20,7 @@ import { convertSheetToContent } from "../helpers/convert"
 import { parseNumbers } from "../helpers/parseNumbers"
 import type { CollaborationManager } from "../manager/CollaborationManager"
 import { CollaborationManagerMode } from "../types"
-import { ConvergenceCursor } from "./cursor"
+import type { ConvergenceCursor } from "./cursor"
 
 export class ConvergenceClient {
   constructor(collaboration: CollaborationManager) {
@@ -49,12 +49,13 @@ export class ConvergenceClient {
       )
       console.log("JWT", jwt)
       this.domain = await connectWithJwt(collaborationServerURL, jwt)
-      this.disposers.push(
-        reaction(
-          () => this.collaboration.post,
-          async () => this.reconnect(),
-        ),
-      )
+      // TODO:
+      // this.disposers.push(
+      //   reaction(
+      //     () => this.collaboration.post,
+      //     async () => this.reconnect(),
+      //   ),
+      // )
       // this.disposers.push(
       //     observe(this.collaboration, "post", this.reconnect),
       // )
@@ -79,38 +80,39 @@ export class ConvergenceClient {
   }
 
   connect = async () => {
-    const googleUser = this.collaboration.session?.google
-    const spreadsheetId = this.collaboration.spreadsheet?.id
-    const channel = this.collaboration.channel
-    const post = this.collaboration.post
-    if (this.domain && googleUser && spreadsheetId && channel && post) {
-      this.model = await this.domain.models().openAutoCreate({
-        collection: spreadsheetId,
-        id: `${channel.id}/${post.id}`,
-        data: convertSheetToContent(channel, post),
-        ephemeral: true,
-      })
-      this.syncUpdate() // get content
-      this.model.root().value(getSnapshot(this.editor)) // force set content with ids to fix incomplete model
-      // this.domain.presence().on(PresenceService.Events.AVAILABILITY_CHANGED)
-      this.model.on(RealTimeModel.Events.VERSION_CHANGED, this.syncUpdate)
-      this.disposers.push(onPatch(this.editor, this.handlePatch))
-      this.cursor = new ConvergenceCursor(this)
-      this.cursor.initTracking()
+    // TODO:
+    // const googleUser = this.collaboration.google
+    // const spreadsheetId = this.collaboration.spreadsheet?.id
+    // const channel = this.collaboration.channel
+    // const post = this.collaboration.post
+    // if (this.domain && googleUser && spreadsheetId && channel && post) {
+    //   this.model = await this.domain.models().openAutoCreate({
+    //     collection: spreadsheetId,
+    //     id: `${channel.id}/${post.id}`,
+    //     data: convertSheetToContent(channel, post),
+    //     ephemeral: true,
+    //   })
+    //   this.syncUpdate() // get content
+    //   this.model.root().value(getSnapshot(this.editor)) // force set content with ids to fix incomplete model
+    //   // this.domain.presence().on(PresenceService.Events.AVAILABILITY_CHANGED)
+    //   this.model.on(RealTimeModel.Events.VERSION_CHANGED, this.syncUpdate)
+    //   this.disposers.push(onPatch(this.editor, this.handlePatch))
+    //   this.cursor = new ConvergenceCursor(this)
+    //   this.cursor.initTracking()
 
-      this.collaboration.setMode(CollaborationManagerMode.ONLINE)
-    } else {
-      this.collaboration.showError(
-        new Error("Cannot connect to collaboration server"),
-      )
-      console.warn(
-        "Cannot connect to collaboration server",
-        toJS(googleUser),
-        spreadsheetId,
-        channel?.id,
-        post?.id,
-      )
-    }
+    //   this.collaboration.setMode(CollaborationManagerMode.ONLINE)
+    // } else {
+    //   this.collaboration.showError(
+    //     new Error("Cannot connect to collaboration server"),
+    //   )
+    //   console.warn(
+    //     "Cannot connect to collaboration server",
+    //     toJS(googleUser),
+    //     spreadsheetId,
+    //     channel?.id,
+    //     post?.id,
+    //   )
+    // }
 
     this.collaboration.resetMode(CollaborationManagerMode.CONNECTING)
   }
