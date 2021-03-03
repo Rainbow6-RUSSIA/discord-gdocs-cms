@@ -19,7 +19,7 @@ export function DiscordSettings() {
         <DiscordLoginButton
           onClick={async () => collaborationManager.link("discord")}
         >
-          <img src="/static/google-button.svg" height={32} width={32} />
+          <img src="/static/discord-button.svg" height={32} width={32} />
           <span>Sign in with Discord</span>
         </DiscordLoginButton>
       </>
