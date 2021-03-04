@@ -33,23 +33,22 @@ const EchoInput = styled(Input)`
   }
   scrollbar-color: transparent transparent;
 
-  left: 9px;
+  height: 100%;
+  width: 100%;
 
-  input + & {
+  input + && {
     line-height: 33px; // from Input 36px - 3px
     white-space: nowrap;
-    overflow: auto hidden;
-    padding: 0;
-    height: calc(100% + 18px); // hide scrollbar at bottom
-    right: 9px;
+    overflow: hidden;
+    padding: 0 9px;
+    clip-path: inset(0 9px 0 9px);
   }
 
-  textarea + & {
+  textarea + && {
     line-height: normal;
     white-space: pre-wrap; // important for pixel-perfect overlay
     overflow: hidden auto; // important for pixel-perfect overlay
-    padding: 5.5px 9px 5.5px 0; // from Input
-    height: 100%;
+    padding: 5.5px 9px; // from Input
   }
 `
 
@@ -156,7 +155,7 @@ const TextInputHighlight = (
         {...props}
       />
       <EchoInput ref={echoRef} as="div">
-        {Boolean(value.length && props.id !== "webhook") && content}
+        {Boolean(value.length > 0 && props.id !== "webhook") && content}
       </EchoInput>
     </HighlightContainer>
   )
