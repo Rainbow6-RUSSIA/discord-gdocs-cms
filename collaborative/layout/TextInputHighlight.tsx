@@ -17,7 +17,7 @@ const HighlightContainer = styled(FlexContainer)`
 const SimpleTextInput = styled(Input)`
   background-color: transparent;
   z-index: 1;
-  ${FlexContainer} > & {
+  ${FlexContainer} > && {
     flex: 1;
   }
 `
@@ -147,17 +147,23 @@ const TextInputHighlight = (
     }
   }, [inputRef, value.length])
 
-  return (
+  const input = (
+    <SimpleTextInput
+      style={{ backgroundColor: "red" }}
+      ref={ref ?? inputRef}
+      {...props}
+    />
+  )
+
+  return !props.disabled ? (
     <HighlightContainer>
-      <SimpleTextInput
-        style={{ backgroundColor: "red" }}
-        ref={ref ?? inputRef}
-        {...props}
-      />
+      {input}
       <EchoInput ref={echoRef} as="div">
         {Boolean(value.length > 0 && props.id !== "webhook") && content}
       </EchoInput>
     </HighlightContainer>
+  ) : (
+    input
   )
 }
 
