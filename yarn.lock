@@ -765,6 +765,7 @@ __metadata:
     "@babel/plugin-proposal-decorators": ^7.12.13
     "@babel/runtime": ^7.12.18
     "@convergence/convergence": ^1.0.0-rc.7
+    "@next-auth/typeorm-adapter": ^0.0.1
     "@next/bundle-analyzer": ^10.0.7
     "@popperjs/core": ^2.8.3
     "@reach/slider": ^0.13.2
@@ -782,7 +783,7 @@ __metadata:
     "@types/jest": ^26.0.15
     "@types/jsonwebtoken": ^8
     "@types/lodash": ^4.14.168
-    "@types/next-auth": ^3.1.18
+    "@types/next-auth": ^3.13.0
     "@types/node": ^14.14.7
     "@types/react": ^17.0.2
     "@types/react-dom": ^17.0.1
@@ -823,7 +824,7 @@ __metadata:
     mobx-state-tree: ^3.17.3
     mstform: "patch:mstform@1.27.0#./patches/mstform+1.27.0.patch"
     next: ^10.0.7
-    next-auth: ^3.1.0
+    next-auth: ^3.14.8
     page-metadata-parser: ^1.1.4
     pg: ^8.5.1
     polished: ^4.1.1
@@ -1164,6 +1165,19 @@ __metadata:
     "@types/yargs": ^15.0.0
     chalk: ^4.0.0
   checksum: 5c511d7807f414b298299ae4a053abf265f39984942e0eefdfb17a7986a36f1047e0fd9a6f785bdddbf7343a5737595dfabe148719a80e118dd77486502009cc
+  languageName: node
+  linkType: hard
+
+"@next-auth/typeorm-adapter@npm:^0.0.1":
+  version: 0.0.1
+  resolution: "@next-auth/typeorm-adapter@npm:0.0.1"
+  dependencies:
+    crypto-js: ^4.0.0
+    require_optional: ^1.0.1
+    typeorm: ^0.2.30
+  peerDependencies:
+    next-auth: ^3.1.0
+  checksum: 862756bb2b5fcb33e504cd0d232b25b106b5ce1f9296130c0f8d4683b106868b0300427c2e237213c22ce9a535d8a9e4e16199e3b656bc217414c3d51ddb6142
   languageName: node
   linkType: hard
 
@@ -1509,6 +1523,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sqltools/formatter@npm:^1.2.2":
+  version: 1.2.3
+  resolution: "@sqltools/formatter@npm:1.2.3"
+  checksum: 67762c7fbd943c9ccebf2175d6c8e6e209ec811767a17a140dc36533f1e547f3e6bb341c3b0e2e05ad3659dc9c1c029349301e9084bb8ecd258e96f73bc385c2
+  languageName: node
+  linkType: hard
+
 "@testing-library/dom@npm:^7.28.1":
   version: 7.29.0
   resolution: "@testing-library/dom@npm:7.29.0"
@@ -1814,15 +1835,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/next-auth@npm:^3.1.18":
-  version: 3.1.18
-  resolution: "@types/next-auth@npm:3.1.18"
+"@types/next-auth@npm:^3.13.0":
+  version: 3.13.0
+  resolution: "@types/next-auth@npm:3.13.0"
   dependencies:
     "@types/node": "*"
     "@types/react": "*"
     jose: ^1.28.0
-    typeorm: ^0.2.24
-  checksum: 02473c41eb208c196c84f923f4c839c9ee83d143d9b11efc9b5c3603fa56a2fb94ec582a5019eb0e799d951bd1159fb0f38f0587b8e219f35d0eea8e1bfeaa49
+    typeorm: ^0.2.31
+  checksum: 621b1455d2f3f7e5481eb908ba07cdf969826a0899165493c271b6a6a6a9c7be112930fe493dad04ae7bc12143273d4669dd0704b9c62997eabad0c074fe3380
   languageName: node
   linkType: hard
 
@@ -1993,6 +2014,13 @@ __metadata:
   version: 0.0.2
   resolution: "@types/zeit__next-source-maps@npm:0.0.2"
   checksum: 54743f99af0c02df82145dd99a12f3556000d74ecd66b547e6e80bbcea56d0330c8a4ea5955a06a587c1ba0c0909e3964c8d9716d5d54e32e2dcdbfdf29821e1
+  languageName: node
+  linkType: hard
+
+"@types/zen-observable@npm:^0.8.2":
+  version: 0.8.2
+  resolution: "@types/zen-observable@npm:0.8.2"
+  checksum: f48643c09a5fb00503d5b5c156779870bc5c96c4cc7f3d0f643619752a04eed784de6a37c9121e284d2cdd8ec70e3e00a73613797f009f37dbe6795ffb9607c5
   languageName: node
   linkType: hard
 
@@ -2354,6 +2382,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"argparse@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "argparse@npm:2.0.1"
+  checksum: 160b7a25d2a7097fd5fdf25eb8a99e037340078f70e6c7cfdef305837ed14d54570b2b13261bcae26c8cd44ad6e9a7136a0110d815ac65a7891c69c7bf2f4afd
+  languageName: node
+  linkType: hard
+
 "aria-hidden@npm:^1.1.1":
   version: 1.1.1
   resolution: "aria-hidden@npm:1.1.1"
@@ -2694,7 +2729,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"base64-js@npm:^1.3.0":
+"base64-js@npm:^1.3.0, base64-js@npm:^1.3.1":
   version: 1.5.1
   resolution: "base64-js@npm:1.5.1"
   checksum: c1b41a26ddc6620eb7f1ee6c29c812f5942a4e328e74263f995872cfb8ca3aee08542beb25cd10fd7ef16e4f16603e25c35a26e776c01fd55277e5035e829e0e
@@ -2998,6 +3033,16 @@ __metadata:
     ieee754: ^1.1.4
     isarray: ^1.0.0
   checksum: e29ecda22aa854008e26a8df294be1e5339a3bec8cbf537a794fecf63a024da68165743bc9afb1524909c74d8b03392e93a9c8fa5c2b064b1b2a52d4680c204e
+  languageName: node
+  linkType: hard
+
+"buffer@npm:^6.0.3":
+  version: 6.0.3
+  resolution: "buffer@npm:6.0.3"
+  dependencies:
+    base64-js: ^1.3.1
+    ieee754: ^1.2.1
+  checksum: a8cf6a58571dc7c43b24ab821ad4c72222d9040775f49fd143a30fad45f33ec0a8e0d572ca80d589ad4f8b4715aa012c029dc2b925dc95467f135c2d13d7abfb
   languageName: node
   linkType: hard
 
@@ -3733,7 +3778,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"debug@npm:4":
+"debug@npm:4, debug@npm:^4.3.1":
   version: 4.3.2
   resolution: "debug@npm:4.3.2"
   dependencies:
@@ -5768,6 +5813,13 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
+"ieee754@npm:^1.2.1":
+  version: 1.2.1
+  resolution: "ieee754@npm:1.2.1"
+  checksum: 6c1cfab995ecab3b0dbb6cfb7e192686eb02f0f8e788f2d962e1fc02e2d5ab38a85e06d417221f136bd029663a77cdb920d99605d68d3730a05597dd7910426a
+  languageName: node
+  linkType: hard
+
 "ignore@npm:^4.0.6":
   version: 4.0.6
   resolution: "ignore@npm:4.0.6"
@@ -6781,6 +6833,17 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
+"js-yaml@npm:^4.0.0":
+  version: 4.1.0
+  resolution: "js-yaml@npm:4.1.0"
+  dependencies:
+    argparse: ^2.0.1
+  bin:
+    js-yaml: bin/js-yaml.js
+  checksum: 8973cf4296c944cc2551d1e3d3d064e7de0d0a6db3f7bafe40339ee9e5e0329560b52c4b8492b9b22365404c9be0822b62340ab49884e1dedfcc7ff80158abe0
+  languageName: node
+  linkType: hard
+
 "jsbn@npm:~0.1.0":
   version: 0.1.1
   resolution: "jsbn@npm:0.1.1"
@@ -7703,9 +7766,9 @@ mstform@1.27.0:
   languageName: node
   linkType: hard
 
-"next-auth@npm:^3.1.0":
-  version: 3.5.0
-  resolution: "next-auth@npm:3.5.0"
+"next-auth@npm:^3.14.8":
+  version: 3.14.8
+  resolution: "next-auth@npm:3.14.8"
   dependencies:
     crypto-js: ^4.0.0
     futoin-hkdf: ^1.3.2
@@ -7715,14 +7778,14 @@ mstform@1.27.0:
     oauth: ^0.9.15
     pkce-challenge: ^2.1.0
     preact: ^10.4.1
-    preact-render-to-string: ^5.1.7
+    preact-render-to-string: ^5.1.14
     querystring: ^0.2.0
     require_optional: ^1.0.1
     typeorm: ^0.2.30
   peerDependencies:
     react: ^16.13.1 || ^17
     react-dom: ^16.13.1 || ^17
-  checksum: 68615099f8a918761e5bc8da0bfd11449f8a54db6b4d74ebc9d8e2c30c910137940b8854c11f04014aef971640892cce2b62c92e557f3fa1eee3bf02574a2fc2
+  checksum: 2171aed05a74c720e81addcda09dab2d49cc8c4fbdf2d4ca9630215bbaf2b305d366d5dbda29248731a512e27607660bb8958a663104a6a5c34434d722bcf438
   languageName: node
   linkType: hard
 
@@ -8756,14 +8819,14 @@ mstform@1.27.0:
   languageName: node
   linkType: hard
 
-"preact-render-to-string@npm:^5.1.7":
-  version: 5.1.12
-  resolution: "preact-render-to-string@npm:5.1.12"
+"preact-render-to-string@npm:^5.1.14":
+  version: 5.1.19
+  resolution: "preact-render-to-string@npm:5.1.19"
   dependencies:
     pretty-format: ^3.8.0
   peerDependencies:
     preact: ">=10"
-  checksum: 61c84b6de85d59965095d3d474dc3c1c64af383113d7cf326500814a9ae1099a1a734648c7adeba4b458df376a027708c103ca056e21c417f2686b000bd4a28e
+  checksum: d90427f67ec6319f31b6dc7caf63bb9b57d8dc74d49093dfe2687e94a705a6c79f52e2be5cb66078cc0f0135862aecd181090c8e926129bd8d56df399cd77124
   languageName: node
   linkType: hard
 
@@ -11051,7 +11114,7 @@ mstform@1.27.0:
   languageName: node
   linkType: hard
 
-"typeorm@npm:^0.2.24, typeorm@npm:^0.2.29, typeorm@npm:^0.2.30":
+"typeorm@npm:^0.2.29, typeorm@npm:^0.2.30":
   version: 0.2.31
   resolution: "typeorm@npm:0.2.31"
   dependencies:
@@ -11077,6 +11140,33 @@ mstform@1.27.0:
   languageName: node
   linkType: hard
 
+"typeorm@npm:^0.2.31":
+  version: 0.2.32
+  resolution: "typeorm@npm:0.2.32"
+  dependencies:
+    "@sqltools/formatter": ^1.2.2
+    app-root-path: ^3.0.0
+    buffer: ^6.0.3
+    chalk: ^4.1.0
+    cli-highlight: ^2.1.10
+    debug: ^4.3.1
+    dotenv: ^8.2.0
+    glob: ^7.1.6
+    js-yaml: ^4.0.0
+    mkdirp: ^1.0.4
+    reflect-metadata: ^0.1.13
+    sha.js: ^2.4.11
+    tslib: ^2.1.0
+    xml2js: ^0.4.23
+    yargonaut: ^1.1.4
+    yargs: ^16.2.0
+    zen-observable-ts: ^1.0.0
+  bin:
+    typeorm: cli.js
+  checksum: f2f40db8d55b8bebaef6d2b8d39667303399086096c79ec625bf35932bdde3312c6f330331d1452eda2bcb578fd97edc9e0a080f437c1fed7952b86a60a9fc0f
+  languageName: node
+  linkType: hard
+
 typescript@^4.1.5:
   version: 4.1.5
   resolution: "typescript@npm:4.1.5"
@@ -11089,11 +11179,11 @@ typescript@^4.1.5:
 
 "typescript@patch:typescript@^4.1.5#builtin<compat/typescript>":
   version: 4.1.5
-  resolution: "typescript@patch:typescript@npm%3A4.1.5#builtin<compat/typescript>::version=4.1.5&hash=cc6730"
+  resolution: "typescript@patch:typescript@npm%3A4.1.5#builtin<compat/typescript>::version=4.1.5&hash=a45b0e"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 58cc7786be0f8485c124944883b1384287532e4867ec37f1fb5cb2811dbc10f7a9decccad89097f924043285f3515bfd8223c61dbb4f88af00b2d8dc2ef73207
+  checksum: 9c57e19536e978f130694888fbda2f8fe60f92c388c6b2945881dd7c912078bf52663dcb3278100cf9f4689805fbaec86b3de42ef600fb9672545b24fc1b7b15
   languageName: node
   linkType: hard
 
@@ -11657,7 +11747,7 @@ typescript@^4.1.5:
   languageName: node
   linkType: hard
 
-"yargonaut@npm:^1.1.2":
+"yargonaut@npm:^1.1.2, yargonaut@npm:^1.1.4":
   version: 1.1.4
   resolution: "yargonaut@npm:1.1.4"
   dependencies:
@@ -11704,7 +11794,7 @@ typescript@^4.1.5:
   languageName: node
   linkType: hard
 
-"yargs@npm:^16.0.0, yargs@npm:^16.0.3":
+"yargs@npm:^16.0.0, yargs@npm:^16.0.3, yargs@npm:^16.2.0":
   version: 16.2.0
   resolution: "yargs@npm:16.2.0"
   dependencies:
@@ -11723,5 +11813,22 @@ typescript@^4.1.5:
   version: 0.1.0
   resolution: "yocto-queue@npm:0.1.0"
   checksum: 096c3b40beb2804659539be1605a35c58eb0c85285f94b77b3e924f42ee265c1a40bf9f4153770039517146b469a964d51742395f35ca8135fc9f7e4982b785d
+  languageName: node
+  linkType: hard
+
+"zen-observable-ts@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "zen-observable-ts@npm:1.0.0"
+  dependencies:
+    "@types/zen-observable": ^0.8.2
+    zen-observable: ^0.8.15
+  checksum: 285d473b5aefeabdeb434fedbcf4698f286d807bb1aece10a6e6372f30f996fb169fd8a8ee729b24a0ea0f723fde967dd2459f0396bdd377d3d101f846ccf45e
+  languageName: node
+  linkType: hard
+
+"zen-observable@npm:^0.8.15":
+  version: 0.8.15
+  resolution: "zen-observable@npm:0.8.15"
+  checksum: 7d155f8a75b9314f9f31e70a31edcd897b0e8a1313737502ab84a573e49d2c333b738e415c156334a6e910c363ce546b59fa7921eff61440285caa99c843df74
   languageName: node
   linkType: hard

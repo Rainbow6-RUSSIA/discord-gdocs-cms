@@ -1,6 +1,22 @@
 import { BotClient } from "../bot"
 import type { DiscordPartialGuild, DiscordProfile } from "../types"
 
+export const getDiscordGuilds = async (token: string) => {
+  const guilds = await fetch(
+    "https://discord.com/api/users/@me/guilds",
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    },
+  ).then(async d => d.json())
+
+  if ("message" in guilds) throw new Error(guilds.message)
+
+  return guilds.map((g: DiscordPartialGuild) => ({
+    ...g,
+    isBotPresent: BotClient.guilds.cache.has(g.id),
+  }))
+}
+
 export const getDiscordProfile = async (
   token: string,
 ): Promise<DiscordProfile> => {
@@ -8,20 +24,9 @@ export const getDiscordProfile = async (
     headers: { Authorization: `Bearer ${token}` },
   }).then(async d => d.json())
 
-  const discordGuilds = await fetch(
-    "https://discord.com/api/users/@me/guilds",
-    {
-      headers: { Authorization: `Bearer ${token}` },
-    },
-  ).then(async d => d.json())
-
   if ("message" in discordUser) throw new Error(discordUser.message)
-  if ("message" in discordGuilds) throw new Error(discordGuilds.message)
 
-  discordUser.guilds = discordGuilds.map((g: DiscordPartialGuild) => ({
-    ...g,
-    isBotPresent: BotClient.guilds.cache.has(g.id),
-  }))
+  discordUser.guilds = await getDiscordGuilds(token)
 
   return discordUser
 }

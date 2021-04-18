@@ -20,7 +20,7 @@ export type DiscordUser = { type: "discord" } & DiscordProfile & BasicUser
 export type BasicUser = {
   id: string
   name: string
-  locale: string
+  locale?: string
   avatar: string
 }
 
@@ -32,14 +32,17 @@ export type CustomSession = {
 }
 
 export type DiscordProfile = {
-  avatar?: string
-  discriminator: string
-  flags: number
   id: string
-  locale: string
-  mfa_enabled: boolean
-  public_flags: number
   username: string
+  avatar: string | null
+  discriminator: string
+  public_flags?: number
+  flags?: number
+  locale?: string
+  mfa_enabled?: boolean
+  premium_type?: number
+  email?: string
+  verified?: boolean
   guilds: DiscordPartialGuild[]
 }
 
