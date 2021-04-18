@@ -64,7 +64,7 @@ export function PageHead(props: PageHeadProps) {
         content="width=device-width, initial-scale=1.0"
       />
       <title key="title">
-        {title === "Discohook" ? title : `${title} • Discohook`}
+        {title === "QuarrelPost" ? title : `${title} • QuarrelPost`}
       </title>
       <meta key="description" name="description" content={description} />
       <meta key="og:title" property="og:title" content={title} />

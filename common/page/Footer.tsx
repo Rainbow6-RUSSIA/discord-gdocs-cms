@@ -109,7 +109,7 @@ export function Footer() {
       </NavigationList>
       <LegalInfo>
         &copy; 2021 Rainbow6-RUSSIA. QuarrelPost is not affiliated with Discord.
-        QuarrelPost is a fork of Discohook (discohook.org).
+        QuarrelPost is a fork of <a href="https://discohook.org" target="_blank" rel="noreferrer">Discohook</a>.
       </LegalInfo>
       <LegalInfo>
         This website is made available under the terms of the GNU AGPL v3
