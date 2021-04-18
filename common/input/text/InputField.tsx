@@ -24,6 +24,7 @@ export type InputFieldProps = {
   value: string
   onChange: (value: string) => void
   label: string
+  hideLabel?: boolean
   type?: string
   rows?: number
   placeholder?: string
@@ -48,6 +49,7 @@ function InputFieldRenderer(
     value,
     onChange: handleChange,
     label,
+    hideLabel,
     type,
     rows,
     placeholder,
@@ -79,13 +81,14 @@ function InputFieldRenderer(
       onClick={handleClick}
       onFocus={handleFocus}
       onBlur={handleBlur}
+      aria-label={hideLabel ? label : undefined}
     />
   )
 
   return (
     <InputContainer className={className}>
       <InputLabel>
-        <label htmlFor={id}>{label}</label>
+        {!hideLabel && <label htmlFor={id}>{label}</label>}
         {required && <InputConstraint state="normal">Required</InputConstraint>}
         {maxLength && (
           <InputConstraint

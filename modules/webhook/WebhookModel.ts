@@ -1,11 +1,12 @@
 /* eslint-disable import/no-cycle */
 
 import { flow, Instance, SnapshotOrInstance, types } from "mobx-state-tree"
+import { getUniqueId } from "../../common/state/uid"
 import {
   BRANDED_DEFAULT_AVATAR_URL,
   DEFAULT_AVATAR_URL,
   DEFAULT_DISPLAY_NAME,
-  DISCORD_API_BASE_URL,
+  DISCORD_API_HOST_PROMISE,
   DISCORD_AVATARS_CDN_BASE_URL,
   MESSAGE_REF_RE,
 } from "./constants"
@@ -13,11 +14,12 @@ import type { WebhookData } from "./WebhookData"
 
 export const WebhookModel = types
   .model("WebhookModel", {
+    id: types.optional(types.identifierNumber, getUniqueId),
     url: "",
   })
   .volatile(() => ({
     exists: undefined as boolean | undefined,
-    id: undefined as string | undefined,
+    snowflake: undefined as string | undefined,
     name: undefined as string | undefined,
     avatar: undefined as string | null | undefined,
     channelId: undefined as string | undefined,
@@ -27,7 +29,7 @@ export const WebhookModel = types
   .views(self => ({
     get avatarUrl() {
       if (!self.avatar) return self.avatar
-      return `${DISCORD_AVATARS_CDN_BASE_URL}/${self.id}/${self.avatar}.png`
+      return `${DISCORD_AVATARS_CDN_BASE_URL}/${self.snowflake}/${self.avatar}.png`
     },
 
     get displayName() {
@@ -41,20 +43,23 @@ export const WebhookModel = types
       )
     },
 
-    getRoute(reference?: string) {
+    async getRoute(reference?: string) {
+      const host = await DISCORD_API_HOST_PROMISE
+
       const match = reference && MESSAGE_REF_RE.exec(reference)
+
       if (match) {
         const [, messageId] = match
 
         return [
           "PATCH",
-          `${DISCORD_API_BASE_URL}/webhooks/${self.id}/${self.token}/messages/${messageId}`,
+          `https://${host}/api/v8/webhooks/${self.snowflake}/${self.token}/messages/${messageId}`,
         ]
       }
 
       return [
         "POST",
-        `${DISCORD_API_BASE_URL}/webhooks/${self.id}/${self.token}?wait=true`,
+        `https://${host}/api/v8/webhooks/${self.snowflake}/${self.token}?wait=true`,
       ]
     },
   }))
@@ -68,7 +73,7 @@ export const WebhookModel = types
 
     fetch: flow(function* () {
       self.exists = undefined
-      self.id = undefined
+      self.snowflake = undefined
       self.name = undefined
       self.avatar = undefined
       self.channelId = undefined
@@ -76,7 +81,10 @@ export const WebhookModel = types
       self.token = undefined
 
       try {
-        const response: Response = yield fetch(self.url)
+        const url = new URL(self.url)
+        url.host = yield DISCORD_API_HOST_PROMISE
+
+        const response: Response = yield fetch(String(url))
 
         /* eslint-disable require-atomic-updates */
 
@@ -88,7 +96,7 @@ export const WebhookModel = types
         const webhook: WebhookData = yield response.json()
 
         self.exists = true
-        self.id = webhook.id
+        self.snowflake = webhook.id
         self.name = webhook.name
         self.avatar = webhook.avatar
         self.channelId = webhook.channel_id

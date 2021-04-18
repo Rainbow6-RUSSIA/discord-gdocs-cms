@@ -51,5 +51,17 @@ export const getEditorManagerFromQuery = (query: ParsedUrlQuery) => {
             : undefined,
       }
     }),
+    targets:
+      "targets" in value && Array.isArray(value.targets)
+        ? value.targets.map(target => {
+            if (typeof target !== "object" || !target || !("url" in target)) {
+              return {}
+            }
+
+            return {
+              url: String(target.url),
+            }
+          })
+        : [{}],
   })
 }
