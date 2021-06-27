@@ -3,7 +3,6 @@ import { destroy, getSnapshot, SnapshotOut } from "mobx-state-tree"
 import type { GetServerSidePropsContext } from "next"
 import React, { useEffect, useRef, useState } from "react"
 import styled from "styled-components"
-import { ConvergenceClient } from "../collaborative/convergence/client"
 import { CollaborationManagerContext } from "../collaborative/manager/CollaborationManagerContext"
 import { CollaborationModal } from "../collaborative/modals/CollaborationModal"
 import { CollaborativeEditor } from "../collaborative/overrides/CollaborativeEditor"
@@ -111,10 +110,10 @@ export default function Main(props: MainProps) {
           tabs={
             mobile
               ? {
-                  items: ["Editor", "Preview"],
-                  current: activeTab,
-                  onChange: setActiveTab,
-                }
+                items: ["Editor", "Preview"],
+                current: activeTab,
+                onChange: setActiveTab,
+              }
               : undefined
           }
         />

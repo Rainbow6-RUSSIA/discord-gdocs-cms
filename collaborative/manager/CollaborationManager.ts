@@ -1,13 +1,13 @@
-import { action, computed, observable } from "mobx"
+import { action, observable } from "mobx"
+import type { Session } from "next-auth"
 import { signIn, signOut } from "next-auth/client"
-import { getSession } from "next-auth/client";
+import { getSession } from "next-auth/client"
 import type { EditorManagerLike } from "../../modules/editor/EditorManager"
 // import type { SaveAPIQuery } from "../../pages/api/collaboration/save"
-import type { ConvergenceClient } from "../convergence/client"
+import { ConvergenceClient } from "../convergence/client"
 // import { convertContentToSheet } from "../helpers/convert"
 // import type { ChannelInstance } from "../sheet/channel"
 // import type { MessageInstance } from "../sheet/post"
-import type { Session } from "next-auth";
 import {
   CollaborationManagerMode,
   // CustomSession,
@@ -56,6 +56,7 @@ export class CollaborationManager {
     const res = await fetch(`/api/auth/provider/${type}/unlink`, {
       method: "POST",
     })
+    if (!res.ok) return this.showError(new Error(res.statusText))
     if (res.status === 204) {
       await signOut()
     }
@@ -101,15 +102,18 @@ export class CollaborationManager {
   }
 
   @action load = async (editor?: EditorManagerLike) => {
-    this.editor = editor
+    this.editor = this.editor ?? editor
     const session = await getSession()
     console.log(session)
     this.session = session
-    // TODO:
-    // if (session?.google) {
-    //   this.loadSettings()
-    //   this.convergence = new ConvergenceClient(this)
-    // } else this.resetSettings()
+    if (session && session.accounts.length > 0) {
+      //   this.loadSettings()
+      try {
+        this.convergence = new ConvergenceClient(this)
+      } catch (error) {
+        this.showError(error)
+      }
+    } // else this.resetSettings()
   }
 
   handleSave = async () => {

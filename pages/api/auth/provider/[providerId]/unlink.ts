@@ -1,34 +1,30 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import { getSession } from "next-auth/client"
+import { Account, User } from "../../../../../collaborative/db"
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
+  if (req.method !== "POST") return res.status(405).end()
+
+  // console.log(await getCsrfToken({ req }))
+
   const session = await getSession({ req })
   const { providerId } = req.query
 
   try {
-    throw new Error("Not implemented")
-    // const account = session?.accounts.find(a => a.type === providerId)
-    // if (req.method === "POST" && session && account) {
-    //   const accs = await Account.find({
-    //     where: {
-    //       userId: session.id,
-    //     },
-    //   })
-    //   const accToDelete = accs.find(
-    //     a => a.providerId === providerId && a.providerAccountId === account.id,
-    //   )
+    if (!session) return res.status(401).end()
+    const account = session.accounts.find(a => a.type === providerId)
+    if (!account) return res.status(404).end()
+    await Account.unlink({ providerAccountId: account.id, providerId: account.type })
 
-    //   await accToDelete?.remove()
+    if (session.accounts.length === 1) {
+      await User.clearSessions(session.id)
+      await User.delete({ id: session.id })
 
-    //   if (accToDelete && accs.length === 1) {
-    //     await User.delete({ id: session.id })
-    //     await Session.delete({ sessionToken: session.accessToken })
-    //     return res.status(204).end()
-    //   }
+      return res.status(204).end()
+    }
 
-    //   return res.status(200).end()
-    // }
-    // throw ""
+    return res.status(200).end()
+
   } catch (error) {
     console.log(error)
     return res.status(500).end()

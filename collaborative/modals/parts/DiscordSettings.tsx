@@ -13,7 +13,7 @@ export function DiscordSettings() {
       <>Discord settings here</>
     ) : (
       <LoginContainer>
-        <LoginInfo>QuarrelPost bot provides an ability to restore messages previously sent by webhooks.</LoginInfo>
+        <LoginInfo>QuarrelPost bot provides an ability to restore messages previously sent by webhooks. (Soon™)</LoginInfo>
         <DiscordLoginButton
           onClick={async () => collaborationManager.link("discord")}
         >

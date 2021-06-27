@@ -13,7 +13,7 @@ export function GoogleSettings() {
       <>Google Settings here</>
     ) : (
       <LoginContainer>
-        <LoginInfo>Login into a Google account provides import, export and milestone saves to chosen spreadsheet. (Soon™)</LoginInfo>
+        <LoginInfo>Login into a Google account for import, export and milestone saves to chosen spreadsheet. (Soon™)</LoginInfo>
         <GoogleLoginButton
           onClick={async () => collaborationManager.link("google")}
         >

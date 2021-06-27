@@ -12,4 +12,15 @@ export class Account implements DBAccount {
     accessTokenExpires!: Date | null
     createdAt!: Date
     updatedAt!: Date
+
+    static async unlink(
+        { providerAccountId, providerId }:
+            Pick<Account, "providerId" | "providerAccountId">
+    ) {
+        return prisma.account.delete({
+            where: {
+                providerId_providerAccountId: { providerAccountId, providerId }
+            }
+        })
+    }
 }

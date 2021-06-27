@@ -1,7 +1,8 @@
-import type { User as DBUser } from "@prisma/client"
+import type { User as DBUser, Prisma } from "@prisma/client"
 import type { IncomingMessage } from "http"
-import { getSession } from "next-auth/client";
+import { getSession } from "next-auth/client"
 import { prisma } from "../prisma"
+import type { Session } from "./Session"
 
 export class User implements DBUser {
     id!: string;
@@ -22,7 +23,7 @@ export class User implements DBUser {
                 sessions: {
                     some: {
                         AND: {
-                            accessToken: session.accessToken as string,
+                            accessToken: session.accessToken,
                             expires: {
                                 gt: new Date()
                             }
@@ -33,5 +34,24 @@ export class User implements DBUser {
         })
 
         return user
+    }
+
+    static async delete(where: Prisma.UserWhereUniqueInput) {
+        return prisma.user.delete({ where })
+    }
+
+    static async clearSessions(userId: User["id"]) {
+        return prisma.session.deleteMany({ where: { userId } })
+    }
+
+    static async clearAnotherSessions(userId: User["id"], accessToken: Session["accessToken"]) {
+        return prisma.session.deleteMany({
+            where: {
+                AND: {
+                    userId,
+                    NOT: { accessToken }
+                }
+            }
+        })
     }
 }
