@@ -1,24 +1,26 @@
-import {
-  BaseEntity,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from "typeorm"
+// import {
+//   BaseEntity,
+//   CreateDateColumn,
+//   Entity,
+//   PrimaryGeneratedColumn,
+//   UpdateDateColumn,
+// } from "typeorm"
 
-@Entity()
-export class User extends BaseEntity {
-  constructor(fields?: Partial<User>) {
-    super()
-    Object.assign(this, fields)
-  }
+// @Entity()
+// export class User extends BaseEntity {
+//   constructor(fields?: Partial<User>) {
+//     super()
+//     Object.assign(this, fields)
+//   }
 
-  @PrimaryGeneratedColumn("uuid")
-  id!: string
+//   @PrimaryGeneratedColumn("uuid")
+//   id!: string
 
-  @CreateDateColumn()
-  createDate!: Date
+//   @CreateDateColumn()
+//   createDate!: Date
 
-  @UpdateDateColumn()
-  updateDate!: Date
-}
+//   @UpdateDateColumn()
+//   updateDate!: Date
+// }
+
+export { }

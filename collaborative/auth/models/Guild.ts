@@ -1,25 +1,27 @@
-import {
-  BaseEntity,
-  CreateDateColumn,
-  Entity,
-  PrimaryColumn,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from "typeorm"
+// import {
+//   BaseEntity,
+//   CreateDateColumn,
+//   Entity,
+//   PrimaryColumn,
+//   PrimaryGeneratedColumn,
+//   UpdateDateColumn,
+// } from "typeorm"
 
-@Entity()
-export class Guild extends BaseEntity {
-  constructor(fields?: Partial<Guild>) {
-    super()
-    Object.assign(this, fields)
-  }
+// @Entity()
+// export class Guild extends BaseEntity {
+//   constructor(fields?: Partial<Guild>) {
+//     super()
+//     Object.assign(this, fields)
+//   }
 
-  @PrimaryColumn("character varying")
-  id!: string
+//   @PrimaryColumn("character varying")
+//   id!: string
 
-  @CreateDateColumn()
-  createDate!: Date
+//   @CreateDateColumn()
+//   createDate!: Date
 
-  @UpdateDateColumn()
-  updateDate!: Date
-}
+//   @UpdateDateColumn()
+//   updateDate!: Date
+// }
+
+export { }
