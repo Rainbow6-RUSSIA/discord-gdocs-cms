@@ -1,7 +1,6 @@
 import JWT from "jsonwebtoken"
 import type { NextApiRequest, NextApiResponse } from "next"
 import { getSession } from "next-auth/client"
-import type { GoogleUser } from "../../../collaborative/types"
 
 export default async function handler(
   req: NextApiRequest,
@@ -9,24 +8,20 @@ export default async function handler(
 ) {
   const session = await getSession({ req })
   if (!session) return res.status(401).end()
-  const google = session.accounts.find((a): a is GoogleUser => a.type === "google");
-  if (!google) return res.status(401).end()
-
-  const {
-    email,
-    given_name: firstName,
-    family_name: lastName,
-    sub,
-  } = google
+  const account = session.accounts.sort((a, b) => a.type.localeCompare(b.type))[0]
 
   const token = JWT.sign(
-    { email, firstName, lastName },
+    {
+      email: account.email,
+      firstName: account.name,
+      lastName: account.type
+    },
     process.env.PRIVATE_KEY!,
     {
       algorithm: "RS256",
       keyid: "defaultkeyid",
       audience: "Convergence",
-      subject: sub,
+      subject: session.id,
       expiresIn: "1h",
     },
   )
