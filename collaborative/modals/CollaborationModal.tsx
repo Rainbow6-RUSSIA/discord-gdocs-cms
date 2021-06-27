@@ -45,11 +45,7 @@ export function CollaborationModal() {
         </ModalHeader>
         <ModalBody>
           <Stack gap={8}>
-            {accounts.length > 0 ? (
-              <AuthStatus />
-            ) : (
-              "To use collaboration features you must login into atleast one account:"
-            )}
+            {accounts.length > 0 ? <AuthStatus /> : "To use collaboration features you must login into atleast one account:"}
             <Separator />
             <DiscordSettings />
             <Separator />

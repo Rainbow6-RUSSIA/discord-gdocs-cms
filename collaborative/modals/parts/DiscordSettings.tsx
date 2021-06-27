@@ -1,5 +1,4 @@
 import { useObserver } from "mobx-react-lite"
-import { signIn } from "next-auth/client"
 import React from "react"
 import { useRequiredContext } from "../../../common/state/useRequiredContext"
 import { CollaborationManagerContext } from "../../manager/CollaborationManagerContext"

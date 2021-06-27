@@ -245,6 +245,7 @@ module.exports = {
     "react/state-in-constructor": ["warn", "never"],
     "require-atomic-updates": "error",
     "require-yield": "warn",
+    "semi": ["error", "never"],
     "spaced-comment": ["warn", "always", { markers: ["/"] }],
     "symbol-description": "warn",
     "unicorn/better-regex": "warn",
