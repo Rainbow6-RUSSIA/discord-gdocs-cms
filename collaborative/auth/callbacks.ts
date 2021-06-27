@@ -55,9 +55,10 @@ const getRefreshedAccount = async (userId: string) => {
 const callbacks = {
     session: async (session: Session, user: JWT | User) => {
         session = {
-            ...session,
             id: user.id as string,
-            accounts: []
+            accounts: [],
+            accessToken: session.accessToken,
+            expires: session.expires
         }
 
         const accounts = await getRefreshedAccount(session.id)
@@ -82,7 +83,9 @@ const callbacks = {
             } catch (error) {
                 console.log("Profile error", error)
                 if (error.message.includes("Invalid Credentials")) {
-                    await discord.remove()
+                    await prisma.account.delete({
+                        where: discord
+                    })
                 }
             }
         }
@@ -99,11 +102,12 @@ const callbacks = {
             } catch (error) {
                 console.log("Profile error", error)
                 if (error.message.includes("Invalid Credentials")) {
-                    await google.remove()
+                    await prisma.account.delete({
+                        where: google
+                    })
                 }
             }
         }
-
         return session
     },
 }

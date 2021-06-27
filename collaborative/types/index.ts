@@ -22,6 +22,7 @@ export type BasicUser = {
   name: string
   locale?: string
   avatar: string
+  email: string
 }
 
 export type DiscordProfile = {
@@ -34,7 +35,7 @@ export type DiscordProfile = {
   locale?: string
   mfa_enabled?: boolean
   premium_type?: number
-  email?: string
+  email: string
   verified?: boolean
   guilds: DiscordPartialGuild[]
 }
