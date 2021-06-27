@@ -2,11 +2,23 @@ import { tint } from "polished"
 import styled from "styled-components"
 import { PrimaryButton } from "../../../common/input/button/PrimaryButton"
 
+export const LoginContainer = styled.div`
+  display: flex;
+  align-items: center; 
+  flex-wrap: wrap;
+  justify-content: center;
+`
+
+export const LoginInfo = styled.div`
+  flex: 1 1 175px;
+`
+
 export const LoginButton = styled(PrimaryButton)`
+  width: 175px;
   display: flex;
   align-items: center;
   padding: 0;
-  margin: 0 auto;
+  margin: 5px;
   & > span {
     margin: 0 3px;
   }

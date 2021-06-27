@@ -3,7 +3,7 @@ import { signIn } from "next-auth/client"
 import React from "react"
 import { useRequiredContext } from "../../../common/state/useRequiredContext"
 import { CollaborationManagerContext } from "../../manager/CollaborationManagerContext"
-import { GoogleLoginButton } from "./Layout"
+import { GoogleLoginButton, LoginContainer, LoginInfo } from "./Layout"
 
 export function GoogleSettings() {
   const collaborationManager = useRequiredContext(CollaborationManagerContext)
@@ -13,16 +13,15 @@ export function GoogleSettings() {
     return google ? (
       <>Google Settings here</>
     ) : (
-      <>
-        You can also login into a Google account to select spreadsheet for
-        import, export and milestone saves. (Soon™)
+      <LoginContainer>
+        <LoginInfo>Login into a Google account provides import, export and milestone saves to chosen spreadsheet. (Soon™)</LoginInfo>
         <GoogleLoginButton
           onClick={async () => collaborationManager.link("google")}
         >
           <img src="/static/google-button.svg" height={32} width={32} />
           <span>Sign in with Google</span>
         </GoogleLoginButton>
-      </>
+      </LoginContainer>
     )
   })
 }

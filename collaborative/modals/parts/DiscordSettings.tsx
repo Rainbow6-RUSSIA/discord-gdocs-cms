@@ -3,7 +3,7 @@ import { signIn } from "next-auth/client"
 import React from "react"
 import { useRequiredContext } from "../../../common/state/useRequiredContext"
 import { CollaborationManagerContext } from "../../manager/CollaborationManagerContext"
-import { DiscordLoginButton } from "./Layout"
+import { DiscordLoginButton, LoginContainer, LoginInfo } from "./Layout"
 
 export function DiscordSettings() {
   const collaborationManager = useRequiredContext(CollaborationManagerContext)
@@ -13,16 +13,15 @@ export function DiscordSettings() {
     return discord ? (
       <>Discord settings here</>
     ) : (
-      <>
-        To use collaboration features you must login into a Discord account and
-        add QuarrelPost bot.
+      <LoginContainer>
+        <LoginInfo>QuarrelPost bot provides an ability to restore messages previously sent by webhooks.</LoginInfo>
         <DiscordLoginButton
           onClick={async () => collaborationManager.link("discord")}
         >
           <img src="/static/discord-button.svg" height={32} width={32} />
           <span>Sign in with Discord</span>
         </DiscordLoginButton>
-      </>
+      </LoginContainer>
     )
   })
 }
