@@ -26,7 +26,7 @@
     "webpack": "~4.43.0"
   },
   "prisma": {
-    "schema": "./collaborative/schema.prisma"
+    "schema": "./collaborative/db/schema.prisma"
   },
   "dependencies": {
     "@babel/runtime": "^7.12.18",

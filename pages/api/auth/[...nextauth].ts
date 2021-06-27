@@ -1,8 +1,10 @@
-import type { NextApiRequest, NextApiResponse } from "next"
-import nextAuth from "next-auth"
+import NextAuth from "next-auth"
+import { callbacks } from "../../../collaborative/auth/callbacks"
+import { providers } from "../../../collaborative/auth/providers"
+import { adapter } from "../../../collaborative/db"
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
-  if (process.browser) return res.end()
-  const { options } = await import("../../../collaborative/auth/handler")
-  return nextAuth(req, res, options)
-}
+export default NextAuth({
+  providers,
+  adapter,
+  callbacks
+})
