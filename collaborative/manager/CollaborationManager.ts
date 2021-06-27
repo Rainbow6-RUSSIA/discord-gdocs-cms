@@ -1,30 +1,31 @@
 import { action, computed, observable } from "mobx"
 import { signIn, signOut } from "next-auth/client"
+import { getSession } from "next-auth/client";
 import type { EditorManagerLike } from "../../modules/editor/EditorManager"
-import type { SaveAPIQuery } from "../../pages/api/collaboration/save"
-import { getCustomSession } from "../auth/session"
+// import type { SaveAPIQuery } from "../../pages/api/collaboration/save"
 import type { ConvergenceClient } from "../convergence/client"
-import { convertContentToSheet } from "../helpers/convert"
-import type { ChannelInstance } from "../sheet/channel"
-import type { MessageInstance } from "../sheet/post"
+// import { convertContentToSheet } from "../helpers/convert"
+// import type { ChannelInstance } from "../sheet/channel"
+// import type { MessageInstance } from "../sheet/post"
+import type { Session } from "next-auth";
 import {
   CollaborationManagerMode,
-  CustomSession,
+  // CustomSession,
   DiscordUser,
-  GoogleProfile,
+  // GoogleProfile,
   GoogleUser,
   SocialType,
-  SpreadsheetItem,
+  // SpreadsheetItem,
 } from "../types"
 
 export class CollaborationManager {
   static LSSettingsKey = "collaborationSettings"
   // shareClient = new ConvergenceCursor(this)
-  @observable session?: CustomSession | null
+  @observable session: Session | null = null
 
-  @observable spreadsheet?: SpreadsheetItem
-  @observable channel?: ChannelInstance
-  @observable collection?: MessageInstance[]
+  @observable spreadsheet?: Record<string, unknown>
+  @observable channel?: Record<string, unknown>
+  @observable collection?: []
 
   @observable mode = CollaborationManagerMode.OFFLINE
   error?: Error
@@ -74,25 +75,25 @@ export class CollaborationManager {
   }
 
   saveSettings = () => {
-    localStorage.setItem(
-      CollaborationManager.LSSettingsKey,
-      JSON.stringify({
-        spreadsheet: this.spreadsheet,
-        channel: this.channel,
-        // TODO:
-        // post: this.post,
-      }),
-    )
+    //   localStorage.setItem(
+    //     CollaborationManager.LSSettingsKey,
+    //     JSON.stringify({
+    //       spreadsheet: this.spreadsheet,
+    //       channel: this.channel,
+    //       // TODO:
+    //       // post: this.post,
+    //     }),
+    //   )
   }
 
   @action loadSettings = () => {
-    const settings = JSON.parse(
-      localStorage.getItem(CollaborationManager.LSSettingsKey) ?? "{}",
-    )
-    this.spreadsheet = settings.spreadsheet
-    this.channel = settings.channel
-    // TODO:
-    // this.post = settings.post
+    //   const settings = JSON.parse(
+    //     localStorage.getItem(CollaborationManager.LSSettingsKey) ?? "{}",
+    //   )
+    //   this.spreadsheet = settings.spreadsheet
+    //   this.channel = settings.channel
+    //   // TODO:
+    //   // this.post = settings.post
   }
 
   @action resetSettings = () => {
@@ -101,7 +102,7 @@ export class CollaborationManager {
 
   @action load = async (editor?: EditorManagerLike) => {
     this.editor = editor
-    const session = await getCustomSession()
+    const session = await getSession()
     console.log(session)
     this.session = session
     // TODO:

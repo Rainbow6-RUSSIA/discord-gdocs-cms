@@ -24,13 +24,6 @@ export type BasicUser = {
   avatar: string
 }
 
-export type CustomSession = {
-  id: string
-  accessToken: string
-  expires: string
-  accounts: CustomUser[]
-}
-
 export type DiscordProfile = {
   id: string
   username: string

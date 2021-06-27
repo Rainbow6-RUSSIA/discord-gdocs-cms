@@ -15,7 +15,7 @@ export function GoogleSettings() {
     ) : (
       <>
         You can also login into a Google account to select spreadsheet for
-        import, export and milestone saves.
+        import, export and milestone saves. (Soon™)
         <GoogleLoginButton
           onClick={async () => collaborationManager.link("google")}
         >
