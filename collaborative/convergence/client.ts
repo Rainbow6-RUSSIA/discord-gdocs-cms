@@ -7,7 +7,7 @@ import {
   RealTimeObject,
 } from "@convergence/convergence"
 import isEqual from "lodash/isEqual"
-import { autorun, observe, reaction, toJS } from "mobx"
+import { toJS } from "mobx"
 import {
   applySnapshot,
   getSnapshot,
@@ -15,12 +15,13 @@ import {
   IJsonPatch,
   onPatch,
 } from "mobx-state-tree"
+import { getSession } from "next-auth/client"
 import type { EditorManagerLike } from "../../modules/editor/EditorManager"
-import { convertSheetToContent } from "../helpers/convert"
+// import { convertSheetToContent } from "../helpers/convert"
 import { parseNumbers } from "../helpers/parseNumbers"
 import type { CollaborationManager } from "../manager/CollaborationManager"
 import { CollaborationManagerMode } from "../types"
-import type { ConvergenceCursor } from "./cursor"
+import { ConvergenceCursor } from "./cursor"
 
 export class ConvergenceClient {
   constructor(collaboration: CollaborationManager) {
@@ -44,9 +45,7 @@ export class ConvergenceClient {
   init = async () => {
     const collaborationServerURL = process.env.NEXT_PUBLIC_CONVERGENCE_URL
     if (collaborationServerURL) {
-      const jwt = await fetch("/api/collaboration/token").then(async d =>
-        d.text(),
-      )
+      const jwt = await fetch("/api/collaboration/token").then(async d => d.text())
       console.log("JWT", jwt)
       this.domain = await connectWithJwt(collaborationServerURL, jwt)
       // TODO:
@@ -85,34 +84,34 @@ export class ConvergenceClient {
     // const spreadsheetId = this.collaboration.spreadsheet?.id
     // const channel = this.collaboration.channel
     // const post = this.collaboration.post
-    // if (this.domain && googleUser && spreadsheetId && channel && post) {
-    //   this.model = await this.domain.models().openAutoCreate({
-    //     collection: spreadsheetId,
-    //     id: `${channel.id}/${post.id}`,
-    //     data: convertSheetToContent(channel, post),
-    //     ephemeral: true,
-    //   })
-    //   this.syncUpdate() // get content
-    //   this.model.root().value(getSnapshot(this.editor)) // force set content with ids to fix incomplete model
-    //   // this.domain.presence().on(PresenceService.Events.AVAILABILITY_CHANGED)
-    //   this.model.on(RealTimeModel.Events.VERSION_CHANGED, this.syncUpdate)
-    //   this.disposers.push(onPatch(this.editor, this.handlePatch))
-    //   this.cursor = new ConvergenceCursor(this)
-    //   this.cursor.initTracking()
+    const session = await getSession()
 
-    //   this.collaboration.setMode(CollaborationManagerMode.ONLINE)
-    // } else {
-    //   this.collaboration.showError(
-    //     new Error("Cannot connect to collaboration server"),
-    //   )
-    //   console.warn(
-    //     "Cannot connect to collaboration server",
-    //     toJS(googleUser),
-    //     spreadsheetId,
-    //     channel?.id,
-    //     post?.id,
-    //   )
-    // }
+    if (this.domain && session) {
+      this.model = await this.domain.models().openAutoCreate({
+        collection: "temp",
+        // id: `${channel.id}/${post.id}`,
+        data: toJS(this.editor),// convertSheetToContent(channel, post),
+        ephemeral: true,
+      })
+      console.log(`Connected to Collaboration server with modelId: ${this.model.modelId()}`)
+      this.syncUpdate() // get content
+      this.model.root().value(getSnapshot(this.editor)) // force set content with ids to fix incomplete model
+      // this.domain.presence().on(PresenceService.Events.AVAILABILITY_CHANGED)
+      this.model.on(RealTimeModel.Events.VERSION_CHANGED, this.syncUpdate)
+      this.disposers.push(onPatch(this.editor, this.handlePatch))
+      this.cursor = new ConvergenceCursor(this)
+      this.cursor.initTracking()
+
+      this.collaboration.setMode(CollaborationManagerMode.ONLINE)
+    } else {
+      this.collaboration.showError(
+        new Error("Cannot connect to collaboration server"),
+      )
+      console.warn(
+        "Cannot connect to collaboration server",
+        session
+      )
+    }
 
     this.collaboration.resetMode(CollaborationManagerMode.CONNECTING)
   }
@@ -162,11 +161,11 @@ export class ConvergenceClient {
     this.lock = true
 
     const value = model.root().value()
-    const isWebhookChanged = this.editor.target.url !== value.target?.url
+    // const isWebhookChanged = this.editor.target.url !== value.target?.url
     applySnapshot(this.editor, value)
-    if (isWebhookChanged) {
-      void this.editor.process("/target/url")
-    }
+    // if (isWebhookChanged) {
+    //   void this.editor.process("/target/url")
+    // }
 
     console.log("received change version", model.version())
 

@@ -1,7 +1,7 @@
 /* eslint-disable require-atomic-updates */
-import type { Session } from "next-auth";
-import type { JWT } from "next-auth/jwt";
-import { Account, prisma, User } from "../db";
+import type { Session } from "next-auth"
+import type { JWT } from "next-auth/jwt"
+import { Account, prisma, User } from "../db"
 import { getDiscordProfile } from "../helpers/discord"
 import { getGoogleProfile } from "../helpers/google"
 import { providers } from "./providers"
@@ -83,9 +83,7 @@ const callbacks = {
             } catch (error) {
                 console.log("Profile error", error)
                 if (error.message.includes("Invalid Credentials")) {
-                    await prisma.account.delete({
-                        where: discord
-                    })
+                    await Account.unlink(discord)
                 }
             }
         }
@@ -102,9 +100,7 @@ const callbacks = {
             } catch (error) {
                 console.log("Profile error", error)
                 if (error.message.includes("Invalid Credentials")) {
-                    await prisma.account.delete({
-                        where: google
-                    })
+                    await Account.unlink(google)
                 }
             }
         }
