@@ -92,6 +92,15 @@ export class ConvergenceClient {
         // id: `${channel.id}/${post.id}`,
         data: toJS(this.editor),// convertSheetToContent(channel, post),
         ephemeral: true,
+        userPermissions: {
+          [session.id]: {
+            read: true,
+            write: true,
+            manage: true,
+            remove: true
+          }
+        }
+
       })
       console.log(`Connected to Collaboration server with modelId: ${this.model.modelId()}`)
       this.syncUpdate() // get content
