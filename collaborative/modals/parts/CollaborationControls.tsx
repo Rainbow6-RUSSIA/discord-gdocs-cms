@@ -2,7 +2,6 @@ import { useObserver } from "mobx-react-lite"
 import React from "react"
 import { useMutation } from "react-query"
 import styled from "styled-components"
-import { PrimaryButton } from "../../../common/input/button/PrimaryButton"
 import { InputContainer } from "../../../common/input/layout/InputContainer"
 import { InputLabel } from "../../../common/input/layout/InputLabel"
 import { InputField } from "../../../common/input/text/InputField"
@@ -13,6 +12,7 @@ import { useRequiredContext } from "../../../common/state/useRequiredContext"
 import { remove } from "../../../icons/remove"
 import { loading } from "../../icons/loading"
 import { CollaborationManagerContext } from "../../manager/CollaborationManagerContext"
+import { PrimaryIconButton } from "./Layout"
 
 const Name = styled.div`
   line-height: 32px;
@@ -46,7 +46,11 @@ export const CollaborationControls = () => {
           onChange={() => { }}
           readOnly
         >
-          <PrimaryButton accent="danger" >Go Live</PrimaryButton>
+          <PrimaryIconButton>
+            <span>Go Live</span>
+            {loading}
+          </PrimaryIconButton>
+
         </InputField>
         <InputContainer>
           <InputLabel>Linked Accounts</InputLabel>

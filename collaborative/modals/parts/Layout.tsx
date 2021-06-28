@@ -13,14 +13,26 @@ export const LoginInfo = styled.div`
   flex: 1 1 175px;
 `
 
-export const LoginButton = styled(PrimaryButton)`
-  width: 175px;
+export const PrimaryIconButton = styled(PrimaryButton)`
   display: flex;
   align-items: center;
-  padding: 0;
-  margin: 5px;
-  & > span {
+  padding: 0 9px;
+  min-width: unset;
+  & > * {
     margin: 0 3px;
+  }
+`
+
+const LoginButton = styled(PrimaryIconButton)`
+  padding: 0;
+  width: 180px;
+
+  & > span {
+    margin: 0 auto;
+  }
+
+  & > :is(img, svg) {
+    margin: 0;
   }
 `
 
