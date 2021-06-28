@@ -123,6 +123,7 @@ const TextInputHighlight = (
         <Highlight color="#FF0000">{value.slice(pos[0], pos[1])}</Highlight>
       )}
       {value.slice(pos[1])}
+      {"\n" /* фикс при пустых строках в конце */}
     </>
   )
 
@@ -138,16 +139,19 @@ const TextInputHighlight = (
       setPos(
         new Array(2)
           .fill(null)
-          .map(() => Math.round(Math.random() * value.length))
+          .map(() => Math.round(Math.random() * 100)) // test
           .sort((a, b) => a - b),
       )
 
+      const observer = new ResizeObserver(setScroll)
+      observer.observe(input)
       input.addEventListener("scroll", setScroll)
       return () => {
         input.removeEventListener("scroll", setScroll)
+        observer.disconnect()
       }
     }
-  }, [inputRef, value])
+  }, [inputRef])
 
   return (props.disabled || props.type === "password" || props.placeholder === "#rrggbb") // детект косвенных полей
     ? <PlainTextInput ref={mergeRefs([ref, inputRef])} {...props} /> // TODO: показывать фокус на поле вебхука
