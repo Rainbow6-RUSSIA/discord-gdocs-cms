@@ -1,14 +1,12 @@
-import type { NextApiRequest, NextApiResponse } from "next"
-import { getCustomSession } from "../../../collaborative/auth/session"
-import { validateQuery } from "../../../collaborative/helpers/validateQuery"
+// import type { NextApiRequest, NextApiResponse } from "next"
 import type { ChannelInstance } from "../../../collaborative/sheet/channel"
-import { SheetORM } from "../../../collaborative/sheet/orm"
+// import { SheetORM } from "../../../collaborative/sheet/orm"
 
 const query = ["spreadsheetId"] as const
 
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
+  // req: NextApiRequest,
+  // res: NextApiResponse,
 ) {
   // TODO:
   // const session = await getCustomSession({ req })

@@ -50,7 +50,7 @@ const EchoInput = styled(Input)`
     overflow: hidden auto; // important for pixel-perfect overlay
     padding: 5.5px 9px; // from Input
   }
-`
+`.withComponent("div") // fix buggy as prop
 
 type CursorProps = {
   color: string
@@ -158,7 +158,7 @@ const TextInputHighlight = (
   return !props.disabled ? (
     <HighlightContainer>
       {input}
-      <EchoInput ref={echoRef} as="div">
+      <EchoInput ref={echoRef}>
         {Boolean(value.length > 0 && props.id !== "webhook") && content}
       </EchoInput>
     </HighlightContainer>

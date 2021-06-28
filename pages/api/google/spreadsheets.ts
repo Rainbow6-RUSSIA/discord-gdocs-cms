@@ -1,14 +1,13 @@
-import { google } from "googleapis"
-import type { NextApiRequest, NextApiResponse } from "next"
-import { getCustomSession } from "../../../collaborative/auth/session"
-import { getAuthClient } from "../../../collaborative/helpers/google"
+// import { google } from "googleapis"
+// import type { NextApiRequest, NextApiResponse } from "next"
+// import { getAuthClient } from "../../../collaborative/helpers/google"
 import type { SpreadsheetItem } from "../../../collaborative/types"
 
-const drive = google.drive("v3")
+// const drive = google.drive("v3")
 
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
+  // req: NextApiRequest,
+  // res: NextApiResponse,
 ) {
   // TODO:
   // const session = await getCustomSession({ req })

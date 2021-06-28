@@ -99,7 +99,7 @@ export function DataEditorModal(props: DataEditorModalProps) {
           as="textarea"
           id="data-editor"
           value={value}
-          onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
+          onChange={(event: { target: { value: React.SetStateAction<string> } }) => {
             setValue(event.target.value)
           }}
         />

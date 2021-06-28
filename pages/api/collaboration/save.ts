@@ -1,8 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import { getCustomSession } from "../../../collaborative/auth/session"
-import { validateQuery } from "../../../collaborative/helpers/validateQuery"
-import { SheetORM } from "../../../collaborative/sheet/orm"
-import type { MessageInstance } from "../../../collaborative/sheet/post"
+// import { validateQuery } from "../../../collaborative/helpers/validateQuery"
+// import { SheetORM } from "../../../collaborative/sheet/orm"
+// import type { MessageInstance } from "../../../collaborative/sheet/post"
 
 const query = ["spreadsheetId", "channelId", "postId"] as const
 

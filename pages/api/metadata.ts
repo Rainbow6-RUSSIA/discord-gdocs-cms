@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import { getCustomSession } from "../../collaborative/auth/session"
+import { getSession } from "next-auth/client"
 import { parseMetadata } from "../../collaborative/helpers/pageMetadata"
 import { validateQuery } from "../../collaborative/helpers/validateQuery"
 
@@ -11,7 +11,7 @@ export default async function handler(
 ) {
   if (req.method !== "GET") return res.status(405).end()
 
-  const session = await getCustomSession({ req })
+  const session = await getSession({ req })
 
   if (!session) return res.status(401).end()
 
