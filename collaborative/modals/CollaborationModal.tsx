@@ -1,5 +1,7 @@
 import { useObserver } from "mobx-react-lite"
+import { signOut, useSession } from "next-auth/client"
 import React from "react"
+import { useMutation } from "react-query"
 import { ReactQueryDevtools } from "react-query/devtools"
 import { PrimaryButton } from "../../common/input/button/PrimaryButton"
 import { Separator } from "../../common/layout/Separator"
@@ -12,11 +14,14 @@ import { ModalHeader } from "../../common/modal/layout/ModalHeader"
 import { ModalTitle } from "../../common/modal/layout/ModalTitle"
 import { ModalContext } from "../../common/modal/ModalContext"
 import { useRequiredContext } from "../../common/state/useRequiredContext"
+import { loading } from "../icons/loading"
 import { remove } from "../../icons/remove"
 import { CollaborationManagerContext } from "../manager/CollaborationManagerContext"
 import { CollaborationControls } from "./parts/CollaborationControls"
 import { DiscordSettings } from "./parts/DiscordSettings"
 import { GoogleSettings } from "./parts/GoogleSettings"
+import { PrimaryIconButton } from "./parts/Layout"
+
 
 export function CollaborationModal() {
   const modal = useRequiredContext(ModalContext)
@@ -29,6 +34,9 @@ export function CollaborationModal() {
   //     collaborationManager.post = undefined
   // // eslint-disable-next-line react-hooks/exhaustive-deps
   // }, [])
+
+  // const [session, loading] = useSession()
+  const { isLoading: isLogoutLoading, mutate: logout } = useMutation(() => signOut())
 
   return useObserver(() => {
     const accounts = collaborationManager.session?.accounts ?? []
@@ -56,6 +64,14 @@ export function CollaborationModal() {
           </div>
         </ModalBody>
         <ModalFooter>
+
+          {collaborationManager.session &&
+            <PrimaryIconButton onClick={() => !isLogoutLoading && logout()} accent="danger">
+              <span>Logout</span>
+              {isLogoutLoading && loading}
+            </PrimaryIconButton>
+
+          }
           <PrimaryButton onClick={() => modal.dismiss()}>Close</PrimaryButton>
         </ModalFooter>
       </ModalContainer>

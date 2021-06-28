@@ -3,6 +3,7 @@ import { destroy, getSnapshot, SnapshotOut } from "mobx-state-tree"
 import type { GetServerSidePropsContext } from "next"
 import React, { useEffect, useRef, useState } from "react"
 import styled from "styled-components"
+import { base62toUUID } from "../collaborative/helpers/base62"
 import { CollaborationManagerContext } from "../collaborative/manager/CollaborationManagerContext"
 import { CollaborationModal } from "../collaborative/modals/CollaborationModal"
 import { CollaborativeEditor } from "../collaborative/overrides/CollaborativeEditor"
@@ -49,19 +50,21 @@ const View = styled.main.attrs({ translate: "no" })`
 
 export type MainProps = {
   state: SnapshotOut<typeof EditorManager>
-  mobile: boolean
+  mobile: boolean,
+  room: string | null
 }
 
 export default function Main(props: MainProps) {
-  const { state, mobile } = props
+  const { state, mobile, room } = props
 
   const collaborationManager = useRequiredContext(CollaborationManagerContext)
   const editorManager = useLazyValue(() => EditorManager.create(state))
 
   useEffect(() => {
+    collaborationManager.roomId = room
     void collaborationManager.load(editorManager)
     return () => collaborationManager.convergence?.dispose()
-  }, [editorManager, collaborationManager]) // ВСТРОЕННЫЙ shareClient ЛОМАЕТ КНОПКИ
+  }, [editorManager, collaborationManager, room]) // ВСТРОЕННЫЙ shareClient ЛОМАЕТ КНОПКИ
   useWindowEvent("unload", () => collaborationManager.convergence?.dispose())
 
   useEffect(() => () => destroy(editorManager), [editorManager])
@@ -125,7 +128,7 @@ export default function Main(props: MainProps) {
           )}
           {(!mobile || activeTab === "Editor") && (
             <div>
-              {collaborationManager.hasMode(CollaborationManagerMode.ONLINE) ? (
+              {collaborationManager.roomId ? (
                 <CollaborativeEditor />
               ) : (
                 <Editor />
@@ -142,10 +145,12 @@ export default function Main(props: MainProps) {
 export const getServerSideProps = (
   context: GetServerSidePropsContext,
 ): { props: MainProps } => {
+  const { room } = context.query
   return {
     props: {
       state: getSnapshot(getEditorManagerFromQuery(context.query)),
       mobile: /mobile/i.test(context.req.headers["user-agent"] ?? ""),
+      room: room && !Array.isArray(room) ? base62toUUID.decode(room) : null,
     },
   }
 }

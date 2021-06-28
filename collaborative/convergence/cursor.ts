@@ -52,10 +52,10 @@ const ShortPathConvert: Record<string, string> = {
 
 export class ConvergenceCursor {
   constructor(client: ConvergenceClient) {
-    if (!client.model || !client.collaboration.discord)
+    if (!client.model || !client.user)
       throw new Error("Incomplete client")
     this.client = client
-    this.color = new ColorHash().hex(client.collaboration.discord.id)
+    this.color = new ColorHash().hex(client.user.username)
     this.elementReference = client.model.elementReference("selected")
     // this.elementReference.on(LocalElementReference.Events.SET, e => console.log("ELEMENT REFERENCE SET", e))
   }

@@ -8,6 +8,7 @@ export default async function handler(
 ) {
   const session = await getSession({ req })
   if (!session) return res.status(401).end()
+  console.log(session.accounts)
   const account = session.accounts.sort((a, b) => a.type.localeCompare(b.type))[0]
 
   const token = JWT.sign(

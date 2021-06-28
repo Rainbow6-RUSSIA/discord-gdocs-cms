@@ -5,9 +5,9 @@ import {
   ConvergenceDomain,
   RealTimeArray,
   RealTimeObject,
+  DomainUser
 } from "@convergence/convergence"
 import isEqual from "lodash/isEqual"
-import { toJS } from "mobx"
 import {
   applySnapshot,
   getSnapshot,
@@ -20,34 +20,22 @@ import type { EditorManagerLike } from "../../modules/editor/EditorManager"
 // import { convertSheetToContent } from "../helpers/convert"
 import { parseNumbers } from "../helpers/parseNumbers"
 import type { CollaborationManager } from "../manager/CollaborationManager"
-import { CollaborationManagerMode } from "../types"
 import { ConvergenceCursor } from "./cursor"
 
 export class ConvergenceClient {
-  constructor(collaboration: CollaborationManager) {
+  static async init(collaboration: CollaborationManager) {
     if (!collaboration.editor) throw new Error("No Editor")
-    this.collaboration = collaboration
-    this.editor = collaboration.editor
-    void this.init()
-    this.collaboration.setMode(CollaborationManagerMode.CONNECTING)
-  }
 
-  editor: EditorManagerLike
-  collaboration: CollaborationManager
-  domain?: ConvergenceDomain
-  model?: RealTimeModel
-  lock = true
+    const instance = new ConvergenceClient()
 
-  disposers: IDisposer[] = []
+    instance.collaboration = collaboration
+    instance.editor = collaboration.editor
 
-  cursor?: ConvergenceCursor
-
-  init = async () => {
     const collaborationServerURL = process.env.NEXT_PUBLIC_CONVERGENCE_URL
     if (collaborationServerURL) {
       const jwt = await fetch("/api/collaboration/token").then(async d => d.text())
       console.log("JWT", jwt)
-      this.domain = await connectWithJwt(collaborationServerURL, jwt)
+      instance.domain = await connectWithJwt(collaborationServerURL, jwt)
       // TODO:
       // this.disposers.push(
       //   reaction(
@@ -61,11 +49,24 @@ export class ConvergenceClient {
 
       // await this.connect()
     } else {
-      this.collaboration.resetMode(CollaborationManagerMode.CONNECTING)
-      this.collaboration.showError(new Error("No Collaboration server URL set"))
+      // this.collaboration.resetMode(CollaborationManagerMode.CONNECTING)
+      collaboration.showError(new Error("No Collaboration server URL set"))
       console.warn("No Collaboration server URL set")
     }
+
+    return instance
   }
+
+  editor!: EditorManagerLike
+  collaboration!: CollaborationManager
+  domain: ConvergenceDomain | null = null
+  model: RealTimeModel | null = null
+  user: DomainUser | null = null
+  lock = true
+
+  disposers: IDisposer[] = []
+
+  cursor?: ConvergenceCursor
 
   reconnect = async () => {
     await this.disconnect()
@@ -78,7 +79,7 @@ export class ConvergenceClient {
     for (const dispose of this.disposers) dispose()
   }
 
-  connect = async () => {
+  connect = async (modelId?: string) => {
     // TODO:
     // const googleUser = this.collaboration.google
     // const spreadsheetId = this.collaboration.spreadsheet?.id
@@ -87,31 +88,42 @@ export class ConvergenceClient {
     const session = await getSession()
 
     if (this.domain && session) {
-      this.model = await this.domain.models().openAutoCreate({
-        collection: "temp",
-        // id: `${channel.id}/${post.id}`,
-        data: toJS(this.editor),// convertSheetToContent(channel, post),
-        ephemeral: true,
-        userPermissions: {
-          [session.id]: {
-            read: true,
-            write: true,
-            manage: true,
-            remove: true
-          }
-        }
+      const editorData = getSnapshot(this.editor)
+      console.log("Fresh connect:", modelId)
 
-      })
+      if (modelId) {
+        this.model = await this.domain.models().open(modelId)
+      } else {
+        this.model = await this.domain.models().openAutoCreate({
+          collection: "temp",
+          // id: `${channel.id}/${post.id}`,
+          data: editorData,// convertSheetToContent(channel, post),
+          ephemeral: true,
+          userPermissions: {
+            [session.id]: {
+              read: true,
+              write: true,
+              manage: true,
+              remove: true
+            }
+          }
+
+        })
+      }
+
+      this.user = await this.domain.identity().user(session.id)
+      console.log("Convergence User:", this.user)
+
       console.log(`Connected to Collaboration server with modelId: ${this.model.modelId()}`)
       this.syncUpdate() // get content
-      this.model.root().value(getSnapshot(this.editor)) // force set content with ids to fix incomplete model
+      // this.model.root().value(getSnapshot(this.editor)) // force set content with ids to fix incomplete model from spreadsheet
       // this.domain.presence().on(PresenceService.Events.AVAILABILITY_CHANGED)
       this.model.on(RealTimeModel.Events.VERSION_CHANGED, this.syncUpdate)
       this.disposers.push(onPatch(this.editor, this.handlePatch))
       this.cursor = new ConvergenceCursor(this)
       this.cursor.initTracking()
 
-      this.collaboration.setMode(CollaborationManagerMode.ONLINE)
+      // this.collaboration.setMode(CollaborationManagerMode.ONLINE)
     } else {
       this.collaboration.showError(
         new Error("Cannot connect to collaboration server"),
@@ -122,11 +134,11 @@ export class ConvergenceClient {
       )
     }
 
-    this.collaboration.resetMode(CollaborationManagerMode.CONNECTING)
+    // this.collaboration.resetMode(CollaborationManagerMode.CONNECTING)
   }
 
   disconnect = async () => {
-    this.collaboration.resetMode(CollaborationManagerMode.ONLINE)
+    // this.collaboration.resetMode(CollaborationManagerMode.ONLINE)
     this.cursor?.stopTracking()
     if (this.isConnected) await this.model!.close()
   }

@@ -153,7 +153,14 @@ const TextInputHighlight = (
     }
   }, [inputRef])
 
-  return (props.disabled || props.type === "password" || props.placeholder === "#rrggbb" || !collaborationManager.convergence || value) // детект некорректных полей
+  return (
+    props.disabled
+    || props.type === "password"
+    || props.placeholder === "#rrggbb"
+    || !collaborationManager.convergence
+    || !collaborationManager.roomId
+    || !value
+  ) // детект некорректных полей
     ? <PlainTextInput ref={mergeRefs([ref, inputRef])} {...props} /> // TODO: показывать фокус на поле вебхука
     : (
       <HighlightContainer>

@@ -1,5 +1,5 @@
 import { useObserver } from "mobx-react-lite"
-import React from "react"
+import React, { useMemo } from "react"
 import { useMutation } from "react-query"
 import styled from "styled-components"
 import { InputContainer } from "../../../common/input/layout/InputContainer"
@@ -10,6 +10,7 @@ import { FlexContainer } from "../../../common/layout/FlexContainer"
 import { IconButton } from "../../../common/layout/IconButton"
 import { useRequiredContext } from "../../../common/state/useRequiredContext"
 import { remove } from "../../../icons/remove"
+import { base62toUUID } from "../../helpers/base62"
 import { loading } from "../../icons/loading"
 import { CollaborationManagerContext } from "../../manager/CollaborationManagerContext"
 import { PrimaryIconButton } from "./Layout"
@@ -32,7 +33,9 @@ const Card = styled(FlexContainer)`
 
 export const CollaborationControls = () => {
   const collaborationManager = useRequiredContext(CollaborationManagerContext)
-  const { isLoading, mutate: unlink } = useMutation(collaborationManager.unlink)
+  const { isLoading: isUnlinkLoading, mutate: unlink } = useMutation(collaborationManager.unlink)
+  const { isLoading: isRoomLoading, mutate: toggleRoom } = useMutation(collaborationManager.toggleRoom)
+  const shortRoomId = useMemo(() => collaborationManager.roomId && base62toUUID.encode(collaborationManager.roomId), [collaborationManager.roomId])
 
   return useObserver(() => {
     const accounts = collaborationManager.session?.accounts ?? []
@@ -40,17 +43,21 @@ export const CollaborationControls = () => {
       <>
         <InputField
           id="roomUrl"
-          placeholder={`${window?.location.href}?room=`}
-          value=""
+          placeholder={`${window.location.origin + window.location.pathname}?room=`}
+          value={collaborationManager.roomId ? `${window.location.origin + window.location.pathname}?room=${shortRoomId}` : ""}
           label="Room URL"
           onChange={() => { }}
           readOnly
+          disabled={isUnlinkLoading}
         >
-          <PrimaryIconButton>
-            <span>Go Live</span>
-            {loading}
+          <PrimaryIconButton
+            accent={collaborationManager.roomId ? "danger" : "primary"}
+            onClick={() => !isRoomLoading && toggleRoom()}
+            disabled={isUnlinkLoading}
+          >
+            <span>{collaborationManager.roomId ? "Leave Room" : "Create Room"}</span>
+            {isRoomLoading && loading}
           </PrimaryIconButton>
-
         </InputField>
         <InputContainer>
           <InputLabel>Linked Accounts</InputLabel>
@@ -60,8 +67,8 @@ export const CollaborationControls = () => {
                 <Avatar src={a.avatar} />
                 <Name>{a.name}</Name>
                 <IconButton
-                  onClick={() => !isLoading && unlink(a.type)}
-                  icon={isLoading ? loading : remove}
+                  onClick={() => !isUnlinkLoading && unlink(a.type)}
+                  icon={isUnlinkLoading ? loading : remove}
                   label="Unlink"
                 />
               </Card>

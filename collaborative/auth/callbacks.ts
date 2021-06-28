@@ -67,7 +67,7 @@ const callbacks = {
 
         if (discord?.accessToken) {
             try {
-                const discordUser = await getDiscordProfile(discord.accessToken)
+                const discordUser = await getDiscordProfile(discord.accessToken) // TODO: cache profile to avoid ratelimit
                 const avatarPath = discordUser.avatar
                     ? `avatars/${discordUser.id}/${discordUser.avatar}.${discordUser.avatar.startsWith("a_") ? "gif" : "png"
                     }`
@@ -90,7 +90,7 @@ const callbacks = {
 
         if (google?.accessToken) {
             try {
-                const googleUser = await getGoogleProfile(google.accessToken)
+                const googleUser = await getGoogleProfile(google.accessToken)  // TODO: cache profile to avoid ratelimit
                 session.accounts.push({
                     ...googleUser,
                     type: "google",
