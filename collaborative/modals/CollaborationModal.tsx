@@ -14,7 +14,7 @@ import { ModalContext } from "../../common/modal/ModalContext"
 import { useRequiredContext } from "../../common/state/useRequiredContext"
 import { remove } from "../../icons/remove"
 import { CollaborationManagerContext } from "../manager/CollaborationManagerContext"
-import { AuthStatus } from "./parts/AuthStatus"
+import { CollaborationControls } from "./parts/CollaborationControls"
 import { DiscordSettings } from "./parts/DiscordSettings"
 import { GoogleSettings } from "./parts/GoogleSettings"
 
@@ -45,7 +45,7 @@ export function CollaborationModal() {
         </ModalHeader>
         <ModalBody>
           <Stack gap={8}>
-            {accounts.length > 0 ? <AuthStatus /> : "You must be logged into at least one account to use the collaboration features:"}
+            {accounts.length > 0 ? <CollaborationControls /> : "You must be logged into at least one account to use the collaboration features:"}
             <Separator />
             <DiscordSettings />
             <Separator />
