@@ -59,7 +59,7 @@ export function CollaborativeEditor() {
   return useObserver(() => (
     <EditorContainer gap={16}>
       <Actions>
-        <SecondaryButton onClick={collaborationManager.handleSave}>
+        <SecondaryButton onClick={() => { }}>
           Save
         </SecondaryButton>
         <SecondaryButton onClick={() => spawnClearAllModal()}>
