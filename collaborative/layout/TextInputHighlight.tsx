@@ -13,25 +13,29 @@ const HighlightContainer = styled(FlexContainer)`
   border: 0;
   border-radius: 3px; // rounded inputs
 `
-
-const SimpleTextInput = styled(Input)`
-  background-color: transparent;
-  z-index: 1;
-  ${FlexContainer} > && {
+const PlainTextInput = styled(Input)`
+  ${FlexContainer} > & {
     flex: 1;
   }
+`
+
+const TransparentTextInput = styled(PlainTextInput)`
+  background-color: transparent;
+  z-index: 1;
 `
 
 // There's minor bugs in Firefox, I won't fix them
 const EchoInput = styled(Input)`
   position: absolute;
-  color: transparent;
+  color: ${process.env.NODE_ENV === "development" ? "blue" : "transparent"};
   /* Hide scrollbar*/
   ::-webkit-scrollbar-thumb,
   ::-webkit-scrollbar-track {
     background-color: transparent;
   }
   scrollbar-color: transparent transparent;
+
+  border: 2px solid transparent;
 
   height: 100%;
   width: 100%;
@@ -50,7 +54,7 @@ const EchoInput = styled(Input)`
     overflow: hidden auto; // important for pixel-perfect overlay
     padding: 5.5px 9px; // from Input
   }
-`.withComponent("div") // fix buggy as prop
+`.withComponent("div") // fix buggy "as" prop
 
 type CursorProps = {
   color: string
@@ -101,7 +105,7 @@ type AnyProps = {
 const TextInputHighlight = (
   props: AnyProps,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ref?: any,
+  ref: any,
 ) => {
   const collaborationManager = useRequiredContext(CollaborationManagerContext)
   const echoRef = useRef<HTMLDivElement>(null)
@@ -147,24 +151,21 @@ const TextInputHighlight = (
     }
   }, [inputRef, value.length])
 
-  const input = (
-    <SimpleTextInput
-      style={{ backgroundColor: "red" }}
-      ref={ref ?? inputRef}
-      {...props}
-    />
-  )
+  const WEBHOOK_CONTROLS_ID = "_1_url"
 
-  return !props.disabled ? (
-    <HighlightContainer>
-      {input}
-      <EchoInput ref={echoRef}>
-        {Boolean(value.length > 0 && props.id !== "webhook") && content}
-      </EchoInput>
-    </HighlightContainer>
-  ) : (
-    input
-  )
+  console.log(inputRef.current)
+
+  return (props.disabled || !inputRef.current) // детект вебхука
+    ? <PlainTextInput ref={ref ?? inputRef} {...props} /> // TODO: показывать фокус на поле вебхука
+    : (
+      <HighlightContainer>
+        <TransparentTextInput ref={ref ?? inputRef} {...props} />
+        <EchoInput ref={echoRef}>
+          {Boolean(value.length > 0 && props.id !== "webhook") && content}
+        </EchoInput>
+      </HighlightContainer>
+    )
+
 }
 
 export const TextInput = forwardRef(TextInputHighlight)
