@@ -1,7 +1,9 @@
 import React, { forwardRef, useEffect, useRef, useState } from "react"
+import mergeRefs from "react-merge-refs"
 import styled from "styled-components"
 import { Input } from "../../common/input/layout/Input"
 import { FlexContainer } from "../../common/layout/FlexContainer"
+import type { ReactRef } from "../../common/state/ReactRef"
 import { useRequiredContext } from "../../common/state/useRequiredContext"
 import { CollaborationManagerContext } from "../manager/CollaborationManagerContext"
 
@@ -104,18 +106,14 @@ type AnyProps = {
 
 const TextInputHighlight = (
   props: AnyProps,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ref: any,
+  ref: ReactRef<CommonInputElement>,
 ) => {
   const collaborationManager = useRequiredContext(CollaborationManagerContext)
   const echoRef = useRef<HTMLDivElement>(null)
-  const inputRef = useRef<CommonInputElement>(
-    ref && "current" in ref ? ref.current : null,
-  ) // use forwarded ref or create intermediate
+  const inputRef = useRef<CommonInputElement>(null)
   const [pos, setPos] = useState([0, 0])
 
   const { value } = props
-
   const content = (
     <>
       {value.slice(0, pos[0])}
@@ -149,18 +147,14 @@ const TextInputHighlight = (
         input.removeEventListener("scroll", setScroll)
       }
     }
-  }, [inputRef, value.length])
+  }, [inputRef, value])
 
-  const WEBHOOK_CONTROLS_ID = "_1_url"
-
-  console.log(inputRef.current)
-
-  return (props.disabled || !inputRef.current) // детект вебхука
-    ? <PlainTextInput ref={ref ?? inputRef} {...props} /> // TODO: показывать фокус на поле вебхука
+  return (props.disabled || props.type === "password" || props.placeholder === "#rrggbb") // детект косвенных полей
+    ? <PlainTextInput ref={mergeRefs([ref, inputRef])} {...props} /> // TODO: показывать фокус на поле вебхука
     : (
       <HighlightContainer>
-        <TransparentTextInput ref={ref ?? inputRef} {...props} />
-        <EchoInput ref={echoRef}>
+        <TransparentTextInput ref={mergeRefs([ref, inputRef])} {...props} />
+        <EchoInput ref={echoRef} >
           {Boolean(value.length > 0 && props.id !== "webhook") && content}
         </EchoInput>
       </HighlightContainer>
