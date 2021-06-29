@@ -23,7 +23,7 @@ export default async function handler(
       keyid: "defaultkeyid",
       audience: "Convergence",
       subject: session.id,
-      expiresIn: "1h",
+      expiresIn: "6h",
     },
   )
 
