@@ -123,6 +123,8 @@ export class ConvergenceClient {
       this.cursor = new ConvergenceCursor(this)
       this.cursor.initTracking()
 
+      this.lock = false
+
       // this.collaboration.setMode(CollaborationManagerMode.ONLINE)
     } else {
       this.collaboration.showError(
@@ -148,6 +150,7 @@ export class ConvergenceClient {
   }
 
   handlePatch = (patch: IJsonPatch) => {
+    console.log("🚀 ~ file: client.ts ~ line 157 ~ ConvergenceClient ~ this.isConnected, this.lock", this.isConnected, this.lock)
     if (!this.isConnected || this.lock) return
     const root = this.model!.root()
     const path = patch.path.split("/").filter(Boolean).map(parseNumbers)
@@ -173,6 +176,7 @@ export class ConvergenceClient {
   }
 
   syncUpdate = () => {
+    console.log("🚀 ~ file: client.ts ~ line 176 ~ ConvergenceClient ~ this.isConnected", this.isConnected)
     if (!this.isConnected) return
 
     const model = this.model!
