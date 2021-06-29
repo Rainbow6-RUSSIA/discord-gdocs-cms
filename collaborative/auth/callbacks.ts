@@ -4,41 +4,12 @@ import type { JWT } from "next-auth/jwt"
 import { Account, prisma, User } from "../db"
 import { getDiscordProfile } from "../helpers/discord"
 import { getGoogleProfile } from "../helpers/google"
-import { providers } from "./providers"
 
 const rotateToken = async (account: Account) => {
-    const provider = providers.find(p => p.id === account.providerId)
-
     try {
-        if (
-            provider &&
-            account.refreshToken &&
-            account.accessTokenExpires &&
-            account.accessTokenExpires.valueOf() < Date.now() + 5000
-        ) {
-            const res = await fetch(provider.accessTokenUrl, {
-                method: "POST",
-                body: new URLSearchParams({
-                    client_id: provider.clientId,
-                    client_secret: provider.clientSecret as string,
-                    refresh_token: account.refreshToken,
-                    grant_type: "refresh_token",
-                }),
-            })
-            const raw = await res.json()
-            account.accessToken = raw.access_token
-            account.accessTokenExpires = new Date(
-                Date.now() + (raw.expires_in ?? 3600) * 1000,
-            )
-            await prisma.account.update({
-                data: account,
-                where: {
-                    providerId_providerAccountId: account
-                }
-            })
-        }
+        return await Account.rotateToken(account)
     } catch (error) {
-        console.log("SESSION", error)
+        console.log("ROTATE TOKEN", error)
     }
 
     return account
