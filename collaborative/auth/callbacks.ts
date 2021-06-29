@@ -2,8 +2,6 @@
 import type { Session } from "next-auth"
 import type { JWT } from "next-auth/jwt"
 import { Account, prisma, User } from "../db"
-import { getDiscordProfile } from "../helpers/discord"
-import { getGoogleProfile } from "../helpers/google"
 
 const rotateToken = async (account: Account) => {
     try {
@@ -38,7 +36,7 @@ const callbacks = {
 
         if (discord?.accessToken) {
             try {
-                const discordUser = await getDiscordProfile(discord.accessToken) // TODO: cache profile to avoid ratelimit
+                const discordUser = await Account.getDiscordProfile(discord)
                 const avatarPath = discordUser.avatar
                     ? `avatars/${discordUser.id}/${discordUser.avatar}.${discordUser.avatar.startsWith("a_") ? "gif" : "png"
                     }`
@@ -61,7 +59,7 @@ const callbacks = {
 
         if (google?.accessToken) {
             try {
-                const googleUser = await getGoogleProfile(google.accessToken)  // TODO: cache profile to avoid ratelimit
+                const googleUser = await Account.getGoogleProfile(google)
                 session.accounts.push({
                     ...googleUser,
                     type: "google",

@@ -1,14 +1,15 @@
-import type { Account as DBAccount, Prisma } from "@prisma/client"
+import { Account as DBAccount, AccountProvider, Prisma } from "@prisma/client"
 import { providers } from "../../auth/providers"
+import { getDiscordGuilds } from "../../helpers/discord"
 import type { DiscordProfile, GoogleProfile } from "../../types"
 import { prisma } from "../prisma"
 
 export class Account implements DBAccount {
     id!: string
     userId!: string
-    providerType!: string
-    providerId!: string
     providerAccountId!: string
+    providerType!: "oauth"
+    providerId!: AccountProvider
     refreshToken!: string | null
     accessToken!: string | null
     accessTokenExpires!: Date | null
@@ -22,6 +23,18 @@ export class Account implements DBAccount {
             Pick<Account, "providerId" | "providerAccountId">
     ) {
         return prisma.account.delete({
+            where: {
+                providerId_providerAccountId: { providerAccountId, providerId }
+            }
+        })
+    }
+
+    static async update(
+        account: Pick<Account, "providerId" | "providerAccountId"> & Partial<Account>
+    ) {
+        const { providerAccountId, providerId } = account
+        return prisma.account.update({
+            data: account,
             where: {
                 providerId_providerAccountId: { providerAccountId, providerId }
             }
@@ -67,19 +80,60 @@ export class Account implements DBAccount {
         return account
     }
 
-    // static async getDiscordProfile(account: Account): Promise<DiscordProfile | null> {
-    //     if (account.providerId !== "discord") return null
+    static async getDiscordProfile(account: Account): Promise<DiscordProfile> {
+        if (!account.accessToken) throw new Error("No token")
+        if (!Account.isDiscordAccount(account)) throw new Error(`Not a discord account, got ${account.providerId}`)
+        if (!Account.isProfileCacheValid(account)) {
+            const discordUser = await fetch("https://discord.com/api/users/@me", {
+                headers: { Authorization: `Bearer ${account.accessToken}` },
+            }).then(async d => d.json())
 
-    //     if (!account.cachedProfile
-    //         || !account.cachedAt
-    //         || account.cachedAt.valueOf() < Date.now() - Number.parseInt(process.env.PROFILE_CACHE_LIFETIME ?? "3600") * 1000
-    //     ) {
+            if ("message" in discordUser) throw new Error(discordUser.message)
 
-    //     }
+            discordUser.guilds = await getDiscordGuilds(account.accessToken)
 
-    // }
+            Object.assign(account, {
+                cachedProfile: discordUser,
+                cachedAt: new Date()
+            })
 
-    // static async getGoogleProfile(account: Account): Promise<GoogleProfile | null> {
-    //     if (account.providerId !== "google") return null
-    // }
+            await Account.update(account)
+        }
+        return account.cachedProfile!
+    }
+
+    static async getGoogleProfile(account: Account): Promise<GoogleProfile> {
+        if (!account.accessToken) throw new Error("No token")
+        if (!Account.isGoogleAccount(account)) throw new Error(`Not a google account, got ${account.providerId}`)
+        if (!Account.isProfileCacheValid(account)) {
+            const googleUser = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+                headers: { Authorization: `Bearer ${account.accessToken}` },
+            }).then(async d => d.json())
+            if ("error" in googleUser) throw new Error(googleUser.error_description)
+
+            Object.assign(account, {
+                cachedProfile: googleUser,
+                cachedAt: new Date()
+            })
+
+            await Account.update(account)
+        }
+        return account.cachedProfile!
+    }
+
+    static isProfileCacheValid({ cachedProfile, cachedAt }: Account) {
+        return Boolean(
+            cachedProfile
+            && cachedAt
+            && cachedAt.valueOf() > Date.now() - Number.parseInt(process.env.PROFILE_CACHE_LIFETIME ?? "3600") * 1000
+        )
+    }
+
+    static isDiscordAccount(account: Account): account is (Account & { cachedProfile: DiscordProfile | null }) {
+        return account.providerId === AccountProvider.discord
+    }
+
+    static isGoogleAccount(account: Account): account is (Account & { cachedProfile: GoogleProfile | null }) {
+        return account.providerId === AccountProvider.google
+    }
 }
