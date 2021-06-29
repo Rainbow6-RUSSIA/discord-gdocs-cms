@@ -47,8 +47,7 @@ export class Account implements DBAccount {
         if (
             provider &&
             account.refreshToken &&
-            account.accessTokenExpires &&
-            account.accessTokenExpires.valueOf() < Date.now() + 5000
+            Number(account.accessTokenExpires) < Date.now() + 5000
         ) {
             const res = await fetch(provider.accessTokenUrl, {
                 method: "POST",
@@ -68,13 +67,7 @@ export class Account implements DBAccount {
                 )
             })
 
-            const { providerId, providerAccountId } = account
-            return await prisma.account.update({
-                data: account,
-                where: {
-                    providerId_providerAccountId: { providerId, providerAccountId }
-                }
-            })
+            return await Account.update(account)
         }
 
         return account
