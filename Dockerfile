@@ -3,6 +3,9 @@ FROM node:14-alpine AS builder
 RUN apk add --no-cache libc6-compat git
 
 WORKDIR /app
+
+ENV NODE_ENV=production
+
 COPY package.json yarn.lock .yarnrc.yml ./
 COPY .yarn ./.yarn
 COPY patches ./patches
@@ -17,7 +20,7 @@ ARG NEXT_PUBLIC_GOOGLE_CLIENT_ID
 ARG NEXT_PUBLIC_CONVERGENCE_URL
 
 ARG BUILD_ID
-RUN BUILD_ID=${BUILD_ID} yarn build
+RUN BUILD_ID=${BUILD_ID} yarn build && yarn prisma:deploy
 
 FROM node:14-alpine
 

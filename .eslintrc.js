@@ -199,7 +199,7 @@ module.exports = {
     "prefer-spread": "warn",
     "prefer-template": "warn",
     "quote-props": ["warn", "consistent-as-needed"],
-    "radix": "warn",
+    "radix": "off",
     "react-hooks/exhaustive-deps": [
       "error",
       { additionalHooks: "(useIsomorphicLayoutEffect)" },
