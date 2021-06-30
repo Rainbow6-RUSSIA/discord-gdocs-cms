@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FocusEvent, forwardRef, ReactNode } from "react"
 import styled from "styled-components"
-import { TextInput } from "../../../collaborative/layout/TextInputHighlight"
+import { TextInput } from "../../../collaborative/overrides/TextInputHighlight"
 import { FlexContainer } from "../../layout/FlexContainer"
 import type { ReactRef } from "../../state/ReactRef"
 import { InputError } from "../error/InputError"
