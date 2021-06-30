@@ -186,11 +186,13 @@ export class ConvergenceClient {
     this.lock = true
 
     const value = model.root().value()
-    // const isWebhookChanged = this.editor.target.url !== value.target?.url
+    const isWebhooksChanged = !isEqual(this.editor.targets, value.targets)
     applySnapshot(this.editor, value)
-    // if (isWebhookChanged) {
-    //   void this.editor.process("/target/url")
-    // }
+    if (isWebhooksChanged) {
+      for (let i = 0; i < this.editor.targets.length; i++) {
+        void this.editor.process(`/targets/${i}/url`)
+      }
+    }
 
     console.log("received change version", model.version())
 
