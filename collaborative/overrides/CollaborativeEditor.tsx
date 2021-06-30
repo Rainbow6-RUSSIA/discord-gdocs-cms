@@ -1,36 +1,52 @@
 import { useObserver } from "mobx-react-lite"
-import React, { useEffect } from "react"
+import dynamic from "next/dynamic"
+import { transparentize } from "polished"
+import React, { Fragment, useEffect } from "react"
 import styled from "styled-components"
 import { useWindowEvent } from "../../common/dom/useWindowEvent"
+import { PrimaryButton } from "../../common/input/button/PrimaryButton"
 import { SecondaryButton } from "../../common/input/button/SecondaryButton"
+import { ButtonList } from "../../common/layout/ButtonList"
 import { Separator } from "../../common/layout/Separator"
 import { Stack } from "../../common/layout/Stack"
 import { ModalManagerContext } from "../../common/modal/ModalManagerContext"
-import { Footer } from "../../common/page/Footer"
 import { usePreference } from "../../common/settings/usePreference"
 import { useLazyValue } from "../../common/state/useLazyValue"
 import { useRequiredContext } from "../../common/state/useRequiredContext"
+import type { BackupsModalProps } from "../../modules/database/backup/modal/BackupsModal"
 import { EditorManagerContext } from "../../modules/editor/EditorManagerContext"
 import { ClearAllConfirmationModal } from "../../modules/editor/message/ClearAllConfirmationModal"
+import { ShareModal } from "../../modules/editor/share/ShareModal"
+import { WebhookControls } from "../../modules/editor/webhook/WebhookControls"
+import { Markdown } from "../../modules/markdown/Markdown"
 import { createEditorForm } from "../../modules/message/state/editorForm"
+import type { MessageLike } from "../../modules/message/state/models/MessageModel"
 import { CollaborationManagerContext } from "../manager/CollaborationManagerContext"
 import { CollaborativeMessageEditor } from "./CollaborativeMessageEditor"
-import { CollaborativeWebhookControls } from "./CollaborativeWebhookControls"
+
+const BackupsModal = dynamic<BackupsModalProps>(async () =>
+  import("../../modules/database/backup/modal/BackupsModal").then(
+    module => module.BackupsModal,
+  ),
+)
 
 const EditorContainer = styled(Stack)`
   padding: 16px 16px 0;
 `
 
-const Actions = styled.div`
-  display: flex;
-  flex-flow: wrap;
+const JavaScriptWarning = styled.noscript`
+  display: block;
 
-  margin-bottom: -8px;
+  margin-bottom: 16px;
+  padding: 16px;
+  border-radius: 4px;
 
-  & > * {
-    margin-right: 12px;
-    margin-bottom: 8px;
-  }
+  border: 2px solid ${({ theme }) => theme.accent.danger};
+  background: ${({ theme }) => transparentize(0.75, theme.accent.danger)};
+
+  color: ${({ theme }) => theme.header.primary};
+  font-weight: 500;
+  line-height: 1.375;
 `
 
 export function CollaborativeEditor() {
@@ -42,9 +58,19 @@ export function CollaborativeEditor() {
 
   const modalManager = useRequiredContext(ModalManagerContext)
 
+  const spawnBackupsModal = () =>
+    modalManager.spawn({
+      render: () => <BackupsModal editorManager={editorManager} />,
+    })
+
   const spawnClearAllModal = () =>
     modalManager.spawn({
       render: () => <ClearAllConfirmationModal editorManager={editorManager} />,
+    })
+
+  const spawnShareModal = () =>
+    modalManager.spawn({
+      render: () => <ShareModal editorManager={editorManager} />,
     })
 
   const confirmExit = usePreference("confirmExit")
@@ -58,23 +84,46 @@ export function CollaborativeEditor() {
 
   return useObserver(() => (
     <EditorContainer gap={16}>
-      <Actions>
-        <SecondaryButton onClick={() => { }}>
-          Save
+      <JavaScriptWarning>
+        <Markdown
+          content={
+            "It appears your web browser has prevented this page from " +
+            "executing JavaScript.\nTo use QuarrelPost, please allow this page " +
+            "to run JavaScript from your browser's settings."
+          }
+        />
+      </JavaScriptWarning>
+      <ButtonList>
+        <SecondaryButton onClick={() => spawnBackupsModal()}>
+          Backups
         </SecondaryButton>
         <SecondaryButton onClick={() => spawnClearAllModal()}>
           Clear All
         </SecondaryButton>
-      </Actions>
-      <CollaborativeWebhookControls form={form} />
-      <Separator />
+        <SecondaryButton onClick={() => spawnShareModal()}>
+          Share Message
+        </SecondaryButton>
+      </ButtonList>
+      <WebhookControls form={form} />
       {editorManager.messages.map((message, index) => (
-        <CollaborativeMessageEditor
-          key={message.id}
-          message={message}
-          form={form.repeatingForm("messages").index(index)}
-        />
+        <Fragment key={message.id}>
+          <Separator />
+          <CollaborativeMessageEditor
+            message={message}
+            form={form.repeatingForm("messages").index(index)}
+          />
+        </Fragment>
       ))}
+      <Separator />
+      <div>
+        <PrimaryButton
+          onClick={() => {
+            form.repeatingForm("messages").push({} as MessageLike)
+          }}
+        >
+          Add Message
+        </PrimaryButton>
+      </div>
     </EditorContainer>
   ))
 }

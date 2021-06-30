@@ -110,6 +110,21 @@ export function CollaborativeWebhookControls(props: WebhookControlsProps) {
             </HiddenInputField>
           )
         })}
+        {/* <div>
+          <SecondaryButton
+            onClick={() => {
+              applyPatch(form.state.value, [
+                {
+                  op: "add",
+                  path: `/targets/${editorManager.targets.length}`,
+                  value: {},
+                },
+              ])
+            }}
+          >
+            Add Webhook
+          </SecondaryButton>
+        </div> */}
       </Stack>
     )
   })
