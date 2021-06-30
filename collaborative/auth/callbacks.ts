@@ -51,9 +51,9 @@ const callbacks = {
                 })
             } catch (error) {
                 console.log("Profile error", error)
-                if (error.message.includes("Invalid Credentials")) {
-                    await Account.unlink(discord)
-                }
+                // if (error.message.includes("Invalid Credentials")) {
+                await Account.unlink(discord)
+                // }
             }
         }
 
@@ -68,9 +68,9 @@ const callbacks = {
                 })
             } catch (error) {
                 console.log("Profile error", error)
-                if (error.message.includes("Invalid Credentials")) {
-                    await Account.unlink(google)
-                }
+                // if (error.message.includes("Invalid Credentials")) {
+                await Account.unlink(google)
+                // }
             }
         }
         return session
