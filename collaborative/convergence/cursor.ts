@@ -2,6 +2,7 @@ import { LocalElementReference, RealTimeString } from "@convergence/convergence"
 import type { LocalIndexReference } from "@convergence/convergence/typings/model/reference/LocalIndexReference"
 import ColorHash from "color-hash"
 import type { EditorManagerLike } from "../../modules/editor/EditorManager"
+import { checkInput, disabledInputs } from "../helpers/inputFilters"
 import { parseNumbers } from "../helpers/parseNumbers"
 import type { ConvergenceClient } from "./client"
 
@@ -11,7 +12,7 @@ type Path = (string | number)[]
 const isAllowedElement = (
   element: EventTarget | null,
 ): element is TextElement =>
-  element instanceof HTMLTextAreaElement || element instanceof HTMLInputElement
+  (element instanceof HTMLTextAreaElement || element instanceof HTMLInputElement) && !checkInput(element, disabledInputs)
 
 // const isAllowedEvent = (event: Event) =>
 //   !(event instanceof KeyboardEvent)

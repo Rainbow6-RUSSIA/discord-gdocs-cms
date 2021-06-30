@@ -1,26 +1,41 @@
-import React, { forwardRef, useEffect, useRef, useState } from "react"
+import React, { CSSProperties, ChangeEvent, FocusEvent, forwardRef, useEffect, useRef, useState } from "react"
 import mergeRefs from "react-merge-refs"
 import type { ReactRef } from "../../common/state/ReactRef"
 import { useRequiredContext } from "../../common/state/useRequiredContext"
+import { checkInput, disabledInputs, outlineOnlyInputs } from "../helpers/inputFilters"
 import { PlainTextInput, HighlightContainer, TransparentTextInput, EchoInput } from "../layout/InputHighlight"
 import { RemoteCursor, RemoteSelection } from "../layout/RemoteCursor"
 import { CollaborationManagerContext } from "../manager/CollaborationManagerContext"
 
-type CommonInputElement = HTMLInputElement | HTMLTextAreaElement | null
+type InputElement = HTMLInputElement | HTMLTextAreaElement
+type InputChangeEvent = ChangeEvent<InputElement>
+type InputFocusEvent = FocusEvent<InputElement>
 
-type AnyProps = {
-  value: string
+export type InputProps = {
+  as: "textarea" | "input"
   id: string
-  [s: string]: unknown
+  type?: string
+  value: string
+  placeholder?: string
+  disabled?: boolean
+  readOnly?: boolean
+  required?: boolean
+  style: CSSProperties
+
+  onChange?: (event: InputChangeEvent) => void
+  onClick?: () => void
+  onFocus?: (event: InputFocusEvent) => void
+  onBlur?: (event: InputFocusEvent) => void
+  "aria-label"?: string
 }
 
-const TextInputHighlight = (
-  props: AnyProps,
-  ref: ReactRef<CommonInputElement>,
+const RichTextInputRender = (
+  props: InputProps,
+  ref: ReactRef<InputElement>,
 ) => {
-  const collaborationManager = useRequiredContext(CollaborationManagerContext)
+  // const collaborationManager = useRequiredContext(CollaborationManagerContext)
   const echoRef = useRef<HTMLDivElement>(null)
-  const inputRef = useRef<CommonInputElement>(null)
+  const inputRef = useRef<InputElement>(null)
   const [pos, setPos] = useState([0, 0])
 
   const { value = "" } = props
@@ -61,26 +76,36 @@ const TextInputHighlight = (
         observer.disconnect()
       }
     }
-  }, [inputRef])
-
-  return (
-    props.disabled
-    || props.type === "password"
-    || props.placeholder === "#rrggbb"
-    || !collaborationManager.convergence
-    || !collaborationManager.roomId
-    || !value
-  ) // детект некорректных полей
-    ? <PlainTextInput ref={mergeRefs([ref, inputRef])} {...props} /> // TODO: показывать фокус на поле вебхука
+  }, [])
+  // TODO: показывать фокус на поле вебхука
+  return checkInput(props, outlineOnlyInputs)
+    ? <PlainTextInput ref={mergeRefs([ref, inputRef])} {...props} />
     : (
       <HighlightContainer>
         <TransparentTextInput ref={mergeRefs([ref, inputRef])} {...props} />
         <EchoInput ref={echoRef} >
-          {Boolean(value.length > 0 && props.id !== "webhook") && content}
+          {value.length > 0 && content}
         </EchoInput>
       </HighlightContainer>
     )
 
 }
 
-export const TextInput = forwardRef(TextInputHighlight)
+const RichTextInput = forwardRef(RichTextInputRender)
+
+const SwitchRender = (
+  props: InputProps,
+  ref: ReactRef<InputElement>,
+) => {
+  const collaborationManager = useRequiredContext(CollaborationManagerContext)
+
+  return (
+    checkInput(props, disabledInputs)
+    || !collaborationManager.convergence
+    || !collaborationManager.roomId
+  ) // детект некорректных полей
+    ? <PlainTextInput ref={mergeRefs([ref])} {...props} />
+    : <RichTextInput ref={ref} {...props} />
+}
+
+export const TextInput = forwardRef(SwitchRender)
