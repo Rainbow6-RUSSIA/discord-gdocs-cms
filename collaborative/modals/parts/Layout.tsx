@@ -7,6 +7,8 @@ export const LoginContainer = styled.div`
   align-items: center; 
   flex-wrap: wrap;
   justify-content: center;
+
+  gap: 8px;
 `
 
 export const LoginInfo = styled.div`

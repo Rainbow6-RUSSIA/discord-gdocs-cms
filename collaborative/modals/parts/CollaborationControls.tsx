@@ -6,7 +6,6 @@ import { copyTextToClipboard } from "../../../common/dom/copyTextToClipboard"
 import { InputContainer } from "../../../common/input/layout/InputContainer"
 import { InputLabel } from "../../../common/input/layout/InputLabel"
 import { InputField } from "../../../common/input/text/InputField"
-import { ButtonRow } from "../../../common/layout/ButtonRow"
 import { FlexContainer } from "../../../common/layout/FlexContainer"
 import { IconButton } from "../../../common/layout/IconButton"
 import { useRequiredContext } from "../../../common/state/useRequiredContext"
@@ -24,6 +23,11 @@ const Name = styled.div`
 
 const Avatar = styled.img.attrs({ height: 32, width: 32 })`
   border-radius: 50%;
+`
+
+const CardContainer = styled(FlexContainer)`
+  flex-wrap: wrap;
+  gap: 12px;
 `
 
 const Card = styled(FlexContainer)`
@@ -99,7 +103,7 @@ export const CollaborationControls = observer(() => {
       </InputField>
       <InputContainer>
         <InputLabel>Linked Accounts</InputLabel>
-        <ButtonRow>
+        <CardContainer>
           {accounts.map(a => (
             <Card key={a.id}>
               <Avatar src={a.avatar} />
@@ -111,7 +115,7 @@ export const CollaborationControls = observer(() => {
               />
             </Card>
           ))}
-        </ButtonRow>
+        </CardContainer>
       </InputContainer>
     </>
   )
