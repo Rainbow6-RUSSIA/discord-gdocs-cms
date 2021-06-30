@@ -1,7 +1,8 @@
-import { useObserver } from "mobx-react-lite"
-import React, { useMemo } from "react"
+import { observer } from "mobx-react-lite"
+import React, { useMemo, useRef } from "react"
 import { useMutation } from "react-query"
 import styled from "styled-components"
+import { copyTextToClipboard } from "../../../common/dom/copyTextToClipboard"
 import { InputContainer } from "../../../common/input/layout/InputContainer"
 import { InputLabel } from "../../../common/input/layout/InputLabel"
 import { InputField } from "../../../common/input/text/InputField"
@@ -9,6 +10,7 @@ import { ButtonRow } from "../../../common/layout/ButtonRow"
 import { FlexContainer } from "../../../common/layout/FlexContainer"
 import { IconButton } from "../../../common/layout/IconButton"
 import { useRequiredContext } from "../../../common/state/useRequiredContext"
+import { TooltipManagerContext } from "../../../common/tooltip/TooltipManagerContext"
 import { remove } from "../../../icons/remove"
 import { base62toUUID } from "../../helpers/base62"
 import { loading } from "../../icons/loading"
@@ -31,62 +33,88 @@ const Card = styled(FlexContainer)`
   background: ${({ theme }) => `${theme.background.secondaryAlt}`};
 `
 
-export const CollaborationControls = () => {
+export const CollaborationControls = observer(() => {
   const collaborationManager = useRequiredContext(CollaborationManagerContext)
-  const { isLoading: isUnlinkLoading, mutate: unlink } = useMutation(collaborationManager.unlink)
-  const { isLoading: isRoomLoading, mutate: toggleRoom } = useMutation(collaborationManager.toggleRoom)
-  const shortRoomId = useMemo(() => collaborationManager.roomId && base62toUUID.encode(collaborationManager.roomId), [collaborationManager.roomId])
+  const tooltipManager = useRequiredContext(TooltipManagerContext)
 
-  return useObserver(() => {
-    const accounts = collaborationManager.session?.accounts ?? []
-    return (
-      <>
-        <InputField
-          id="roomUrl"
-          placeholder={`${window.location.origin + window.location.pathname}?room=`}
-          value={collaborationManager.roomId ? `${window.location.origin + window.location.pathname}?room=${shortRoomId}` : ""}
-          label="Room URL"
-          onChange={() => { }}
-          readOnly
+  // return useObserver(() => {
+  const shortRoomId = useMemo(() => collaborationManager.roomId && base62toUUID.encode(collaborationManager.roomId), [collaborationManager.roomId])
+  const domain = window.location.origin + window.location.pathname
+
+  const anchorRef = useRef<HTMLInputElement>(null)
+
+  const accounts = collaborationManager.session?.accounts ?? []
+  const roomURL = collaborationManager.roomId ? `${domain}?room=${shortRoomId}` : ""
+
+  const copy = () => {
+    const { current: anchor } = anchorRef
+    if (!anchor || !roomURL) return
+    const dismiss = tooltipManager.add({
+      anchor,
+      content: "Copied",
+    })
+
+    copyTextToClipboard(roomURL)
+
+    setTimeout(() =>
+      anchor.dispatchEvent(
+        new MouseEvent("mouseenter", {
+          bubbles: true,
+        })
+      ), 0
+    ) // вкл показ без перезахода в поле
+
+    setTimeout(dismiss, 3000)
+  }
+
+  const { isLoading: isUnlinkLoading, mutate: unlink } = useMutation(collaborationManager.unlink)
+  const { isLoading: isRoomLoading, mutate: toggleRoom } = useMutation(
+    async () =>
+      collaborationManager
+        .toggleRoom()
+        .then(() => collaborationManager.roomId && copy())
+  )
+
+  return (
+    <>
+      <InputField
+        id="roomUrl"
+        placeholder={`${domain}?room=`}
+        value={roomURL}
+        label="Room URL"
+        onChange={() => { }}
+        onClick={copy}
+        readOnly
+        disabled={isUnlinkLoading}
+        ref={anchorRef}
+      >
+        <PrimaryIconButton
+          accent={collaborationManager.roomId ? "danger" : "primary"}
+          onClick={() => !isRoomLoading && toggleRoom()}
           disabled={isUnlinkLoading}
         >
-          <PrimaryIconButton
-            accent={collaborationManager.roomId ? "danger" : "primary"}
-            onClick={() => !isRoomLoading && toggleRoom()}
-            disabled={isUnlinkLoading}
-          >
-            <span>{collaborationManager.roomId ? "Leave Room" : "Create Room"}</span>
-            {isRoomLoading && loading}
-          </PrimaryIconButton>
-        </InputField>
-        <InputContainer>
-          <InputLabel>Linked Accounts</InputLabel>
-          <ButtonRow>
-            {accounts.map(a => (
-              <Card key={a.id}>
-                <Avatar src={a.avatar} />
-                <Name>{a.name}</Name>
-                <IconButton
-                  onClick={() => !isUnlinkLoading && unlink(a.type)}
-                  icon={isUnlinkLoading ? loading : remove}
-                  label="Unlink"
-                />
-              </Card>
-            ))}
-          </ButtonRow>
-        </InputContainer>
-      </>
-    )
-  })
-}
-/*
-  const { isLoading: isUnlinking, mutate: handleUnlink } = useMutation(
-    collaborationManager.unlink,
+          <span>{collaborationManager.roomId ? "Leave Room" : "Create Room"}</span>
+          {isRoomLoading && loading}
+        </PrimaryIconButton>
+      </InputField>
+      <InputContainer>
+        <InputLabel>Linked Accounts</InputLabel>
+        <ButtonRow>
+          {accounts.map(a => (
+            <Card key={a.id}>
+              <Avatar src={a.avatar} />
+              <Name>{a.name}</Name>
+              <IconButton
+                onClick={() => !isUnlinkLoading && unlink(a.type)}
+                icon={isUnlinkLoading ? loading : remove}
+                label="Unlink"
+              />
+            </Card>
+          ))}
+        </ButtonRow>
+      </InputContainer>
+    </>
   )
-        {user && (
-          <PrimaryButton onClick={() => handleUnlink()} accent="danger">
-            {"Logout "}
-            {isUnlinking ? loading : null}
-          </PrimaryButton>
-        )}
-        */
+  // }
+
+})

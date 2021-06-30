@@ -10,7 +10,7 @@ export function GoogleSettings() {
   return useObserver(() => {
     const google = collaborationManager.google
     return google ? (
-      <>Google Settings here</>
+      <>Google Settings: soon™</>
     ) : (
       <LoginContainer>
         <LoginInfo>Login into a Google account for import, export and milestone saves to chosen spreadsheet. (Soon™)</LoginInfo>

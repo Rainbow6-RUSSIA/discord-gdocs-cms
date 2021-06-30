@@ -1,5 +1,5 @@
 import { useObserver } from "mobx-react-lite"
-import { signOut, useSession } from "next-auth/client"
+import { signOut } from "next-auth/client"
 import React from "react"
 import { useMutation } from "react-query"
 import { ReactQueryDevtools } from "react-query/devtools"
@@ -14,8 +14,8 @@ import { ModalHeader } from "../../common/modal/layout/ModalHeader"
 import { ModalTitle } from "../../common/modal/layout/ModalTitle"
 import { ModalContext } from "../../common/modal/ModalContext"
 import { useRequiredContext } from "../../common/state/useRequiredContext"
-import { loading } from "../icons/loading"
 import { remove } from "../../icons/remove"
+import { loading } from "../icons/loading"
 import { CollaborationManagerContext } from "../manager/CollaborationManagerContext"
 import { CollaborationControls } from "./parts/CollaborationControls"
 import { DiscordSettings } from "./parts/DiscordSettings"
@@ -36,7 +36,7 @@ export function CollaborationModal() {
   // }, [])
 
   // const [session, loading] = useSession()
-  const { isLoading: isLogoutLoading, mutate: logout } = useMutation(() => signOut())
+  const { isLoading: isLogoutLoading, mutate: logout } = useMutation(async () => signOut())
 
   return useObserver(() => {
     const accounts = collaborationManager.session?.accounts ?? []

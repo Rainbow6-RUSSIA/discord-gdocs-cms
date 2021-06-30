@@ -10,7 +10,7 @@ export function DiscordSettings() {
   return useObserver(() => {
     const discord = collaborationManager.discord
     return discord ? (
-      <>Discord settings here</>
+      <>Discord settings: soon™</>
     ) : (
       <LoginContainer>
         <LoginInfo>QuarrelPost bot provides an ability to restore messages previously sent by webhooks. (Soon™)</LoginInfo>
