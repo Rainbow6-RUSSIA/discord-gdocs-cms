@@ -25,6 +25,7 @@ export const TransparentTextInput = styled(PlainTextInput)`
 export const EchoInput = styled(Input)`
   position: absolute;
   color: ${process.env.NODE_ENV === "development" ? "blue" : "transparent"};
+  
   /* Hide scrollbar*/
   ::-webkit-scrollbar-thumb,
   ::-webkit-scrollbar-track {
@@ -33,6 +34,8 @@ export const EchoInput = styled(Input)`
   scrollbar-color: transparent transparent;
 
   border: 2px solid transparent;
+
+  font-size: 16px; // фиксированный шрифт, а не из настроек
 
   height: 100%;
   width: 100%;
