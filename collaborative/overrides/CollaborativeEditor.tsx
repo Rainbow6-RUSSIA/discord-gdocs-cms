@@ -25,6 +25,7 @@ import { createEditorForm } from "../../modules/message/state/editorForm"
 import type { MessageLike } from "../../modules/message/state/models/MessageModel"
 import type { CursorsMap } from "../convergence/cursor"
 import { CursorsContextProvider } from "../convergence/CursorContext"
+import { isRange } from "../helpers/flattenRanges"
 import { CollaborationManagerContext } from "../manager/CollaborationManagerContext"
 import { CollaborativeMessageEditor } from "./CollaborativeMessageEditor"
 
@@ -69,20 +70,21 @@ export const CollaborativeEditor = observer(() => {
     const root = model.root()
 
     const getCollaborator = (sessionId: string) => model.collaborators().find(c => c.sessionId === sessionId) ?? { user: null }
-    const getPathRef = (sessionId: string) => root.reference(sessionId, "path") as PropertyReference
-    const getSelectionRef = (sessionId: string) => root.reference(sessionId, "selection") as PropertyReference
+    const getPathRef = (sessionId: string) => root.reference(sessionId, "path") as PropertyReference | null
+    const getSelectionRef = (sessionId: string) => root.reference(sessionId, "selection") as PropertyReference | null
 
     const updateCursor = (sessionId: string) => {
       const { user } = getCollaborator(sessionId)
       const pathRef = getPathRef(sessionId)
       const selectionRef = getSelectionRef(sessionId)
       if (user && pathRef && selectionRef) {
+        const selection = selectionRef.values().map(Number)
         setCursors(cursors =>
           new Map(
             cursors.set(sessionId, {
               color: new ColorHash().hex(user.username),
               path: pathRef.value(),
-              selection: selectionRef.values().map(Number) as [number, number],
+              selection: isRange(selection) ? selection : null,
               isLocal: sessionId === localSession,
               timestamp: Date.now()
             })
