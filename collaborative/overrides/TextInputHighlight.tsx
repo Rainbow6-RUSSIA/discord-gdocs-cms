@@ -2,7 +2,7 @@ import React, { CSSProperties, ChangeEvent, FocusEvent, forwardRef, useEffect, u
 import mergeRefs from "react-merge-refs"
 import type { ReactRef } from "../../common/state/ReactRef"
 import { CursorsContext } from "../convergence/CursorContext"
-import { flattenRanges } from "../helpers/flattenRanges"
+import { flattenRanges, Range } from "../helpers/flattenRanges"
 import { checkInput, disabledInputs, outlineOnlyInputs } from "../helpers/inputFilters"
 import { PlainTextInput, HighlightContainer, TransparentTextInput, EchoInput } from "../layout/InputHighlight"
 import { RemoteCursor, RemoteSelection } from "../layout/RemoteCursor"
@@ -39,31 +39,35 @@ const RichTextInputRender = (
     .filter(([, val]) => val.path === props.id && !val.isLocal && val.selection)
     .sort((a, b) => a[1].timestamp - b[1].timestamp)
 
-  if (props.id === "_-1_content") {
-    console.log("🚀 ~ TextInputHighlight.tsx ~ cursors", cursors)
+  const value = props.value
+  // debugger
+  const unflattenRanges: [string | null, Range][] = cursors.map(e => [e[0], e[1].selection!])
+  unflattenRanges.unshift([null, [0, value.length]])
+
+  console.log("RANGES", unflattenRanges)
+  let ranges
+
+  try {
+    ranges = flattenRanges(unflattenRanges)
+  } catch (error) {
+    debugger
+    throw error
   }
 
-  const value = props.value
-  const ranges = flattenRanges(
-    cursors.map(e => [e[0], e[1].selection!])
-  )
-  console.log("RANGES", ranges)
-  const content = ranges.length > 0
-    ? (
-      <>
-        {value.slice(0, ranges[0][1][0])}
-        {
-          ranges.map(([id, sub]) =>
-            sub[0] === sub[1]
+  const content = (
+    <>
+      {
+        ranges.map(([id, sub]) =>
+          !id
+            ? value.slice(sub[0], sub[1])
+            : sub[0] === sub[1]
               ? (<RemoteCursor key={id} color={cursorMap.get(id)!.color} />)
-              : (<RemoteSelection key={id} color={cursorMap.get(id)!.color}>{value.slice(sub[0], sub[1])}</RemoteSelection>) // TODO: заполнить пропуски между выделением
-          )
-        }
-        {value.slice(ranges[ranges.length - 1][1][1])}
-        {"\n" /* фикс при пустых строках в конце */}
-      </>
-    )
-    : value
+              : (<RemoteSelection key={`${id}-${sub[0]}`} color={cursorMap.get(id)!.color}>{value.slice(sub[0], sub[1])}</RemoteSelection>)
+        )
+      }
+      {"\n" /* фикс при пустых строках в конце */}
+    </>
+  )
 
   const echoRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<InputElement>(null)
