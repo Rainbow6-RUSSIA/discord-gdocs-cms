@@ -17,6 +17,8 @@ type TextElement = HTMLTextAreaElement | HTMLInputElement
 //   message: "message",
 // }
 
+const hookedKeys = ["Delete", "Backspace"] // Delete & Backspace
+
 export type CursorsMap = Map<string, {
   path: string,
   selection: [number, number] | null,
@@ -52,14 +54,27 @@ export class ConvergenceCursor {
 
   initTracking = () => {
     document.addEventListener("selectionchange", this.selectionChange)
+    document.addEventListener("keydown", this.keyDownHandler)
     this.pathReference.share()
     this.selectionReference.share()
   }
 
   stopTracking = () => {
     document.removeEventListener("selectionchange", this.selectionChange)
+    document.removeEventListener("keydown", this.keyDownHandler)
     if (this.pathReference.isShared()) this.pathReference.unshare()
     if (this.selectionReference.isShared()) this.selectionReference.unshare()
+  }
+
+  keyDownHandler = (e: KeyboardEvent) => {
+    if (
+      e.target === this.targetElement
+      && hookedKeys.includes(e.key)
+    ) setTimeout(
+      () => {
+        this.selectionChange()
+      }, 0
+    )
   }
 
   /*
