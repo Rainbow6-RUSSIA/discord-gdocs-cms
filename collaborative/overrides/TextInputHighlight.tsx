@@ -1,7 +1,8 @@
-import React, { CSSProperties, ChangeEvent, FocusEvent, forwardRef, useEffect, useRef, useState } from "react"
+import React, { CSSProperties, ChangeEvent, FocusEvent, forwardRef, useEffect, useRef, useContext } from "react"
 import mergeRefs from "react-merge-refs"
 import type { ReactRef } from "../../common/state/ReactRef"
-import { useRequiredContext } from "../../common/state/useRequiredContext"
+import { CursorsContext } from "../convergence/CursorContext"
+import { flattenRanges } from "../helpers/flattenRanges"
 import { checkInput, disabledInputs, outlineOnlyInputs } from "../helpers/inputFilters"
 import { PlainTextInput, HighlightContainer, TransparentTextInput, EchoInput } from "../layout/InputHighlight"
 import { RemoteCursor, RemoteSelection } from "../layout/RemoteCursor"
@@ -33,24 +34,37 @@ const RichTextInputRender = (
   props: InputProps,
   ref: ReactRef<InputElement>,
 ) => {
-  // const collaborationManager = useRequiredContext(CollaborationManagerContext)
+  const cursorMap = useContext(CursorsContext)!
+  const cursors = [...cursorMap.entries()]
+    .filter(([, val]) => val.path === props.id && !val.isLocal && val.selection)
+    .sort((a, b) => a[1].timestamp - b[1].timestamp)
+
+  if (props.id === "_-1_content") {
+    console.log("🚀 ~ TextInputHighlight.tsx ~ cursors", cursors)
+  }
+
+  const value = props.value
+  const ranges = flattenRanges(
+    cursors.map(e => [e[0], e[1].selection!])
+  )
+  const content =
+    (
+      <>
+        {value.slice(0, ranges[0][1][0])}
+        {
+          ranges.map(([id, sub]) =>
+            sub[0] === sub[1]
+              ? (<RemoteCursor key={id} color={cursorMap.get(id)!.color} />)
+              : (<RemoteSelection key={id} color={cursorMap.get(id)!.color}>{value.slice(sub[0], sub[1])}</RemoteSelection>)
+          )
+        }
+        {value.slice(0, ranges[ranges.length - 1][1][1])}
+        {"\n" /* фикс при пустых строках в конце */}
+      </>
+    )
+
   const echoRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<InputElement>(null)
-  const [pos, setPos] = useState([0, 0])
-
-  const { value = "" } = props
-  const content = (
-    <>
-      {value.slice(0, pos[0])}
-      {pos[0] === pos[1] ? (
-        <RemoteCursor color="#FF0000" />
-      ) : (
-        <RemoteSelection color="#FF0000">{value.slice(pos[0], pos[1])}</RemoteSelection>
-      )}
-      {value.slice(pos[1])}
-      {"\n" /* фикс при пустых строках в конце */}
-    </>
-  )
 
   useEffect(() => {
     const { current: echo } = echoRef
@@ -60,13 +74,6 @@ const RichTextInputRender = (
         echo.scrollTop = input.scrollTop // echo.scrollHeight * (input.scrollTop  / input.scrollHeight)
         echo.scrollLeft = input.scrollLeft // echo.scrollWidth  * (input.scrollLeft / input.scrollWidth)
       }
-
-      setPos(
-        new Array(2)
-          .fill(null)
-          .map(() => Math.round(Math.random() * 100)) // test
-          .sort((a, b) => a - b),
-      )
 
       const observer = new ResizeObserver(setScroll)
       observer.observe(input)
@@ -84,7 +91,7 @@ const RichTextInputRender = (
       <HighlightContainer>
         <TransparentTextInput ref={mergeRefs([ref, inputRef])} {...props} />
         <EchoInput ref={echoRef} >
-          {value.length > 0 && content}
+          {content}
         </EchoInput>
       </HighlightContainer>
     )
@@ -97,13 +104,14 @@ const SwitchRender = (
   props: InputProps,
   ref: ReactRef<InputElement>,
 ) => {
-  const collaborationManager = useRequiredContext(CollaborationManagerContext)
+  const cursors = useContext(CursorsContext)
+
+  const isOccupied = cursors && [...cursors.values()].some(c => c.path === props.id)
 
   return (
-    checkInput(props, disabledInputs)
-    || !collaborationManager.convergence
-    || !collaborationManager.roomId
-  ) // детект некорректных полей
+    !isOccupied
+    // || checkInput(props, disabledInputs)
+  )
     ? <PlainTextInput ref={mergeRefs([ref])} {...props} />
     : <RichTextInput ref={ref} {...props} />
 }

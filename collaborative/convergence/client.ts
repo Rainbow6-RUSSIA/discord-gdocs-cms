@@ -28,6 +28,8 @@ export class ConvergenceClient {
 
     const instance = new ConvergenceClient()
 
+    Object.assign(window, { client: instance })
+
     instance.collaboration = collaboration
     instance.editor = collaboration.editor
 
@@ -98,7 +100,8 @@ export class ConvergenceClient {
           collection: "temp",
           // id: `${channel.id}/${post.id}`,
           data: editorData,// convertSheetToContent(channel, post),
-          ephemeral: true,
+          ephemeral: process.env.NODE_ENV !== "development",
+
           userPermissions: {
             [session.id]: {
               read: true,
@@ -150,12 +153,11 @@ export class ConvergenceClient {
   }
 
   handlePatch = (patch: IJsonPatch) => {
-    console.log("🚀 ~ file: client.ts ~ line 157 ~ ConvergenceClient ~ this.isConnected, this.lock", this.isConnected, this.lock)
     if (!this.isConnected || this.lock) return
     const root = this.model!.root()
     const path = patch.path.split("/").filter(Boolean).map(parseNumbers)
     const element = root.elementAt(...path)
-    console.log("PATCH", patch)
+    console.log("🚀 ~ file: client.ts ~ line 156 ~ ConvergenceClient ~ patch", patch, element)
     switch (patch.op) {
       case "add": {
         const newKey = path.pop()
