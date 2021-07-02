@@ -17,7 +17,7 @@ type TextElement = HTMLTextAreaElement | HTMLInputElement
 //   message: "message",
 // }
 
-const hookedKeys = ["Delete", "Backspace"] // Delete & Backspace
+const hookedKeys = new Set(["Delete", "Backspace"]) // Delete & Backspace
 
 export type CursorsMap = Map<string, {
   path: string,
@@ -69,7 +69,7 @@ export class ConvergenceCursor {
   keyDownHandler = (e: KeyboardEvent) => {
     if (
       e.target === this.targetElement
-      && hookedKeys.includes(e.key)
+      && hookedKeys.has(e.key)
     ) setTimeout(
       () => {
         this.selectionChange()

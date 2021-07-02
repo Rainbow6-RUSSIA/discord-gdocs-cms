@@ -48,6 +48,7 @@ const RichTextInputRender = (
   let ranges
 
   try {
+    // FIXME: краш при полном выделении
     ranges = flattenRanges(unflattenRanges)
   } catch (error) {
     debugger
@@ -112,7 +113,7 @@ const SwitchRender = (
 ) => {
   const cursors = useContext(CursorsContext)
 
-  const isOccupied = cursors && [...cursors.values()].some(c => c.path === props.id)
+  const isOccupied = cursors && [...cursors.values()].some(val => val.path === props.id && !val.isLocal)
 
   return (
     !isOccupied
