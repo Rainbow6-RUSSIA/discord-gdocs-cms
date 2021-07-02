@@ -1,6 +1,6 @@
-import { PropertyReference, RealTimeObject, RemoteReferenceCreatedEvent, ReferenceSetEvent, ReferenceClearedEvent } from "@convergence/convergence"
+import { PropertyReference, RealTimeObject, RemoteReferenceCreatedEvent } from "@convergence/convergence"
 import ColorHash from "color-hash"
-import { useObserver } from "mobx-react-lite"
+import { observer } from "mobx-react-lite"
 import dynamic from "next/dynamic"
 import { transparentize } from "polished"
 import React, { Fragment, useEffect, useState } from "react"
@@ -53,7 +53,7 @@ const JavaScriptWarning = styled.noscript`
   line-height: 1.375;
 `
 
-export function CollaborativeEditor() {
+export const CollaborativeEditor = observer(() => {
   const editorManager = useRequiredContext(EditorManagerContext)
   const collaborationManager = useRequiredContext(CollaborationManagerContext)
 
@@ -74,33 +74,44 @@ export function CollaborativeEditor() {
 
     const updateCursor = (sessionId: string) => {
       const { user } = getCollaborator(sessionId)
-      if (!user) return
-      setCursors(cursors =>
-        new Map(
-          cursors.set(user.username, {
-            color: new ColorHash().hex(user.username),
-            path: getPathRef(sessionId).value(),
-            selection: getSelectionRef(sessionId).values().map(Number) as [number, number],
-            isLocal: sessionId === localSession,
-            timestamp: Date.now()
-          })
+      const pathRef = getPathRef(sessionId)
+      const selectionRef = getSelectionRef(sessionId)
+      if (user && pathRef && selectionRef) {
+        setCursors(cursors =>
+          new Map(
+            cursors.set(sessionId, {
+              color: new ColorHash().hex(user.username),
+              path: pathRef.value(),
+              selection: selectionRef.values().map(Number) as [number, number],
+              isLocal: sessionId === localSession,
+              timestamp: Date.now()
+            })
+          )
         )
-      )
+      } else {
+        setCursors(cursors => {
+          cursors.delete(sessionId)
+          return new Map(cursors)
+        })
+      }
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const refEventHandler = (refEvent: any) => {
+      console.log("REF EVENT", refEvent)
       updateCursor(refEvent.src.sessionId())
     }
 
     const setReferenceHandlers = (ref: PropertyReference) => {
       ref.on(PropertyReference.Events.SET, refEventHandler)
       ref.on(PropertyReference.Events.CLEARED, refEventHandler)
+      ref.on(PropertyReference.Events.DISPOSED, refEventHandler)
     }
 
     const unsetReferenceHandlers = (ref: PropertyReference) => {
       ref.off(PropertyReference.Events.SET, refEventHandler)
       ref.off(PropertyReference.Events.CLEARED, refEventHandler)
+      ref.off(PropertyReference.Events.DISPOSED, refEventHandler)
     }
 
     const newRefHandler = (newRefEvent: unknown) => {
@@ -153,7 +164,7 @@ export function CollaborativeEditor() {
 
   console.log("CURSORS", cursors)
 
-  return useObserver(() => (
+  return (
     <CursorsContextProvider value={cursors}>
       <EditorContainer gap={16}>
         <JavaScriptWarning>
@@ -198,5 +209,5 @@ export function CollaborativeEditor() {
         </div>
       </EditorContainer>
     </CursorsContextProvider>
-  ))
-}
+  )
+})

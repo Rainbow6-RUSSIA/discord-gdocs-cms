@@ -47,21 +47,23 @@ const RichTextInputRender = (
   const ranges = flattenRanges(
     cursors.map(e => [e[0], e[1].selection!])
   )
-  const content =
-    (
+  console.log("RANGES", ranges)
+  const content = ranges.length > 0
+    ? (
       <>
         {value.slice(0, ranges[0][1][0])}
         {
           ranges.map(([id, sub]) =>
             sub[0] === sub[1]
               ? (<RemoteCursor key={id} color={cursorMap.get(id)!.color} />)
-              : (<RemoteSelection key={id} color={cursorMap.get(id)!.color}>{value.slice(sub[0], sub[1])}</RemoteSelection>)
+              : (<RemoteSelection key={id} color={cursorMap.get(id)!.color}>{value.slice(sub[0], sub[1])}</RemoteSelection>) // TODO: заполнить пропуски между выделением
           )
         }
-        {value.slice(0, ranges[ranges.length - 1][1][1])}
+        {value.slice(ranges[ranges.length - 1][1][1])}
         {"\n" /* фикс при пустых строках в конце */}
       </>
     )
+    : value
 
   const echoRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<InputElement>(null)

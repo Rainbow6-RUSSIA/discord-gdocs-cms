@@ -19,6 +19,8 @@ export const PlainTextInput = styled(Input)`
 export const TransparentTextInput = styled(PlainTextInput)`
   background-color: transparent;
   z-index: 1;
+
+  color: ${process.env.NODE_ENV === "development" ? "#ff0000f0" : ({ theme }) => theme.text.normal}
 `
 
 // There's minor bugs in Firefox, I won't fix them

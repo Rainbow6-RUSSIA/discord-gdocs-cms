@@ -68,6 +68,7 @@ export class ConvergenceCursor {
     3. Редактирование поля  | Обновить выделение          
     4. Повторный клик       | Ничего
   */
+  // TODO: handle Backspace & Delete
   selectionChange = () => {
     const newTarget = ConvergenceCursor.isAllowedElement(document.activeElement) ? document.activeElement : null
     const oldTarget = this.targetElement
