@@ -22,7 +22,7 @@ export function flattenRanges(s: [string | null, Range][]) {
         for (const superior of spans.slice(i + 1)) {                 // Iterate through all spans above
             const result = subtractRanges(superior[1], spans[i][1])
             if (result.length === 0) {                               // If span is completely covered
-                delete spans[i]                                      // Remove it from list
+                spans.splice(i, 1)                                   // Remove it from list
                 i -= 1                                               // Compensate for list shifting
                 break                                                // Skip to next span
             } else {                                                 // If there is at least one resulting span
