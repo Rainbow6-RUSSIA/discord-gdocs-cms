@@ -4,8 +4,6 @@ RUN apk add --no-cache libc6-compat git
 
 WORKDIR /app
 
-ENV NODE_ENV=production
-
 COPY package.json yarn.lock .yarnrc.yml ./
 COPY .yarn ./.yarn
 COPY patches ./patches
@@ -20,6 +18,9 @@ ARG NEXT_PUBLIC_GOOGLE_CLIENT_ID
 ARG NEXT_PUBLIC_CONVERGENCE_URL
 ARG NEXT_PUBLIC_GOOGLE_SCOPES
 ARG NEXT_PUBLIC_DISCORD_SCOPES
+
+# fix git dependency
+ENV NODE_ENV=production 
 
 ARG BUILD_ID
 ARG DATABASE_URL
