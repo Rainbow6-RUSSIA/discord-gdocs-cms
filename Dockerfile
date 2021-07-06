@@ -1,4 +1,4 @@
-FROM node:14-alpine AS builder
+FROM node:16-alpine AS builder
 
 RUN apk add --no-cache libc6-compat git
 
@@ -25,7 +25,7 @@ ARG BUILD_ID
 ARG DATABASE_URL
 RUN BUILD_ID=${BUILD_ID} yarn build && yarn prisma:deploy
 
-FROM node:14-alpine
+FROM node:16-alpine
 
 WORKDIR /app
 COPY --from=builder /app/node_modules ./node_modules
